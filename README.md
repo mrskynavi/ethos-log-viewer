@@ -1,5 +1,7 @@
 # Ethos Log Viewer
 
+> Inoffizielles Werkzeug, nicht mit FrSky verbunden. FrSky und Ethos sind Marken ihrer Inhaber.
+
 Wertet Telemetrie-Logs (CSV) von FrSky-Ethos-Sendern aus und holt neue Logs automatisch vom Sender, sobald er per USB angeschlossen ist.
 
 ## Log-Sync
