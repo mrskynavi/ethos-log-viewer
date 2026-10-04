@@ -23,6 +23,6 @@ npm run dist    # Installer für das aktuelle System bauen
 
 `web/index.html` ist dieselbe Seite wie die Web-Version. `npm run prepare-app` kopiert sie nach `app/` und bindet Chart.js lokal ein, damit die App offline läuft.
 
-GitHub Actions baut bei jedem Push den Windows-Installer (`.exe`) und das Mac-Image (`.dmg`, Intel und Apple Silicon) und legt beide unter „Releases“ als Version `v<version>` ab.
+GitHub Actions baut bei jedem Push den Windows-Installer (`.exe`) und das Mac-Image (`.dmg`, Intel und Apple Silicon) und legt beide unter „Releases“ als Version `v<version>` ab. Der Release-Text kommt aus dem Abschnitt der Version in `CHANGELOG.md`; vor dem Erhöhen der Version dort einen Abschnitt `## <version> – <datum>` anlegen.
 
 Die Mac-App ist nicht signiert. Beim ersten Start blockiert macOS sie: unter Systemeinstellungen → Datenschutz & Sicherheit „Dennoch öffnen“. Beim ersten Anschliessen des Senders fragt macOS einmal nach dem Zugriff auf Wechselmedien; „Erlauben“ wählen.
