@@ -2,6 +2,8 @@
 
 ## 1.2.1 – noch nicht veröffentlicht
 
+- Neues Tab „Rohdaten“: alle Zeilen und Spalten des Logs als Tabelle, auch bei grossen Logs flüssig. Ein Klick auf eine Zeile setzt den Zeitpunkt, die Zeile des gewählten Zeitpunkts ist hervorgehoben und wird ins Bild geholt.
+- Diagramme „Einzeln“ oder „Überlagert“: überlagert zeigt alle gewählten Kanäle in einem Diagramm, jeder mit eigener Skala, mit Legende und den Werten am Zeitpunkt. Die Wahl bleibt gespeichert.
 - Helle und dunkle Darstellung: unter ⚙ Einstellungen „Darstellung“ mit „Wie System“, „Hell“ und „Dunkel“. Die Wahl wirkt sofort.
 - Eigenes App-Icon (Sender mit Log und Kurven) für Mac und Windows, ohne fremde Logos.
 - Hinweis im ⓘ und im README: inoffizielles Werkzeug, nicht mit dem Hersteller von Ethos verbunden.
