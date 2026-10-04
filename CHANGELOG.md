@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.2.1 – noch nicht veröffentlicht
+## 1.3.0 – 2026-10-04
 
 - Neues Tab „Rohdaten“: alle Zeilen und Spalten des Logs als Tabelle, auch bei grossen Logs flüssig. Ein Klick auf eine Zeile setzt den Zeitpunkt, die Zeile des gewählten Zeitpunkts ist hervorgehoben und wird ins Bild geholt.
 - Diagramme „Einzeln“ oder „Überlagert“: überlagert zeigt alle gewählten Kanäle in einem Diagramm, jeder mit eigener Skala, mit Legende und den Werten am Zeitpunkt. Die Wahl bleibt gespeichert.
