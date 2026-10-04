@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.1 – noch nicht veröffentlicht
+
+- macOS: Die Frage nach dem Zugriff auf Wechselmedien kam bei jeder Datei. Wird der Zugriff verweigert oder ist die Frage noch offen, bricht der Sync jetzt sofort ab, lässt den Sender 30 Sekunden in Ruhe und versucht es danach erneut. Die Sync-Zeile zeigt solange „Zugriff auf den Sender erlauben“.
+- macOS: Die App wird jetzt (ad hoc) signiert, damit macOS sich das „Erlauben“ merken kann.
+
 ## 1.1.0 – 2026-10-04
 
 - Kompakte Kopfzeile: Titel, Modell, Log, ◀▶, „Import …“ und ⚙ in einer Zeile, die Tabs stehen weiter oben.

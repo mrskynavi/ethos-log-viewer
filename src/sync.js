@@ -25,13 +25,16 @@ async function isDir(p) {
 
 // macOS fragt beim ersten Zugriff auf ein Wechselmedium nach der Erlaubnis. Solange die Frage
 // offen ist, schlägt jeder Zugriff fehl und würde eine weitere Frage auslösen. Deshalb wird ein
-// Laufwerk nach "keine Berechtigung" eine Weile in Ruhe gelassen.
+// Laufwerk nach "keine Berechtigung" eine Weile in Ruhe gelassen, und ein laufender Sync bricht
+// beim ersten verweigerten Zugriff ab, statt jede Datei einzeln zu versuchen.
 const DENY_PAUSE = 30000;
 const denied = new Map();
+const isDenied = e => e && (e.code === 'EPERM' || e.code === 'EACCES');
+// Prüft mit readdir, weil erst das Lesen des Inhalts die Frage auslöst (stat geht auch ohne Erlaubnis)
 async function probeDir(p, root, force) {
   if (!force && (denied.get(root) || 0) > Date.now()) return false;
-  try { return (await fsp.stat(p)).isDirectory(); }
-  catch (e) { if (e.code === 'EPERM' || e.code === 'EACCES') denied.set(root, Date.now() + DENY_PAUSE); return false; }
+  try { await fsp.readdir(p); return true; }
+  catch (e) { if (isDenied(e)) denied.set(root, Date.now() + DENY_PAUSE); return false; }
 }
 
 // Windows: Laufwerksbezeichnung über "vol", kurz gecacht
@@ -79,7 +82,7 @@ async function volumes(platform = process.platform) {
 async function findSenderDirs(senderPath, vols, force = false) {
   const p = String(senderPath || '').trim();
   if (!p) return [];
-  if (path.isAbsolute(p) || /^[a-z]:[\\/]/i.test(p)) return (await isDir(p)) ? [p] : [];
+  if (path.isAbsolute(p) || /^[a-z]:[\\/]/i.test(p)) return (await probeDir(p, p, force)) ? [p] : [];
   const parts = p.split(/[\\/]+/).filter(Boolean);
   const found = [];
   for (const v of vols) {
@@ -91,23 +94,24 @@ async function findSenderDirs(senderPath, vols, force = false) {
   return found;
 }
 
-async function listCsv(dir) {
+// strict: "keine Berechtigung" wird weitergereicht statt die Datei still zu überspringen
+async function listCsv(dir, strict = false) {
   let names = [];
-  try { names = await fsp.readdir(dir); } catch { return []; }
+  try { names = await fsp.readdir(dir); } catch (e) { if (strict && isDenied(e)) throw e; return []; }
   const out = [];
   for (const name of names) {
     if (!/\.csv$/i.test(name) || name.startsWith('._')) continue;
     try {
       const st = await fsp.stat(path.join(dir, name));
       if (st.isFile()) out.push({ name, size: st.size, mtime: st.mtimeMs });
-    } catch {}
+    } catch (e) { if (strict && isDenied(e)) throw e; }
   }
   return out;
 }
 
 // Ein Log gilt als vorhanden, wenn es im Modell-Ordner mit gleicher Grösse liegt
 async function plan(src, archive) {
-  const files = await listCsv(src), todo = [];
+  const files = await listCsv(src, true), todo = [];
   let skipped = 0;
   for (const f of files) {
     const dest = path.join(archive, safeDir(modelOf(f.name)), f.name);
@@ -136,7 +140,7 @@ async function syncDir(src, archive, onProgress = () => {}) {
   for (const f of todo) {
     onProgress({ state: 'copy', source: src, total: todo.length, done: res.copied.length + res.errors.length, skipped, bytes, doneBytes, file: f.name });
     try { await copyOne(f); res.copied.push({ name: f.name, model: modelOf(f.name), path: f.dest }); }
-    catch (e) { res.errors.push({ name: f.name, error: e.message }); }
+    catch (e) { if (isDenied(e)) throw e; res.errors.push({ name: f.name, error: e.message }); }
     doneBytes += f.size;
   }
   return res;
@@ -209,10 +213,12 @@ class SyncWatcher extends EventEmitter {
     if (!force && !st.autoSync) { if (this.status.state !== 'off') this.set({ state: 'off' }); return this.status; }
     this.busy = true;
     try {
-      const dirs = await findSenderDirs(st.senderPath, await this.volumes(), force);
+      const vols = await this.volumes();
+      const dirs = await findSenderDirs(st.senderPath, vols, force);
       for (const d of [...this.synced]) if (!dirs.includes(d)) this.synced.delete(d);
       if (!dirs.length) {
         // Sender abgezogen: das letzte Ergebnis bleibt sichtbar
+        if (this.status.state === 'denied' && [...denied.values()].some(t => t > Date.now())) return this.status;
         if (this.status.state === 'done' && this.status.connected) this.set({ ...this.status, connected: false });
         else if (this.status.state !== 'done' && this.status.state !== 'idle') this.set({ state: 'idle' });
         return this.status;
@@ -222,7 +228,16 @@ class SyncWatcher extends EventEmitter {
       const all = { state: 'done', connected: true, sources: [], copied: [], errors: [], skipped: 0, total: 0, at: Date.now() };
       for (const d of todo) {
         this.set({ state: 'copy', source: d, total: 0, done: 0 });
-        const r = await syncDir(d, st.archiveDir, p => this.set(p));
+        let r;
+        try { r = await syncDir(d, st.archiveDir, p => this.set(p)); }
+        catch (e) {
+          if (!isDenied(e)) throw e;
+          // Zugriff verweigert (macOS fragt gerade nach): Laufwerk in Ruhe lassen, später nochmals
+          const v = vols.filter(v => d.startsWith(v.root)).sort((a, b) => b.root.length - a.root.length)[0];
+          denied.set(v ? v.root : d, Date.now() + DENY_PAUSE);
+          this.set({ state: 'denied', source: d });
+          return this.status;
+        }
         this.synced.add(d);
         all.sources.push(d); all.copied.push(...r.copied); all.errors.push(...r.errors);
         all.skipped += r.skipped; all.total += r.total;

@@ -59,8 +59,9 @@
         }
       ],
       "category": "public.app-category.utilities",
-      "identity": null,
-      "artifactName": "Ethos-Log-Viewer-${version}.${ext}"
+      "identity": "-",
+      "artifactName": "Ethos-Log-Viewer-${version}.${ext}",
+      "hardenedRuntime": false
     },
     "publish": null
   }

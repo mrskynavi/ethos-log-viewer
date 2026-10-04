@@ -86,3 +86,27 @@ test('Ohne Berechtigung wird ein Laufwerk nicht dauernd neu angefragt', async ()
   }
   S.denied.clear();
 });
+
+test('Verweigerter Zugriff bricht den Sync ab, statt jede Datei zu versuchen', async () => {
+  const root = tmp(), archive = path.join(root, 'Archiv');
+  const vol = { root: path.join(root, 'RADIO'), label: 'RADIO' };
+  const logs = path.join(vol.root, 'logs');
+  fs.mkdirSync(logs, { recursive: true });
+  for (const n of ['A-2026-01-01-10-00-00.csv', 'A-2026-01-02-10-00-00.csv', 'B-2026-01-03-10-00-00.csv']) fs.writeFileSync(path.join(logs, n), 'x');
+  const calls = { stat: 0, copy: 0 };
+  const fsp = fs.promises, orig = { stat: fsp.stat, copyFile: fsp.copyFile };
+  const eperm = () => Object.assign(new Error('EPERM'), { code: 'EPERM' });
+  fsp.stat = async p => { if (String(p).startsWith(logs + path.sep)) { calls.stat++; throw eperm(); } return orig.stat(p); };
+  fsp.copyFile = async () => { calls.copy++; throw eperm(); };
+  try {
+    const w = new S.SyncWatcher(() => ({ autoSync: true, senderPath: 'Radio/logs', archiveDir: archive }), { volumes: async () => [vol] });
+    const r = await w.poll();
+    assert.equal(r.state, 'denied');
+    assert.equal(calls.stat, 1, 'nach dem ersten Fehler aufgehört');
+    assert.equal(calls.copy, 0);
+    assert.ok(S.denied.get(vol.root) > Date.now(), 'Pause gesetzt');
+    assert.equal((await w.poll()).state, 'denied', 'während der Pause wird nichts angefasst');
+    assert.equal(calls.stat, 1);
+    assert.ok(!w.synced.has(logs), 'gilt nicht als synchronisiert, wird später wiederholt');
+  } finally { Object.assign(fsp, orig); S.denied.clear(); }
+});

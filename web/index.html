@@ -1382,6 +1382,8 @@ function renderSync(s){
     if (s.at!==lastSyncAt){ lastSyncAt=s.at; if (n) loadArchive(); }
   } else if (s.state==='error'){
     txt.textContent='Sync fehlgeschlagen'; sub.textContent=s.error||'';
+  } else if (s.state==='denied'){
+    txt.textContent='Zugriff auf den Sender erlauben'; sub.textContent='macOS fragt nach dem Zugriff auf das Wechselmedium. Nach „Erlauben“ startet der Sync von selbst.';
   } else if (s.state==='off'){
     txt.textContent='Automatischer Sync aus'; sub.textContent='';
   } else {
