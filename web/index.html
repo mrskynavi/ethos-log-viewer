@@ -28,6 +28,9 @@ header.appbar .logpick{flex:1 1 420px;min-width:0}
 header.appbar .actions{display:flex;gap:6px;align-items:center;margin-left:auto}
 .iconbtn{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--muted);background:none;color:var(--muted);font:700 .85rem/1 var(--body);cursor:pointer;display:inline-grid;place-items:center;padding:0}
 .iconbtn[aria-expanded="true"],.iconbtn:hover{border-color:var(--accent);color:var(--accent)}
+.iconbtn.sm{width:20px;height:20px;font-size:.72rem;border-width:1.5px}
+h2.hi{display:flex;align-items:center;gap:8px}
+.pane > .infopop,section > .infopop{margin-bottom:12px}
 .iconbtn.gear{border:0;font-size:1.25rem;width:32px;height:32px}
 .iconbtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .infopop{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:.88rem;color:var(--muted)}
@@ -333,9 +336,10 @@ table.windh .wdv{display:inline-block;min-width:6.5ch;text-align:right}
 
   </div>
   <div class="pane" role="tabpanel" id="pane-steigen" data-tab="steigen" aria-labelledby="tab-steigen" hidden>
+  <div class="infopop" id="info-steigen" hidden><p>Gerechnet wie Deine Widgets „Thermik“ und „Steigfluege“: Ein Steigflug läuft, solange der Schalter EIN ist. Gibt es keinen Steigflug-Schalter, erkennt die App Steigflüge am ESC-Strom: Motor an, solange der Strom über der Schwelle liegt (Standard 3 A, kurze Lücken bis 1 s zählen mit). Gewinn = höchste Höhe während der Phase minus Starthöhe, Ø Steigen = Gewinn durch Dauer. Thermik zählt ab 5 s, Steigflüge ab 1 s. Eine Phase, die beim Logende noch läuft, zählt wie im Widget nicht. Die Zeiten sind so genau wie das Log (etwa 0,5 s).</p></div>
   <div class="two aligned">
     <section class="wpanel" id="w-therm">
-      <h2>Thermik</h2>
+      <h2 class="hi">Thermik <button type="button" class="iconbtn sm" data-info="info-steigen" aria-expanded="false" aria-controls="info-steigen" aria-label="So wird gerechnet">i</button></h2>
       <div class="settings">
         <label for="thermSw">Thermik-Schalter <select id="thermSw"></select></label>
         <label for="thermH">Höhenquelle <select id="thermH"></select></label>
@@ -347,7 +351,7 @@ table.windh .wdv{display:inline-block;min-width:6.5ch;text-align:right}
       <div class="tablewrap"><table id="therm"></table></div>
     </section>
     <section class="wpanel" id="w-climb">
-      <h2>Steigflüge</h2>
+      <h2 class="hi">Steigflüge <button type="button" class="iconbtn sm" data-info="info-steigen" aria-expanded="false" aria-controls="info-steigen" aria-label="So wird gerechnet">i</button></h2>
       <div class="settings">
         <label for="climbSw">Steigflug-Schalter <select id="climbSw"></select></label>
         <label for="climbThr" id="climbThrL" hidden>ab <input type="number" id="climbThr" min="0.5" step="0.5" value="3" inputmode="decimal"> A</label>
@@ -358,7 +362,6 @@ table.windh .wdv{display:inline-block;min-width:6.5ch;text-align:right}
       <div class="tablewrap"><table id="climb"></table></div>
     </section>
   </div>
-  <p class="hint">Gerechnet wie Deine Widgets „Thermik“ und „Steigfluege“: Ein Steigflug läuft, solange der Schalter EIN ist. Gibt es keinen Steigflug-Schalter, erkennt die App Steigflüge am ESC-Strom: Motor an, solange der Strom über der Schwelle liegt (Standard 3 A, kurze Lücken bis 1 s zählen mit). Gewinn = höchste Höhe während der Phase minus Starthöhe, Ø Steigen = Gewinn durch Dauer. Thermik zählt ab 5 s, Steigflüge ab 1 s. Eine Phase, die beim Logende noch läuft, zählt wie im Widget nicht. Die Zeiten sind so genau wie das Log (etwa 0,5 s).</p>
 
   </div>
   <div class="pane" role="tabpanel" id="pane-karte" data-tab="karte" aria-labelledby="tab-karte" hidden>
@@ -370,24 +373,24 @@ table.windh .wdv{display:inline-block;min-width:6.5ch;text-align:right}
       <div class="legend" id="trklegend"></div></div>
   </section>
   <section class="wpanel">
-    <h2>Wind nach Höhe</h2>
+    <h2 class="hi">Wind nach Höhe <button type="button" class="iconbtn sm" data-info="info-windh" aria-expanded="false" aria-controls="info-windh" aria-label="So wird gerechnet">i</button></h2>
+    <div class="infopop" id="info-windh" hidden><p id="windhhint">Für die Tabelle braucht es GPS-Position, GPS-Geschwindigkeit und Kurven im Flug.</p></div>
     <div class="settings">
       <label for="whAlt">Höhenquelle <select id="whAlt"></select></label>
       <label for="whStep">Stufe <select id="whStep"><option>25</option><option selected>50</option><option>100</option></select> m</label>
     </div>
     <div class="tablewrap"><table id="windh" class="windh"></table></div>
     <p class="hint" id="windcur"></p>
-    <p class="hint" id="windhhint"></p>
   </section>
   </div>
 
   </div>
   <div class="pane" role="tabpanel" id="pane-diagramme" data-tab="diagramme" aria-labelledby="tab-diagramme" hidden>
   <section>
-    <h2>Kanäle</h2>
+    <h2 class="hi">Kanäle <button type="button" class="iconbtn sm" data-info="info-diag" aria-expanded="false" aria-controls="info-diag" aria-label="Bedienung und Berechnung">i</button></h2>
+    <div class="infopop" id="info-diag" hidden><p>Im Diagramm ziehen verschiebt. Zoomen mit Strg + Mausrad, Trackpad-Pinch oder den Knöpfen. Doppelklick zeigt alles. In der Leiste oben das Fenster ziehen oder an den Rändern grösser und kleiner machen.</p><p>Zeitachse in Minuten ab Logbeginn. Hinterlegt: Steigflüge blau, Thermik grün, rot der oben gewählte Schalterzustand. Reihenfolge ändern: Diagramm am Griff ⋮⋮ ziehen oder mit ▲ ▼ verschieben.</p><p>ƒ = berechneter Wert. Leistung = Strom × Spannung, Energie = Leistung über die Zeit aufsummiert. GPS Kurs, Windgeschw., Windrichtung und TAS rechnen wie Deine Widgets „GPS Course“ und „Wind Estimator“ mit deren Standardwerten (40 Werte alle 0,7 s, Fit jede Sekunde, Kurs ab 3 m Abstand). Vor dem ersten gültigen Fit zeigt der Wind 0 und die TAS die Geschwindigkeit über Grund, genau wie am Sender.</p></div>
     <div class="chips" id="chips"></div>
     <label class="toggle"><input type="checkbox" id="showRc"> Sender-Kanäle, Schalter und logische Schalter anzeigen</label>
-    <p class="hint">ƒ = berechneter Wert. Leistung = Strom × Spannung, Energie = Leistung über die Zeit aufsummiert. GPS Kurs, Windgeschw., Windrichtung und TAS rechnen wie Deine Widgets „GPS Course“ und „Wind Estimator“ mit deren Standardwerten (40 Werte alle 0,7 s, Fit jede Sekunde, Kurs ab 3 m Abstand). Vor dem ersten gültigen Fit zeigt der Wind 0 und die TAS die Geschwindigkeit über Grund, genau wie am Sender.</p>
     <div class="zoombar" id="zoombar">
       <div class="zrow">
         <div class="zbtns"><button type="button" class="zb" id="zOut" aria-label="Herauszoomen">−</button><button type="button" class="zb" id="zIn" aria-label="Hineinzoomen">+</button><button type="button" class="zb wide" id="zAll">Alles</button></div>
@@ -396,7 +399,6 @@ table.windh .wdv{display:inline-block;min-width:6.5ch;text-align:right}
       </div>
       <div class="nav" id="nav"><canvas id="navc"></canvas><div class="win" id="navwin"><span class="hdl l" data-h="l"></span><span class="hdl r" data-h="r"></span></div></div>
     </div>
-    <p class="hint">Im Diagramm ziehen verschiebt. Zoomen mit Strg + Mausrad, Trackpad-Pinch oder den Knöpfen. Doppelklick zeigt alles. In der Leiste oben das Fenster ziehen oder an den Rändern grösser und kleiner machen.</p>
     <div class="charts" id="charts"></div>
   </section>
 
@@ -882,7 +884,7 @@ function fillWindAlt(){
 }
 function renderWindHeight(){
   const fits=LOG.windFits||[], alt=colBy($('#whAlt').value), step=+$('#whStep').value||50;
-  if (!fits.length || !alt){ $('#windh').innerHTML='<tr><td>Kein Wind berechnet. Dafür braucht es GPS-Position, GPS-Geschwindigkeit und Kurven im Flug.</td></tr>'; $('#windhhint').textContent=''; return; }
+  if (!fits.length || !alt){ $('#windh').innerHTML='<tr><td>Kein Wind berechnet. Dafür braucht es GPS-Position, GPS-Geschwindigkeit und Kurven im Flug.</td></tr>'; $('#windhhint').textContent='Für die Tabelle braucht es GPS-Position, GPS-Geschwindigkeit und Kurven im Flug.'; return; }
   const bands=new Map();
   for (const f of fits){ const h=alt.vals[f.row]; if (isNaN(h)) continue; const b=Math.floor(h/step)*step;
     const o=bands.get(b)||{n:0,w:0,sx:0,sy:0,max:0}; const r=f.d*D2R;
@@ -940,7 +942,6 @@ function drawCharts(){
   }
   drawNav();
   if (!charts.length) box.innerHTML='<p class="hint">Wähle oben einen oder mehrere Kanäle aus.</p>';
-  else box.insertAdjacentHTML('afterbegin','<p class="hint">Zeitachse in Minuten ab Logbeginn. Hinterlegt: Steigflüge blau, Thermik grün, rot der oben gewählte Schalterzustand. Reihenfolge ändern: Diagramm am Griff ⋮⋮ ziehen oder mit ▲ ▼ verschieben.</p>');
 }
 // ---------- Zoom & Verschieben: alle Zeitdiagramme teilen denselben Ausschnitt ----------
 const MIN_SPAN=5;
@@ -1303,6 +1304,9 @@ document.addEventListener('dragover',e=>{ if(isFileDrag(e)) e.preventDefault(); 
 document.addEventListener('dragleave',e=>{ if(!isFileDrag(e)) return; if(--dragDepth<=0){ dragDepth=0; drop.classList.remove('over'); } });
 document.addEventListener('drop',e=>{ e.preventDefault(); dragDepth=0; drop.classList.remove('over'); $('#importDlg').open&&$('#importDlg').close(); });
 $('#importBtn').addEventListener('click',()=>$('#importDlg').showModal());
+document.addEventListener('click',e=>{ const b=e.target.closest('[data-info]'); if(!b) return;
+  const p=document.getElementById(b.dataset.info), on=p.hidden; p.hidden=!on;
+  document.querySelectorAll(`[data-info="${b.dataset.info}"]`).forEach(x=>x.setAttribute('aria-expanded',on)); });
 $('#infoBtn').addEventListener('click',e=>{ const p=$('#infoPop'), on=p.hidden; p.hidden=!on; e.currentTarget.setAttribute('aria-expanded',on); });
 document.addEventListener('drop',e=>{ if(e.dataTransfer.files.length) addFiles(e.dataTransfer.files); });
 const redraw=()=>{ if(LOG){ drawCharts(); drawTrack(LOG,CH,CLIMB,THERM); drawBars(); } };
