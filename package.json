@@ -1,0 +1,67 @@
+{
+  "name": "ethos-log-viewer",
+  "productName": "Ethos Log Viewer",
+  "version": "1.0.0",
+  "description": "Telemetrie-Logs vom FrSky-Ethos-Sender auswerten und automatisch vom Sender ins Archiv synchronisieren",
+  "author": "Christoph Mächler",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "src/main.js",
+  "scripts": {
+    "prepare-app": "node scripts/prepare.js",
+    "start": "npm run prepare-app && electron .",
+    "test": "node --test test/sync.test.js",
+    "dist": "npm run prepare-app && electron-builder --publish never"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "chart.js": "4.4.1",
+    "electron": "^33.4.11",
+    "electron-builder": "^26.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mrskynavi/ethos-log-viewer.git"
+  },
+  "build": {
+    "appId": "ch.maechler.ethoslogviewer",
+    "productName": "Ethos Log Viewer",
+    "files": [
+      "src/**",
+      "app/**",
+      "package.json"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "Ethos-Log-Viewer-Setup-${version}.${ext}"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "universal"
+          ]
+        }
+      ],
+      "category": "public.app-category.utilities",
+      "identity": null,
+      "artifactName": "Ethos-Log-Viewer-${version}.${ext}"
+    },
+    "publish": null
+  }
+}

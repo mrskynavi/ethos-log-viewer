@@ -1,0 +1,1341 @@
+<title>Ethos Log Viewer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+/* Layout: Kopfzeile mit Datei-Ablage, Kennzahl-Leiste, Kanal-Chips, gestapelte Diagramme mit gemeinsamer Zeitachse, Statistik-Tabelle */
+:root{
+  --bg:#eef1f4; --panel:#ffffff; --fg:#17202b; --muted:#5b6876; --line:#d5dbe2;
+  --accent:#0b6bcb; --accent-soft:#dbe9f8; --warn:#b85c00; --bad:#c2312f; --good:#1f7a4d;
+  --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f141a; --panel:#171e26; --fg:#e4e9ef; --muted:#93a1b0; --line:#2a3440;
+  --accent:#4ea3f5; --accent-soft:#16304a; --warn:#f0a040; --bad:#f06a66; --good:#4cc38a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f141a; --panel:#171e26; --fg:#e4e9ef; --muted:#93a1b0; --line:#2a3440;
+  --accent:#4ea3f5; --accent-soft:#16304a; --warn:#f0a040; --bad:#f06a66; --good:#4cc38a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:15px/1.5 var(--body)}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:20px 48px;display:grid;gap:18px}
+header{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:end;justify-content:space-between}
+h1{font:700 2rem/1 var(--display);letter-spacing:.01em;margin:0;text-wrap:balance}
+h2{font:600 1.15rem/1.2 var(--display);letter-spacing:.04em;text-transform:uppercase;margin:0;color:var(--muted)}
+.sub{color:var(--muted);margin:.25rem 0 0;max-width:62ch}
+.drop{border:1.5px dashed var(--line);border-radius:10px;padding:14px 18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:var(--panel);cursor:pointer}
+.drop.over{border-color:var(--accent);background:var(--accent-soft)}
+.drop input{display:none}
+.btn{font:600 .95rem var(--body);background:var(--accent);color:#fff;border:0;border-radius:6px;padding:7px 14px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent);box-shadow:inset 0 0 0 1.5px var(--accent)}
+table.pick tr[data-i]{cursor:pointer}
+table.pick tr[data-i]:hover td{background:var(--accent-soft)}
+table.pick tr[aria-selected="true"] td{background:var(--accent-soft);font-weight:600}
+table.pick tr[data-i]:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.btn:focus-visible,.chip:focus-visible,.drop:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.syncbar{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.syncbar .stext{flex:1 1 280px;min-width:0;display:grid;gap:4px}
+.syncbar #syncText{font-weight:600;overflow-wrap:anywhere}
+.syncbar .sbtns{display:flex;flex-wrap:wrap;gap:6px}
+.syncbar .sbtns .btn{padding:5px 10px;font-size:.88rem}
+.sdot{width:12px;height:12px;border-radius:50%;background:var(--muted);flex:none}
+.syncbar[data-state="copy"] .sdot{background:var(--accent);animation:pulse 1s infinite alternate}
+.syncbar[data-state="done"] .sdot{background:var(--good)}
+.syncbar[data-state="error"] .sdot{background:var(--bad)}
+@keyframes pulse{to{opacity:.35}}
+@media (prefers-reduced-motion:reduce){.syncbar .sdot{animation:none!important}}
+.sprog{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.sprog i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+dialog#settingsDlg{border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--fg);padding:20px;width:min(560px,calc(100vw - 32px))}
+dialog#settingsDlg::backdrop{background:color-mix(in srgb,#000 45%,transparent)}
+.setform{display:grid;gap:14px}
+.setform label{display:grid;gap:4px;font-weight:600;font-size:.92rem}
+.setform label.check{display:flex;gap:8px;align-items:center;font-weight:500}
+.setform input[type=text]{font:500 .92rem var(--mono);padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);min-width:0;width:100%}
+.setform .row{display:flex;gap:8px;align-items:center}
+.setform .row.end{justify-content:flex-end}
+.setform .hint{font-weight:400}
+.fileinfo .btn{padding:3px 10px;font-size:.85rem}
+.fileinfo{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font-size:.9rem;color:var(--muted)}
+.tag{font:500 .75rem var(--mono);text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;border-radius:99px;background:var(--accent-soft);color:var(--accent)}
+.tag.example{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.kpi{background:var(--panel);padding:12px 14px;display:grid;gap:2px;min-width:0}
+.kpi .l{font:500 .72rem var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.kpi .v{font:600 1.6rem/1.1 var(--display);font-variant-numeric:tabular-nums}
+.kpi .v small{font:500 .85rem var(--body);color:var(--muted);margin-left:3px}
+.kpi .d{font:.78rem var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.kpi.bad .v{color:var(--bad)} .kpi.warn .v{color:var(--warn)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:500 .85rem var(--body);border:1px solid var(--line);background:var(--panel);color:var(--fg);border-radius:99px;padding:4px 11px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.chip .sw{width:9px;height:9px;border-radius:50%;background:var(--muted)}
+.chip.calc{border-style:dashed}
+.chip .fx{font:600 .72rem var(--mono);color:var(--accent);letter-spacing:.02em}
+.ctag{font:600 .66rem var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--accent);margin-left:6px}
+.chip[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.charts{display:grid;gap:10px}
+.cbox{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px 6px;min-width:0}
+.cbox .ct{display:flex;justify-content:space-between;gap:12px;font:600 1rem var(--display);letter-spacing:.03em}
+.cbox .ct span{font:400 .78rem var(--mono);color:var(--muted)}
+.cbox .ct .nm{display:flex;align-items:center;gap:6px;min-width:0}
+.cbox .ct .meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.grip{border:0;background:none;color:var(--muted);cursor:grab;touch-action:none;padding:2px 4px;border-radius:4px;font:700 1rem/1 var(--mono);letter-spacing:-.15em}
+.grip:hover{color:var(--accent);background:var(--accent-soft)}
+.grip:focus-visible,.mv:focus-visible{outline:2px solid var(--accent)}
+.mv{border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:4px;cursor:pointer;font:600 .75rem/1 var(--body);padding:3px 6px}
+.mv:hover{color:var(--accent);border-color:var(--accent)}
+.cbox.dragging{box-shadow:0 8px 24px color-mix(in srgb,var(--fg) 20%,transparent);border-color:var(--accent);position:relative;z-index:3;opacity:.95}
+.cbox.dragging .grip{cursor:grabbing}
+.cbox .cv{position:relative;height:150px}
+.hint{color:var(--muted);font-size:.85rem;margin:0}
+.tablewrap{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:.88rem;font-variant-numeric:tabular-nums}
+th,td{padding:7px 12px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{font:500 .72rem var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+td.u{color:var(--muted);text-align:left}
+.err{color:var(--bad);font-weight:500}
+section{display:grid;gap:10px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<style>
+.two{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:14px}
+@media (max-width:820px){.two{grid-template-columns:minmax(0,1fr)}}
+.track{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px;display:grid;gap:6px}
+.track canvas{width:100%;aspect-ratio:4/3;max-width:100%;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:4px 14px;font:.78rem var(--mono);color:var(--muted)}
+.legend i{display:inline-block;width:18px;height:8px;border-radius:2px;vertical-align:middle;margin-right:5px}
+.wpanel{display:grid;gap:10px;align-content:start;min-width:0}
+.settings select{font:500 .88rem var(--body);padding:3px 6px;border:1px solid var(--line);border-radius:5px;background:var(--panel);color:var(--fg);max-width:12em}
+.settings label{display:inline-flex;gap:6px;align-items:center}
+.wstats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+@media (max-width:480px){.wstats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.wchart{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px 6px}
+.wtitle{font:600 .95rem var(--display);letter-spacing:.03em;text-align:center}
+.bv{position:relative;height:190px}
+.track{max-width:820px}
+.tabs{display:flex;gap:2px;overflow-x:auto;border-bottom:1px solid var(--line);scrollbar-width:thin}
+.tab{font:600 1rem/1 var(--display);letter-spacing:.03em;background:none;border:0;border-bottom:3px solid transparent;color:var(--muted);padding:10px 14px 9px;cursor:pointer;white-space:nowrap}
+.tab:hover{color:var(--fg)}
+.tab[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+.tab:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.pane{display:grid;gap:18px}
+.curbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;background:var(--bg);display:grid;grid-template-columns:minmax(0,1fr);gap:6px;padding-block:8px;border-bottom:1px solid var(--line)}
+.curbar .crow{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
+/* gleiche Kanten wie die Übersichtsleiste: 1px Rand, Griff in % der Innenbreite = Zeit/Gesamtzeit */
+.curtrack{position:relative;height:22px;border:1px solid transparent;cursor:pointer;touch-action:none;outline:none}
+.curtrack::before{content:"";position:absolute;left:0;right:0;top:50%;height:4px;margin-top:-2px;border-radius:2px;background:var(--line)}
+.curtrack .cfill{position:absolute;left:0;top:50%;height:4px;margin-top:-2px;border-radius:2px;background:var(--warn);width:0}
+.curtrack .chdl{position:absolute;top:50%;left:0;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:var(--warn);border:2px solid var(--panel);box-shadow:0 1px 3px color-mix(in srgb,var(--fg) 35%,transparent);cursor:grab}
+.curtrack .chdl::after{content:"";position:absolute;left:50%;bottom:100%;width:2px;height:6px;margin-left:-1px;background:var(--warn)}
+.curtrack.off .chdl{background:var(--muted)} .curtrack.off .cfill{display:none}
+.curtrack:focus-visible .chdl{outline:2px solid var(--accent);outline-offset:2px}
+.curbar.inzoom{position:static;border-bottom:0;padding-block:2px 0}
+.curbar .cl{font:600 .72rem var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.curtime{font:500 .9rem var(--mono);font-variant-numeric:tabular-nums;color:var(--fg);min-width:15ch}
+.curtime.off{color:var(--muted);font-family:var(--body)}
+.curkpis .kpi .v{font-size:1.35rem}
+.curkpis .kpi.on{background:color-mix(in srgb,var(--warn) 12%,var(--panel))}
+tr.cur td{background:color-mix(in srgb,var(--warn) 18%,var(--panel))!important;font-weight:600}
+td.cval{color:var(--warn);font-weight:600}
+.cbox .curv{font:600 .8rem var(--mono);color:var(--warn);margin-left:6px}
+.logpick{align-items:center}
+.logpick select{max-width:none;min-width:0}
+#selModel{min-width:10em}
+.ddwrap{position:relative;min-width:0}
+.ddbtn{font:500 .88rem var(--body);padding:4px 30px 4px 10px;border:1px solid var(--line);border-radius:5px;background:var(--panel);color:var(--fg);cursor:pointer;text-align:left;position:relative;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ddbtn::after{content:"▾";position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.ddbtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.ddbtn[aria-expanded="true"]{border-color:var(--accent)}
+.ddpanel{position:fixed;z-index:50;left:16px;right:16px;top:var(--dd-top,80px);max-height:var(--dd-h,60vh);overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 16px 40px color-mix(in srgb,var(--fg) 25%,transparent)}
+.ddpanel table{width:100%;table-layout:auto}
+.ddpanel td.fn{white-space:normal;overflow-wrap:anywhere;text-align:left}
+.ddpanel th:last-child{text-align:left}
+@media (max-width:700px){.ddpanel th,.ddpanel td{padding-inline:6px}.ddpanel th:nth-child(4),.ddpanel td:nth-child(4),.ddpanel th:nth-child(5),.ddpanel td:nth-child(5),.ddpanel th:nth-child(6),.ddpanel td:nth-child(6){display:none}}
+.ddpanel table{font-size:.86rem}
+.ddpanel th{position:sticky;top:0;background:var(--panel);z-index:1}
+.ddpanel tr.act td{background:var(--accent-soft)}
+.ddpanel td.fn{font:400 .78rem var(--mono);color:var(--muted)}
+[hidden]{display:none!important}
+/* Thermik & Steigflüge: beide Spalten teilen sich dieselben Zeilen (Titel, Einstellungen, Kennzahlen, Diagramm, Tabelle) */
+.two.aligned{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:repeat(5,auto);row-gap:10px}
+.two.aligned>.wpanel{grid-row:span 5;grid-template-rows:subgrid;align-items:start}
+.two.aligned>.wpanel>*{align-self:stretch}
+.two.aligned .wchart{display:flex;flex-direction:column;justify-content:space-between}
+.two.aligned .tablewrap{max-height:330px;overflow:auto;align-self:stretch}
+.two.aligned .tablewrap th{position:sticky;top:0;background:var(--panel);z-index:1}
+@media (max-width:820px){.two.aligned{grid-template-columns:minmax(0,1fr);grid-template-rows:none}.two.aligned>.wpanel{grid-row:auto;grid-template-rows:none}}
+/* Grid-Spalten dürfen schmaler als ihr Inhalt werden, sonst halten Chart-Canvases die alte Breite fest */
+.wrap,.pane,section,.wpanel,.stack,.charts,.track{grid-template-columns:minmax(0,1fr)}
+.wchart,.cbox,.track,.tablewrap{min-width:0}
+.bv canvas,.cv canvas{max-width:100%}
+table.windh td.bar{width:22%;min-width:50px}
+table.windh th,table.windh td{padding-inline:8px}
+table.windh .wdv{display:inline-block;min-width:6.5ch;text-align:right}
+.wbar{height:8px;border-radius:4px;background:var(--accent);min-width:2px}
+.warr{display:inline-block;font:700 1rem/1 var(--body);color:var(--accent)}
+.trkwrap{position:relative}
+.trkbtns{position:absolute;top:8px;right:8px}
+#trk{cursor:grab;touch-action:pan-y}
+.zoombar{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--curbar-h,0px));z-index:5;background:var(--bg);padding-block:8px;display:grid;gap:6px;border-bottom:1px solid var(--line)}
+.zrow{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.zbtns{display:inline-flex;gap:4px}
+.zb{font:600 1rem/1 var(--body);min-width:32px;height:30px;border:1px solid var(--line);background:var(--panel);color:var(--fg);border-radius:6px;cursor:pointer;padding:0 8px}
+.zb.wide{font-size:.85rem}
+.zb:hover{border-color:var(--accent)}
+.zb:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.settings input[type=number]{font:500 .88rem var(--body);width:4.5em;padding:3px 6px;border:1px solid var(--line);border-radius:5px;background:var(--panel);color:var(--fg)}
+.markpick{margin-left:auto;display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:.85rem;color:var(--muted)}
+.linkbtn{font:500 .8rem var(--body);background:none;border:0;color:var(--accent);cursor:pointer;padding:2px 4px;text-decoration:underline}
+.linkbtn::before{content:"↺ "}
+.markpick .msw{width:12px;height:12px;border-radius:3px;background:color-mix(in srgb,var(--bad) 30%,transparent);border:1px solid var(--bad)}
+.markpick select[hidden]{display:none!important}
+.zrange{font:500 .85rem var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.nav{position:relative;height:46px;background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden;touch-action:none;cursor:pointer}
+.nav canvas{position:absolute;inset:0;width:100%;height:100%}
+.nav .win{position:absolute;top:0;bottom:0;background:color-mix(in srgb,var(--accent) 16%,transparent);border:1.5px solid var(--accent);border-radius:4px;cursor:grab;min-width:6px}
+.nav .hdl{position:absolute;top:0;bottom:0;width:10px;cursor:ew-resize}
+.nav .hdl.l{left:-5px} .nav .hdl.r{right:-5px}
+.cv canvas{cursor:grab;touch-action:pan-y}
+.settings{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:.88rem;color:var(--muted)}
+.settings input{width:4.5em;font:500 .9rem var(--mono);padding:3px 6px;border:1px solid var(--line);border-radius:5px;background:var(--panel);color:var(--fg)}
+.toggle{font:.85rem var(--body);color:var(--muted);display:inline-flex;gap:6px;align-items:center}
+</style>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Ethos Log Viewer</h1>
+      <p class="sub">Telemetrie-Log (CSV) vom Ethos-Sender laden: Flugzeit, Motorläufe, Empfang, Akku, GPS-Spur und alle Sensoren. Wähle einzelne Logs oder gleich den ganzen LOGS-Ordner. Die Dateien bleiben in Deinem Browser.</p>
+    </div>
+    <div class="drop" id="drop">
+      <input type="file" id="file" accept=".csv,text/csv,text/plain" multiple>
+      <input type="file" id="folder" webkitdirectory multiple>
+      <button class="btn" type="button" id="pickFiles">Logs auswählen</button>
+      <button class="btn ghost" type="button" id="pickFolder">Ordner öffnen</button>
+      <span class="hint">oder CSVs hierher ziehen</span>
+    </div>
+  </header>
+
+  <div class="syncbar" id="syncbar" hidden>
+    <span class="sdot" id="syncDot"></span>
+    <div class="stext"><div id="syncText">Sender wird gesucht …</div><div class="sprog" id="syncProg" hidden><i id="syncFill"></i></div><div class="hint" id="syncSub"></div></div>
+    <div class="sbtns"><button type="button" class="btn ghost" id="syncNow">Jetzt synchronisieren</button><button type="button" class="btn ghost" id="openArchive">Archiv öffnen</button><button type="button" class="btn ghost" id="openSettings">Einstellungen</button></div>
+  </div>
+  <dialog id="settingsDlg" aria-labelledby="setTitle">
+    <form method="dialog" class="setform" id="setForm">
+      <h2 id="setTitle">Einstellungen</h2>
+      <label>Log-Ordner auf dem Sender<input type="text" id="setSender" placeholder="Radio/logs" spellcheck="false"><span class="hint">Wird auf jedem angeschlossenen Laufwerk gesucht. Ein vollständiger Pfad wie E:\logs geht auch.</span></label>
+      <label>Archiv-Ordner<span class="row"><input type="text" id="setArchive" spellcheck="false"><button type="button" class="btn ghost" id="setPick">Wählen …</button></span><span class="hint">Am besten ein Ordner in Google Drive oder OneDrive, dann sind die Logs auf allen Geräten da. Pro Modell entsteht ein Unterordner.</span></label>
+      <label class="check"><input type="checkbox" id="setAuto"> Automatisch synchronisieren, sobald der Sender angeschlossen ist</label>
+      <label class="check"><input type="checkbox" id="setManual"> Manuell eingelesene Logs immer ins Archiv kopieren</label>
+      <div class="row end"><button type="button" class="btn ghost" id="setCancel">Abbrechen</button><button type="submit" class="btn" id="setSave">Speichern</button></div>
+    </form>
+  </dialog>
+
+  <section id="logsec" hidden>
+    <h2>Logs</h2>
+    <div class="logpick settings">
+      <label for="selModel">Modell <select id="selModel"></select></label>
+      <span class="ddlabel" id="logLbl">Log</span>
+      <div class="ddwrap">
+        <button type="button" class="ddbtn" id="logBtn" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="logLbl logBtn"></button>
+        <div class="ddpanel" id="logPanel" hidden><table class="pick" id="logTable" role="listbox" aria-labelledby="logLbl"></table></div>
+      </div>
+      <span class="zbtns"><button type="button" class="zb" id="prevLog" aria-label="Älteres Log">◀</button><button type="button" class="zb" id="nextLog" aria-label="Neueres Log">▶</button></span>
+      <span class="hint" id="logcount"></span>
+    </div>
+  </section>
+
+  <div class="fileinfo" id="fileinfo"><span class="hint">Lade Beispiel-Log …</span></div>
+
+  <div id="curhome"></div>
+  <div class="curbar" id="curbar">
+    <div class="curtrack off" id="curTrack" role="slider" tabindex="0" aria-label="Zeitpunkt im Log" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0"><div class="cfill" id="curFill"></div><div class="chdl" id="curHdl"></div></div>
+    <div class="crow">
+    <span class="cl">Zeitpunkt</span>
+    <button type="button" class="zb" id="curPrev" aria-label="Einen Datensatz zurück">◀</button>
+    <button type="button" class="zb" id="curNext" aria-label="Einen Datensatz vor">▶</button>
+    <span class="curtime" id="curTime">Ziehen oder ins Diagramm klicken</span>
+    <button type="button" class="zb wide" id="curOff" hidden>Aus</button>
+    </div>
+  </div>
+
+  <nav class="tabs" role="tablist" aria-label="Ansichten">
+    <button type="button" role="tab" class="tab" data-tab="uebersicht" id="tab-uebersicht" aria-controls="pane-uebersicht">Übersicht</button>
+    <button type="button" role="tab" class="tab" data-tab="diagramme" id="tab-diagramme" aria-controls="pane-diagramme">Diagramme</button>
+    <button type="button" role="tab" class="tab" data-tab="steigen" id="tab-steigen" aria-controls="pane-steigen">Thermik &amp; Steigflüge</button>
+    <button type="button" role="tab" class="tab" data-tab="karte" id="tab-karte" aria-controls="pane-karte">Karte &amp; Wind</button>
+    <button type="button" role="tab" class="tab" data-tab="werte" id="tab-werte" aria-controls="pane-werte">Alle Werte</button>
+  </nav>
+  <div class="pane" role="tabpanel" id="pane-uebersicht" data-tab="uebersicht" aria-labelledby="tab-uebersicht">
+  <section>
+    <h2>Kennzahlen</h2>
+    <div class="kpis" id="kpis"></div>
+  </section>
+  <section>
+    <h2>Werte am Zeitpunkt</h2>
+    <div class="kpis curkpis" id="curvals"></div>
+  </section>
+
+  </div>
+  <div class="pane" role="tabpanel" id="pane-steigen" data-tab="steigen" aria-labelledby="tab-steigen" hidden>
+  <div class="two aligned">
+    <section class="wpanel" id="w-therm">
+      <h2>Thermik</h2>
+      <div class="settings">
+        <label for="thermSw">Thermik-Schalter <select id="thermSw"></select></label>
+        <label for="thermH">Höhenquelle <select id="thermH"></select></label>
+        <label for="thermMode">Balkenhöhe <select id="thermMode">
+          <option value="rate">Steiggeschwindigkeit</option><option value="height">Erreichte Höhe</option><option value="dur">Steigdauer</option></select></label>
+      </div>
+      <div class="wstats" id="thermStats"></div>
+      <div class="wchart"><div class="wtitle" id="thermTitle"></div><div class="bv"><canvas id="thermBars"></canvas></div></div>
+      <div class="tablewrap"><table id="therm"></table></div>
+    </section>
+    <section class="wpanel" id="w-climb">
+      <h2>Steigflüge</h2>
+      <div class="settings">
+        <label for="climbSw">Steigflug-Schalter <select id="climbSw"></select></label>
+        <label for="climbThr" id="climbThrL" hidden>ab <input type="number" id="climbThr" min="0.5" step="0.5" value="3" inputmode="decimal"> A</label>
+        <label for="climbH">Höhenquelle <select id="climbH"></select></label>
+      </div>
+      <div class="wstats" id="climbStats"></div>
+      <div class="wchart"><div class="wtitle">Höhengewinn (m) · Zahl = Ø Steigen (m/s)</div><div class="bv"><canvas id="climbBars"></canvas></div></div>
+      <div class="tablewrap"><table id="climb"></table></div>
+    </section>
+  </div>
+  <p class="hint">Gerechnet wie Deine Widgets „Thermik“ und „Steigfluege“: Ein Steigflug läuft, solange der Schalter EIN ist. Gibt es keinen Steigflug-Schalter, erkennt die App Steigflüge am ESC-Strom: Motor an, solange der Strom über der Schwelle liegt (Standard 3 A, kurze Lücken bis 1 s zählen mit). Gewinn = höchste Höhe während der Phase minus Starthöhe, Ø Steigen = Gewinn durch Dauer. Thermik zählt ab 5 s, Steigflüge ab 1 s. Eine Phase, die beim Logende noch läuft, zählt wie im Widget nicht. Die Zeiten sind so genau wie das Log (etwa 0,5 s).</p>
+
+  </div>
+  <div class="pane" role="tabpanel" id="pane-karte" data-tab="karte" aria-labelledby="tab-karte" hidden>
+  <div class="two">
+  <section>
+    <h2>GPS-Spur</h2>
+    <div class="track"><div class="trkwrap"><canvas id="trk" width="800" height="600"></canvas>
+      <div class="zbtns trkbtns"><button type="button" class="zb" id="tOut" aria-label="Spur herauszoomen">−</button><button type="button" class="zb" id="tIn" aria-label="Spur hineinzoomen">+</button><button type="button" class="zb wide" id="tAll">Alles</button></div></div>
+      <div class="legend" id="trklegend"></div></div>
+  </section>
+  <section class="wpanel">
+    <h2>Wind nach Höhe</h2>
+    <div class="settings">
+      <label for="whAlt">Höhenquelle <select id="whAlt"></select></label>
+      <label for="whStep">Stufe <select id="whStep"><option>25</option><option selected>50</option><option>100</option></select> m</label>
+    </div>
+    <div class="tablewrap"><table id="windh" class="windh"></table></div>
+    <p class="hint" id="windcur"></p>
+    <p class="hint" id="windhhint"></p>
+  </section>
+  </div>
+
+  </div>
+  <div class="pane" role="tabpanel" id="pane-diagramme" data-tab="diagramme" aria-labelledby="tab-diagramme" hidden>
+  <section>
+    <h2>Kanäle</h2>
+    <div class="chips" id="chips"></div>
+    <label class="toggle"><input type="checkbox" id="showRc"> Sender-Kanäle, Schalter und logische Schalter anzeigen</label>
+    <p class="hint">ƒ = berechneter Wert. Leistung = Strom × Spannung, Energie = Leistung über die Zeit aufsummiert. GPS Kurs, Windgeschw., Windrichtung und TAS rechnen wie Deine Widgets „GPS Course“ und „Wind Estimator“ mit deren Standardwerten (40 Werte alle 0,7 s, Fit jede Sekunde, Kurs ab 3 m Abstand). Vor dem ersten gültigen Fit zeigt der Wind 0 und die TAS die Geschwindigkeit über Grund, genau wie am Sender.</p>
+    <div class="zoombar" id="zoombar">
+      <div class="zrow">
+        <div class="zbtns"><button type="button" class="zb" id="zOut" aria-label="Herauszoomen">−</button><button type="button" class="zb" id="zIn" aria-label="Hineinzoomen">+</button><button type="button" class="zb wide" id="zAll">Alles</button></div>
+        <span class="zrange" id="zRange"></span>
+        <div class="markpick settings"><span class="msw" aria-hidden="true"></span><label for="markSw">Rot markieren</label> <select id="markSw" aria-label="Schalter"></select> <select id="markVal" aria-label="Zustand"></select><span class="ctag" id="markAuto" hidden>automatisch</span><button type="button" class="linkbtn" id="markReset" hidden>automatisch</button></div>
+      </div>
+      <div class="nav" id="nav"><canvas id="navc"></canvas><div class="win" id="navwin"><span class="hdl l" data-h="l"></span><span class="hdl r" data-h="r"></span></div></div>
+    </div>
+    <p class="hint">Im Diagramm ziehen verschiebt. Zoomen mit Strg + Mausrad, Trackpad-Pinch oder den Knöpfen. Doppelklick zeigt alles. In der Leiste oben das Fenster ziehen oder an den Rändern grösser und kleiner machen.</p>
+    <div class="charts" id="charts"></div>
+  </section>
+
+  </div>
+  <div class="pane" role="tabpanel" id="pane-werte" data-tab="werte" aria-labelledby="tab-werte" hidden>
+  <section>
+    <h2>Alle Werte</h2>
+    <div class="tablewrap"><table id="stats"></table></div>
+  </section>
+  </div>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const PALETTE = ['#0b6bcb','#d0552b','#1f8a5c','#8a4fd0','#b8860b','#c2317a','#2a8fa0','#6b7a1f'];
+// Sender-interne Werte: Knüppel, Schalter, logische Schalter, Kanäle
+const RC_RE = /^(K\d+|LS\d+|S[A-H]|SR|HR|QR|Gas|Drehg\..*|Trim.*)$/i;
+
+// ---------- Parsing ----------
+function splitLine(line, d){
+  const out=[]; let cur='', q=false;
+  for (let i=0;i<line.length;i++){
+    const c=line[i];
+    if (c==='"'){ if(q&&line[i+1]==='"'){cur+='"';i++;} else q=!q; }
+    else if (c===d && !q){ out.push(cur); cur=''; }
+    else cur+=c;
+  }
+  out.push(cur); return out.map(s=>s.trim());
+}
+function parseTime(s){
+  const m = /^(\d{1,2}):(\d{2}):(\d{2})(?:[.,](\d+))?$/.exec(s);
+  if (!m) return null;
+  return (+m[1])*3600 + (+m[2])*60 + (+m[3]) + (m[4] ? +('0.'+m[4]) : 0);
+}
+function splitUnit(h){
+  const m = /^(.*?)\s*\(([^)]*)\)\s*$/.exec(h);
+  return m ? {name:m[1].trim(), unit:m[2].trim()} : {name:h.trim(), unit:''};
+}
+function parseCSV(text){
+  const lines = text.replace(/^﻿/,'').split(/\r?\n/).filter(l=>l.trim());
+  if (lines.length < 2) throw new Error('Die Datei enthält keine Datenzeilen.');
+  const d = (lines[0].split(';').length > lines[0].split(',').length) ? ';' : ',';
+  const header = splitLine(lines[0], d);
+  const rows = lines.slice(1).map(l=>splitLine(l,d));
+  const dateIdx = header.findIndex(h=>/^(date|datum)$/i.test(h));
+  const timeIdx = header.findIndex(h=>/^(time|zeit)$/i.test(h));
+  if (timeIdx < 0) throw new Error('Keine Spalte "Time" gefunden. Ist das ein Ethos-Telemetrie-Log?');
+  let t0=null, prev=null, dayOff=0;
+  const t = rows.map(r=>{
+    let s = parseTime(r[timeIdx]||''); if (s==null) return NaN;
+    if (prev!=null && s < prev - 3600) dayOff += 86400;   // Mitternacht
+    prev = s; s += dayOff; if (t0==null) t0=s; return s - t0;
+  });
+  const cols=[], seen={}; let gps=null;
+  const gtIdx = header.findIndex(h=>/^GPS[- ]?(Zeit|clock|time|Uhr)/i.test(h));   // GPS-Zeit als Text, erkennt neue Fixes
+  header.forEach((h,i)=>{
+    if (i===dateIdx || i===timeIdx || !h) return;
+    // GPS steht als "lat lon" in einer Zelle
+    if (/^GPS$/i.test(h)){
+      const pts = rows.map(r=>{ const m=/^(-?\d+\.\d+)\s+(-?\d+\.\d+)$/.exec(r[i]||''); return m?[+m[1],+m[2]]:null; });
+      if (pts.some(Boolean)) gps = pts; return;
+    }
+    const vals = rows.map(r=>{ let v=r[i]??''; if (d===';') v=v.replace(',', '.'); const n=Number(v); return v!=='' && isFinite(n)?n:NaN; });
+    if (vals.filter(v=>!isNaN(v)).length < rows.length*0.3) return;
+    const su = splitUnit(h);
+    seen[su.name]=(seen[su.name]||0)+1;              // doppelte Sensornamen, z. B. "EMPF."
+    const name = seen[su.name]>1 ? su.name+' #'+seen[su.name] : su.name;
+    cols.push({name, unit:su.unit, raw:name+(su.unit?' ('+su.unit+')':''), vals, rc:RC_RE.test(su.name)});
+  });
+  return {t, cols, gps, rows:rows.length, gpsTime: gtIdx>=0 ? rows.map(r=>r[gtIdx]??'') : null,
+    date: dateIdx>=0 ? rows[0][dateIdx] : '', clock: rows.map(r=>r[timeIdx]||'')};
+}
+
+// ---------- Auswertung ----------
+function stats(v){
+  let min=Infinity,max=-Infinity,sum=0,n=0;
+  for (const x of v){ if (isNaN(x)) continue; if(x<min)min=x; if(x>max)max=x; sum+=x; n++; }
+  return n ? {min,max,avg:sum/n,n} : null;
+}
+const find = (cols, re, not) => cols.find(c=>!c.rc && re.test(c.name) && (!not || !not.test(c.name)));
+const fmt = (x,dec=1) => x==null||isNaN(x)||!isFinite(x) ? '–' : x.toLocaleString('de-CH',{minimumFractionDigits:dec,maximumFractionDigits:dec});
+const fmtDur = s => { s=Math.round(s); const h=Math.floor(s/3600), m=Math.floor(s%3600/60), ss=String(s%60).padStart(2,'0'); return h? h+':'+String(m).padStart(2,'0')+':'+ss : m+':'+ss; };
+
+function channels(log){
+  const c=log.cols;
+  return {
+    alt:  find(c,/^(Altitude|Alt|Höhe)$/i) || find(c,/^(GAlt|GPS Alt)/i),
+    vario:find(c,/(Vario|VSpd|Steig)/i),
+    spd:  find(c,/(GPS-?Geschw|GSpd|GPS Speed|Speed)/i),
+    lq:   c.filter(x=>!x.rc && /^(VFR|LQ|RQly)/i.test(x.name)),
+    rssi: c.filter(x=>!x.rc && /RSSI/i.test(x.name)),
+    rxb:  find(c,/^(Empf\.?\s*Bat|RxBatt|Rx ?Bat|RxBt)/i),
+    txb:  find(c,/^TxBat/i),
+    volt: find(c,/^(ESC Spannung|VFAS|ESC ?V|Volt|Akku)/i),
+    cur:  find(c,/^(ESC Strom|Current|Curr|ESC ?A)/i),
+    rpm:  find(c,/(U\/min|RPM|Drehzahl)/i),
+    mah:  find(c,/(Verb|Consumption|Capacity|mAh)/i),
+    temp: find(c,/^ESC Temp/i) || find(c,/Temp/i),
+  };
+}
+// Motorlauf = Drehzahl > 300 (bzw. Strom > 3 A), Lücken unter 2 s werden überbrückt
+function motorRuns(log, ch){
+  const on = log.t.map((_,i)=> ch.rpm ? ch.rpm.vals[i]>300 : ch.cur ? ch.cur.vals[i]>3 : false);
+  const runs=[]; let cur=null;
+  on.forEach((o,i)=>{
+    if (o){ if (cur && log.t[i]-log.t[cur.e] <= 2) cur.e=i; else { cur={s:i,e:i}; runs.push(cur);} }
+  });
+  return runs.filter(r=>log.t[r.e]-log.t[r.s] >= 1).map(r=>{
+    const sl=(col,a,b)=>col?col.vals.slice(a,b+1):[];
+    let peak=r.e; if (ch.alt) for (let i=r.e;i<log.t.length && log.t[i]-log.t[r.e]<=20;i++) if (ch.alt.vals[i]>ch.alt.vals[peak]) peak=i;
+    return { s:r.s, e:r.e, dur:log.t[r.e]-log.t[r.s],
+      curMax: stats(sl(ch.cur,r.s,r.e))?.max, mah: ch.mah ? ch.mah.vals[r.e]-ch.mah.vals[Math.max(0,r.s-1)] : NaN,
+      a0: ch.alt?.vals[r.s], a1: ch.alt?.vals[peak] };
+  });
+}
+// Nachbildung der Widgets "Thermik" (therm01) und "Steigfluege" (climb01):
+// Eine Phase läuft, solange der Schalter > 0 ist. Gewinn = höchste Höhe während der Phase − Starthöhe (min. 0).
+function switchPhases(log, sw, hc, minDur){
+  if (!sw || !hc) return [];
+  const t=log.t, out=[]; let s=-1, h0=NaN, hi=NaN;
+  for (let i=0;i<t.length;i++){
+    const on = sw.vals[i] > 0, h = hc.vals[i];
+    if (on && s<0){ s=i; h0=h; hi=h; }
+    else if (on){ if (!isNaN(h)){ if (isNaN(h0)) h0=h; hi = isNaN(hi) ? h : Math.max(hi,h); } }
+    else if (s>=0){
+      const dur=t[i]-t[s];
+      if (dur>=minDur && !isNaN(h0) && !isNaN(hi)){ const gain=Math.max(0,hi-h0); out.push({s, e:i, dur, h0, hi, gain, rate:gain/dur}); }
+      s=-1;
+    }
+  }
+  return out;
+}
+function phaseTotals(p){ const h=p.reduce((a,r)=>a+r.gain,0), d=p.reduce((a,r)=>a+r.dur,0); return {n:p.length, h, d, avg:d>0?h/d:0}; }
+// ---------- Berechnete Werte ----------
+function addCol(log, key, name, unit, vals, note){
+  const c={name, unit, raw:name+(unit?' ('+unit+')':''), vals, rc:false, derived:true, key, note};
+  log.cols.push(c); return c;
+}
+// Leistung = Strom × Spannung für jedes Paar mit gleichem Präfix (ESC, BEC, SRV1 …); dazu die Energie als Integral
+function addPower(log){
+  const t=log.t;
+  for (const cur of log.cols.filter(c=>!c.rc && !c.derived && /^(.*?)\s*(Strom|Current|Curr)$/i.test(c.name))){
+    const pre=cur.name.replace(/\s*(Strom|Current|Curr)$/i,'');
+    const volt=log.cols.find(c=>!c.rc && !c.derived && new RegExp('^'+pre.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*(Spannung|Volt|Voltage|Spg\\.?)$','i').test(c.name));
+    if (!volt) continue;
+    const P=cur.vals.map((a,i)=>a*volt.vals[i]);
+    if (!(stats(P)?.max>0.5)) continue;                       // Paare ohne Last weglassen
+    addCol(log,'pwr:'+pre, (pre?pre+' ':'')+'Leistung','W',P,`${cur.name} × ${volt.name}`);
+    let e=0; const E=P.map((p,i)=>{ if(i&&!isNaN(p)&&!isNaN(t[i])&&!isNaN(t[i-1])) e+=p*(t[i]-t[i-1])/3600; return e; });
+    addCol(log,'nrg:'+pre, (pre?pre+' ':'')+'Energie','Wh',E,`Integral von ${pre} Leistung`);
+  }
+}
+// ---------- Nachbau der Lua-Widgets "GPS Course" (GPSCrs) und "Wind Estimator" (WindSpd/WindDir/TAS) ----------
+const D2R=Math.PI/180, R2D=180/Math.PI;
+function bearingDeg(lat1, lon1, lat2, lon2){
+  const p1=lat1*D2R, p2=lat2*D2R, dl=(lon2-lon1)*D2R;
+  const y=Math.sin(dl)*Math.cos(p2), x=Math.cos(p1)*Math.sin(p2)-Math.sin(p1)*Math.cos(p2)*Math.cos(dl);
+  let b=Math.atan2(y,x)*R2D; if (b<0) b+=360; return b;
+}
+function distanceM(lat1, lon1, lat2, lon2){
+  const dLat=(lat2-lat1)*D2R, dLon=(lon2-lon1)*D2R*Math.cos((lat1+lat2)/2*D2R);
+  return Math.sqrt(dLat*dLat+dLon*dLon)*6371000;
+}
+// GPS Course: neuer Fix = GPS-Zeit hat sich geändert; Kurs = Azimut zum letzten Fix, erst ab 3 m Abstand
+const MIN_FIX_DISTANCE=3.0;
+function gpsCourse(log){
+  const n=log.t.length, out=new Array(n).fill(NaN);
+  let lastLat=null, lastLon=null, lastKey=null, course=NaN;
+  for (let i=0;i<n;i++){
+    const g=log.gps[i];
+    const key = log.gpsTime ? log.gpsTime[i] : (g ? g[0]+' '+g[1] : null);   // ohne GPS-Zeit-Spalte: Positionswechsel
+    if (key!==lastKey){
+      lastKey=key;
+      if (g){
+        if (lastLat!=null){ if (distanceM(lastLat,lastLon,g[0],g[1])>=MIN_FIX_DISTANCE){ course=bearingDeg(lastLat,lastLon,g[0],g[1]); lastLat=g[0]; lastLon=g[1]; } }
+        else { lastLat=g[0]; lastLon=g[1]; }
+      }
+    }
+    out[i]=course;
+  }
+  return out;
+}
+// Wind Estimator: Ringpuffer der letzten 40 Bodenvektoren (alle 0,7 s), Kasa-Kreisfit jede Sekunde,
+// nur bei genügend Kursstreuung und plausiblem Ergebnis. Das Log wird in 0,1-s-Schritten "abgespielt",
+// wie Ethos wakeup() aufruft; zwischen zwei Logzeilen gelten die letzten Werte.
+const WIND = {windowSize:40, sampleInterval:0.7, minSpeed:2, minSamples:10, fitInterval:1.0, maxSpreadR:0.85, maxTasFactor:2.0, maxWindFactor:1.0, maxResidualFrac:0.25, tick:0.1};
+function kasaFit(x, y, n){
+  let sx=0, sy=0; for (let i=0;i<n;i++){ sx+=x[i]; sy+=y[i]; }
+  const mx=sx/n, my=sy/n; let Suu=0,Svv=0,Suv=0,Suuu=0,Svvv=0,Suvv=0,Svuu=0;
+  for (let i=0;i<n;i++){ const u=x[i]-mx, v=y[i]-my, uu=u*u, vv=v*v; Suu+=uu; Svv+=vv; Suv+=u*v; Suuu+=uu*u; Svvv+=vv*v; Suvv+=u*vv; Svuu+=v*uu; }
+  const detA=Suu*Svv-Suv*Suv, scale=Suu+Svv;
+  if (scale<=0 || Math.abs(detA)<1e-6*scale*scale) return null;
+  const rhs1=(Suuu+Suvv)/2, rhs2=(Svvv+Svuu)/2;
+  const uc=(rhs1*Svv-rhs2*Suv)/detA, vc=(Suu*rhs2-Suv*rhs1)/detA;
+  const r2=uc*uc+vc*vc+(Suu+Svv)/n; if (r2<0) return null;
+  return {cx:uc+mx, cy:vc+my, r:Math.sqrt(r2)};
+}
+function courseSpreadOk(x, y, n){
+  let sc=0, ss=0; for (let i=0;i<n;i++){ const m=Math.hypot(x[i],y[i]); if (m>1e-6){ sc+=x[i]/m; ss+=y[i]/m; } }
+  return Math.hypot(sc,ss)/n < WIND.maxSpreadR;
+}
+function fitIsPlausible(f, x, y, n){
+  if (!f || f.r<=1e-3) return false;
+  let maxG=0; for (let i=0;i<n;i++) maxG=Math.max(maxG, Math.hypot(x[i],y[i]));
+  if (maxG<=1e-3 || f.r>WIND.maxTasFactor*maxG || Math.hypot(f.cx,f.cy)>WIND.maxWindFactor*maxG) return false;
+  let sq=0; for (let i=0;i<n;i++){ const d=Math.hypot(x[i]-f.cx,y[i]-f.cy)-f.r; sq+=d*d; }
+  return Math.sqrt(sq/n) <= WIND.maxResidualFrac*f.r;
+}
+function windEstimator(log, speed, course){
+  const t=log.t, n=t.length, W=new Array(n).fill(NaN), D=new Array(n).fill(NaN), TAS=new Array(n).fill(NaN);
+  const bx=[], by=[]; let bufN=0, head=0, lastSample=-Infinity, lastFit=-Infinity;
+  let windSpeed=0, windDirFrom=0, haveFit=false, tas=NaN, fits=0, row=0; const fitList=[];
+  const tEndV=t.filter(x=>!isNaN(x)).pop()||0;
+  const ticks=Math.ceil(tEndV/WIND.tick)+1;
+  for (let k=0; k<=ticks; k++){ const now=k*WIND.tick;
+    while (row<n-1 && !(t[row+1]>now)) row++;           // letzte Logzeile bis "jetzt"
+    const sp=speed[row], cs=course[row], ok=!isNaN(sp)&&!isNaN(cs);
+    if (now-lastSample>=WIND.sampleInterval && ok && sp>=WIND.minSpeed){
+      bx[head]=sp*Math.sin(cs*D2R); by[head]=sp*Math.cos(cs*D2R);
+      head=(head+1)%WIND.windowSize; if (bufN<WIND.windowSize) bufN++; lastSample=now;
+    }
+    if (now-lastFit>=WIND.fitInterval && bufN>=WIND.minSamples){
+      lastFit=now;
+      if (courseSpreadOk(bx,by,bufN)){
+        const f=kasaFit(bx,by,bufN);
+        if (fitIsPlausible(f,bx,by,bufN)){
+          windSpeed=Math.hypot(f.cx,f.cy);
+          let to=Math.atan2(f.cx,f.cy)*R2D; if (to<0) to+=360;
+          windDirFrom=(to+180)%360; haveFit=true; fits++; fitList.push({row, w:windSpeed, d:windDirFrom});
+        }
+      }
+    }
+    if (ok){ const gr=cs*D2R, wr=(windDirFrom+180)*D2R;
+      tas=Math.hypot(sp*Math.sin(gr)-windSpeed*Math.sin(wr), sp*Math.cos(gr)-windSpeed*Math.cos(wr)); }
+    // Werte am Ende dieser Logzeile festhalten
+    if (row+1>=n || t[row+1]>now+WIND.tick-1e-9){ W[row]=haveFit?windSpeed:0; D[row]=haveFit?windDirFrom:0; TAS[row]=tas; }
+  }
+  return {W, D, TAS, fits, fitList};
+}
+function addWind(log, ch){
+  if (!log.gps) return;
+  const crs=gpsCourse(log);
+  addCol(log,'gpscrs','GPS Kurs (ber.)','°',crs,'Azimut zwischen zwei GPS-Fixes, ab 3 m Abstand (Widget GPS Course)');
+  if (!ch.spd) return;
+  const r=windEstimator(log, ch.spd.vals, crs);
+  addCol(log,'wind','Windgeschw.',ch.spd.unit||'km/h',r.W,'Kasa-Kreisfit über GPS-Geschwindigkeit und GPS Kurs (ber.), Widget Wind Estimator');
+  addCol(log,'winddir','Windrichtung','°',r.D,'Richtung, aus der der Wind kommt (Widget Wind Estimator)');
+  addCol(log,'tas','TAS',ch.spd.unit||'km/h',r.TAS,'Bodenvektor minus Windvektor (Widget Wind Estimator)');
+  log.windEst=r.fits; log.windFits=r.fitList;
+}
+function addDerived(log, ch){ log.cols=log.cols.filter(c=>!c.derived); addPower(log); addWind(log, ch); }
+const calc = key => LOG?.cols.find(c=>c.key===key);
+function flightTime(log, ch){
+  if (!ch.alt) return null;
+  const idx = ch.alt.vals.map((v,i)=>v>5?i:-1).filter(i=>i>=0);
+  return idx.length ? log.t[idx[idx.length-1]] - log.t[idx[0]] : 0;
+}
+
+function kpis(log, ch, runs){
+  log=log||LOG;
+  const out=[]; const T=log.t.filter(x=>!isNaN(x)); const dur=T.length?T[T.length-1]:0;
+  const ft=flightTime(log,ch);
+  out.push({l:'Logdauer', v:fmtDur(dur), d:log.rows.toLocaleString('de-CH')+' Zeilen · '+(dur?fmt(log.rows/dur,1):'–')+' Hz'});
+  if (ft!=null) out.push({l:'Flugzeit', v:fmtDur(ft), d:'Höhe über 5 m'});
+  if (ch.rpm||ch.cur){ const md=runs.reduce((a,r)=>a+r.dur,0); out.push({l:'Motorläufe', v:runs.length, u:'×', d:fmtDur(md)+' Motorzeit'}); }
+  if (ch.alt){ const s=stats(ch.alt.vals); out.push({l:'Max. Höhe', v:fmt(s.max,0), u:ch.alt.unit||'m', d:ch.alt.name}); }
+  if (ch.spd){ const s=stats(ch.spd.vals); out.push({l:'Max. Tempo', v:fmt(s.max,0), u:ch.spd.unit, d:'Ø '+fmt(s.avg,0)}); }
+  if (ch.vario){ const s=stats(ch.vario.vals); out.push({l:'Vario', v:'+'+fmt(s.max,1), u:ch.vario.unit, d:'Sinken max '+fmt(s.min,1)}); }
+  for (const q of ch.lq){ const s=stats(q.vals); out.push({l:q.name+' min', v:fmt(s.min,0), u:q.unit||'%', d:'Ø '+fmt(s.avg,0), cls:s.min<40?'bad':s.min<70?'warn':''}); }
+  for (const r of ch.rssi){ const s=stats(r.vals); out.push({l:r.name+' min', v:fmt(s.min,0), u:r.unit, d:'Ø '+fmt(s.avg,0), cls:s.min<25?'bad':s.min<40?'warn':''}); }
+  if (ch.volt){ const v=ch.volt.vals.filter(x=>!isNaN(x)); out.push({l:ch.volt.name+' min', v:fmt(Math.min(...v),2), u:ch.volt.unit||'V', d:'Start '+fmt(v[0],2)+' · Ende '+fmt(v[v.length-1],2)}); }
+  if (ch.cur){ const s=stats(ch.cur.vals); out.push({l:ch.cur.name+' max', v:fmt(s.max,1), u:ch.cur.unit||'A', d:''}); }
+  if (ch.mah){ const s=stats(ch.mah.vals); out.push({l:'Verbraucht', v:fmt(s.max,0), u:ch.mah.unit||'mAh', d:ch.mah.name}); }
+  const w=log.cols.find(c=>c.key==='wind'), wd=log.cols.find(c=>c.key==='winddir'), tas=log.cols.find(c=>c.key==='tas');
+  if (w){ const s=stats(w.vals.map(v=>v>0?v:NaN))||{}; let sx=0,sy=0; w.vals.forEach((v,i)=>{ if(v>0&&!isNaN(wd.vals[i])){ const r=wd.vals[i]*Math.PI/180; sx+=Math.sin(r); sy+=Math.cos(r);} });
+    const dir=(Math.atan2(sx,sy)*180/Math.PI+360)%360, nm=['N','NO','O','SO','S','SW','W','NW'][Math.round(dir/45)%8];
+    out.push({l:'Wind Ø', v:fmt(s.avg,0), u:'km/h', d:'aus '+nm+' ('+fmt(dir,0)+'°) · max '+fmt(s.max,0)}); }
+  if (tas){ const s=stats(tas.vals); out.push({l:'TAS Ø', v:fmt(s.avg,0), u:'km/h', d:'max '+fmt(s.max,0)}); }
+  for (const pw of log.cols.filter(c=>c.key?.startsWith('pwr:')&&stats(c.vals).max>=50)){ const s=stats(pw.vals), en=log.cols.find(c=>c.key==='nrg:'+pw.key.slice(4)); out.push({l:pw.name+' max', v:fmt(s.max,0), u:'W', d:en?fmt(en.vals[en.vals.length-1],1)+' Wh gesamt':''}); }
+  if (ch.temp){ const s=stats(ch.temp.vals); out.push({l:ch.temp.name+' max', v:fmt(s.max,0), u:ch.temp.unit, d:''}); }
+  if (ch.rxb){ const s=stats(ch.rxb.vals); out.push({l:ch.rxb.name+' min', v:fmt(s.min,2), u:ch.rxb.unit||'V', d:'max '+fmt(s.max,2)}); }
+  if (ch.txb){ const s=stats(ch.txb.vals); out.push({l:'Senderakku min', v:fmt(s.min,2), u:ch.txb.unit||'V', d:'Start '+fmt(ch.txb.vals[0],2)}); }
+  return out;
+}
+
+// ---------- GPS-Spur (ohne Kartenhintergrund, Farbe = Höhe) ----------
+function drawTrack(log, ch, runs, th=[]){
+  const cv=$('#trk'), ctx=cv.getContext('2d'), W=cv.width, H=cv.height;
+  ctx.clearRect(0,0,W,H);
+  const P = (log.gps||[]).map((p,i)=>p&&Math.abs(p[0])>0.01?{la:p[0],lo:p[1],i}:null).filter(Boolean);
+  if (P.length<2){ ctx.fillStyle=css('--muted'); ctx.font='16px sans-serif'; ctx.fillText('Keine GPS-Daten im Log.',20,40); $('#trklegend').innerHTML=''; return; }
+  const lat0=P[0].la*Math.PI/180, R=6371000;
+  const xy=P.map(p=>({x:(p.lo-P[0].lo)*Math.PI/180*R*Math.cos(lat0), y:(p.la-P[0].la)*Math.PI/180*R, i:p.i}));
+  const xs=xy.map(p=>p.x), ys=xy.map(p=>p.y);
+  const minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys);
+  const pad=30, sc=Math.min((W-2*pad)/(maxX-minX||1),(H-2*pad)/(maxY-minY||1));
+  const ox=(W-(maxX-minX)*sc)/2, oy=(H-(maxY-minY)*sc)/2;
+  const X=p=>(ox+(p.x-minX)*sc-W/2)*TZ.z+W/2+TZ.px, Y=p=>(H-oy-(p.y-minY)*sc-H/2)*TZ.z+H/2+TZ.py;
+  // Gitter 100 m
+  ctx.strokeStyle=css('--line'); ctx.lineWidth=1;
+  const span=(maxX-minX)/TZ.z, step = span>1500?500:span>300?100:span>80?20:5;
+  for (let g=Math.ceil((minX-span)/step)*step; g<=maxX+span; g+=step){ ctx.beginPath(); ctx.moveTo(X({x:g,y:0}),0); ctx.lineTo(X({x:g,y:0}),H); ctx.stroke(); }
+  for (let g=Math.ceil((minY-span)/step)*step; g<=maxY+span; g+=step){ ctx.beginPath(); ctx.moveTo(0,Y({x:0,y:g})); ctx.lineTo(W,Y({x:0,y:g})); ctx.stroke(); }
+  const alt=ch.alt?.vals, as=ch.alt?stats(alt):null;
+  const motor=new Set(); runs.forEach(r=>{for(let i=r.s;i<=r.e;i++)motor.add(i)});
+  const therm=new Set(); th.forEach(r=>{for(let i=r.s;i<=r.e;i++)therm.add(i)});
+  const lo=[11,107,203], hi=[208,85,43];
+  const part = VIEW.max-VIEW.min < tEnd()-0.5;
+  ctx.lineWidth=2.2; ctx.lineCap='round';
+  for (let k=1;k<xy.length;k++){
+    const a=xy[k-1], b=xy[k];
+    let f = as && !isNaN(alt[b.i]) ? (alt[b.i]-as.min)/((as.max-as.min)||1) : 0.5;
+    const c=lo.map((v,j)=>Math.round(v+(hi[j]-v)*f));
+    ctx.strokeStyle = motor.has(b.i) ? css('--fg') : therm.has(b.i) ? css('--good') : `rgb(${c})`;
+    ctx.lineWidth = motor.has(b.i)||therm.has(b.i) ? 4 : 2.2;
+    const tt=log.t[b.i]; const faded = part && (tt<VIEW.min||tt>VIEW.max); ctx.globalAlpha = faded ? .18 : 1; ctx.lineCap = faded ? 'butt' : 'round';
+    ctx.beginPath(); ctx.moveTo(X(a),Y(a)); ctx.lineTo(X(b),Y(b)); ctx.stroke();
+  }
+  ctx.globalAlpha=1;
+  ctx.fillStyle=css('--good'); ctx.beginPath(); ctx.arc(X(xy[0]),Y(xy[0]),7,0,7); ctx.fill();
+  ctx.fillStyle=css('--fg'); ctx.font='600 15px sans-serif'; ctx.fillText('Start', X(xy[0])+10, Y(xy[0])+5);
+  const cg = CURSOR!=null && log.gps[CURSOR];
+  if (cg && Math.abs(cg[0])>0.01){ const q={x:(cg[1]-P[0].lo)*Math.PI/180*R*Math.cos(lat0), y:(cg[0]-P[0].la)*Math.PI/180*R}, qx=X(q), qy=Y(q);
+    ctx.strokeStyle=css('--warn'); ctx.lineWidth=3; ctx.fillStyle=css('--bg'); ctx.beginPath(); ctx.arc(qx,qy,10,0,7); ctx.fill(); ctx.stroke();
+    ctx.fillStyle=css('--warn'); ctx.beginPath(); ctx.arc(qx,qy,4,0,7); ctx.fill();
+    const lbl=log.clock[CURSOR].slice(0,8)+(ch.alt&&!isNaN(ch.alt.vals[CURSOR])?' · '+fmt(ch.alt.vals[CURSOR],0)+' m':'');
+    ctx.font='600 14px sans-serif'; const tw=ctx.measureText(lbl).width; ctx.fillStyle=css('--panel'); ctx.globalAlpha=.85; ctx.fillRect(qx+14,qy-24,tw+10,20); ctx.globalAlpha=1;
+    ctx.fillStyle=css('--fg'); ctx.fillText(lbl,qx+19,qy-9); }
+  ctx.fillStyle=css('--muted'); ctx.font='13px monospace'; ctx.fillText('Gitter '+step+' m · Norden oben', 10, H-10);
+  const far=Math.max(...xy.map(p=>Math.hypot(p.x-xy[0].x,p.y-xy[0].y)));
+  $('#trklegend').innerHTML = `<span><i style="background:linear-gradient(90deg,rgb(${lo}),rgb(${hi}))"></i>Höhe ${as?fmt(as.min,0)+'–'+fmt(as.max,0)+' m':''}</span><span><i style="background:var(--fg)"></i>Steigflug</span><span><i style="background:var(--good)"></i>Thermik</span><span>max. Entfernung vom Start ${fmt(far,0)} m</span>${part?'<span>Kräftig: sichtbarer Zeitausschnitt</span>':''}`;
+}
+
+// ---------- Darstellung ----------
+let VIEW={min:0,max:1}, TZ={z:1,px:0,py:0}, ORDER=[], CURSOR=null;
+let MARK=[], LOG=null, CH=null, RUNS=[], THERM=[], CLIMB=[], bars={}, charts=[], selected=new Set();
+function render(log, name, example){
+  LOG=log; CH=channels(log); addDerived(log,CH); RUNS=motorRuns(log,CH);
+  const dur = log.t.filter(x=>!isNaN(x)).pop()||0;
+  $('#fileinfo').innerHTML = `<span class="tag ${example?'example':''}">${example?'Beispiel: Dein Log':'Geladen'}</span><strong>${esc(name)}</strong><span>${esc(log.date)} · ${esc(log.clock[0])} – ${esc(log.clock[log.clock.length-1])}</span><span>${log.cols.filter(c=>!c.rc&&!c.derived).length} Sensoren${log.gps?' + GPS':''}</span>`;
+  $('#kpis').innerHTML = kpis(log,CH,RUNS).map(k=>`<div class="kpi ${k.cls||''}"><span class="l">${esc(k.l)}</span><span class="v">${k.v}<small>${esc(k.u||'')}</small></span><span class="d">${esc(k.d||'')}</span></div>`).join('');
+  fillSelects(); computeWidgets(); fillMark();
+  VIEW={min:0,max:tEnd()}; TZ={z:1,px:0,py:0}; CURSOR=null; $('#curTrack').setAttribute('aria-valuemax',log.t.length);
+  const pref=[CH.alt,CH.vario,CH.spd,CH.lq[0],CH.cur,CH.volt].filter(Boolean);
+  selected = new Set(pref.map(c=>c.raw));
+  try{ ORDER=JSON.parse(store.get('order')||'[]'); }catch(e){ ORDER=[]; }
+  try{ const sv=JSON.parse(store.get('sel')||'null'); if (Array.isArray(sv)){ const ok=sv.filter(k=>log.cols.some(c=>c.raw===k)); if (ok.length) selected=new Set(ok); } }catch(e){}
+  for (const k of selected) if (!ORDER.includes(k)) ORDER.push(k);
+  log.cols.forEach((c,i)=>c.color=PALETTE[i%PALETTE.length]);
+  renderChips();
+  $('#stats').innerHTML = '<tr><th>Kanal</th><th>Einheit</th><th>Am Zeitpunkt</th><th>Min</th><th>Ø</th><th>Max</th><th>Werte</th></tr>' +
+    log.cols.filter(c=>!c.rc).map(c=>{const s=stats(c.vals)||{}; return `<tr><td>${esc(c.name)}${c.derived?'<span class="ctag">berechnet</span>':''}</td><td class="u">${esc(c.unit)}</td><td class="cval" data-k="${esc(c.raw)}">–</td><td>${fmt(s.min,2)}</td><td>${fmt(s.avg,2)}</td><td>${fmt(s.max,2)}</td><td>${(s.n||0).toLocaleString('de-CH')}</td></tr>`}).join('');
+  fillWindAlt(); renderWindHeight();
+  drawCharts(); drawTrack(log,CH,CLIMB,THERM); drawBars(); renderCursor();
+}
+// ---------- Widget-Panels ----------
+const W = {
+  therm:{ sw:'#thermSw', h:'#thermH', min:5, def:['SB'] },
+  climb:{ sw:'#climbSw', h:'#climbH', min:1, def:['LS9'] },
+};
+const store = { get(k){ try{return localStorage.getItem('ethoslv.'+k);}catch(e){return null;} }, set(k,v){ try{localStorage.setItem('ethoslv.'+k,v);}catch(e){} } };
+function colBy(raw){ return LOG.cols.find(c=>c.raw===raw); }
+function fillSelects(){
+  const swOpts = '<option value="">– wählen –</option>' + LOG.cols.filter(c=>c.rc).concat(LOG.cols.filter(c=>!c.rc)).map(c=>`<option>${esc(c.raw)}</option>`).join('');
+  const hOpts  = LOG.cols.filter(c=>!c.rc).map(c=>`<option>${esc(c.raw)}</option>`).join('');
+  for (const [k,w] of Object.entries(W)){
+    $(w.sw).innerHTML=swOpts; $(w.h).innerHTML=hOpts;
+    const savedSw=store.get(k+'.sw'), savedH=store.get(k+'.h');
+    if (k==='climb' && CH.cur) $(w.sw).querySelector('option').insertAdjacentHTML('afterend',`<option value="${CUR_SW}">${esc(CH.cur.name)} (automatisch)</option>`);
+    let sw = savedSw===CUR_SW && CH.cur ? CUR_SW : (savedSw && colBy(savedSw)) ? savedSw : null;
+    if (!sw){ const d=w.def.map(n=>LOG.cols.find(c=>c.name===n)).find(c=>c && c.vals.some(v=>v>0));
+      // kein Steigflug-Schalter im Log: Steigflüge über den ESC-Strom erkennen
+      sw = d ? d.raw : (k==='climb' && CH.cur ? CUR_SW : ''); }
+    $(w.sw).value = sw;
+    $(w.h).value = (savedH && colBy(savedH)) ? savedH : (CH.alt?.raw || '');
+  }
+  const m=store.get('therm.mode'); if (m) $('#thermMode').value=m;
+  const th=store.get('climb.thr'); if (th) $('#climbThr').value=th;
+}
+// Steigflug ohne Schalter: Motor an, solange der ESC-Strom über der Schwelle liegt; Lücken bis 1 s werden überbrückt
+const CUR_SW='@cur';
+function currentSwitch(){
+  const c=CH.cur, thr=+$('#climbThr').value||3, t=LOG.t, on=c.vals.map(v=>v>thr?1:0);
+  let last=-1; for (let i=0;i<on.length;i++){ if(!on[i]) continue; if (last>=0 && i-last>1 && t[i]-t[last]<=1) for(let j=last+1;j<i;j++) on[j]=1; last=i; }
+  return {name:c.name, vals:on};
+}
+function climbSwitch(){ const v=$('#climbSw').value; $('#climbThrL').hidden = v!==CUR_SW; return v===CUR_SW ? (CH.cur?currentSwitch():null) : colBy(v); }
+function miniStats(t){
+  const sec=Math.round(t.d);
+  return [['Ø Steigen',fmt(t.avg,1),'m/s'],['Steigflüge',t.n,''],['Gesamthöhe',fmt(t.h,0),'m'],['Gesamtdauer',Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0'),'']]
+    .map(([l,v,u])=>`<div class="kpi"><span class="l">${l}</span><span class="v">${v}<small>${u}</small></span></div>`).join('');
+}
+function phaseTable(p, withMah){
+  if (!p.length) return '<tr><td>Kein Steigflug. Prüfe, ob der richtige Schalter gewählt ist.</td></tr>';
+  return '<tr><th>#</th><th>Uhrzeit</th><th>Dauer</th><th>Start</th><th>Höchste</th><th>Gewinn</th><th>Ø Steigen</th>'+(withMah?'<th>Verbrauch</th>':'')+'</tr>'+
+    p.map((r,i)=>`<tr data-s="${r.s}" data-e="${r.e}"><td>${i+1}</td><td>${esc(LOG.clock[r.s].slice(0,8))}</td><td>${fmtDur(r.dur)}</td><td>${fmt(r.h0,0)} m</td><td>${fmt(r.hi,0)} m</td><td>+${fmt(r.gain,0)} m</td><td>${fmt(r.rate,1)} m/s</td>`+
+      (withMah?`<td>${fmt(CH.mah.vals[r.e]-CH.mah.vals[r.s],0)} mAh</td>`:'')+'</tr>').join('');
+}
+function computeWidgets(){
+  THERM = switchPhases(LOG, colBy($('#thermSw').value), colBy($('#thermH').value), W.therm.min);
+  CLIMB = switchPhases(LOG, climbSwitch(), colBy($('#climbH').value), W.climb.min);
+  $('#thermStats').innerHTML = miniStats(phaseTotals(THERM));
+  $('#climbStats').innerHTML = miniStats(phaseTotals(CLIMB));
+  $('#therm').innerHTML = phaseTable(THERM, false);
+  $('#climb').innerHTML = phaseTable(CLIMB, !!CH.mah);
+}
+// Zahlen über den Balken (wie im Steigfluege-Widget)
+const barLabels = { id:'barLabels', afterDatasetsDraw(ch, _, o){
+  if (!o.labels) return; const {ctx}=ch, meta=ch.getDatasetMeta(0);
+  ctx.save(); ctx.fillStyle=css('--fg'); ctx.font='500 11px '+css('--mono'); ctx.textAlign='center';
+  meta.data.forEach((b,i)=>ctx.fillText(o.labels[i], b.x, b.y-4)); ctx.restore(); } };
+function barChart(id, list, val, unit, labels){
+  bars[id]?.destroy();
+  const fg=css('--muted'), grid=css('--line');
+  bars[id] = new Chart($(id), { type:'bar', plugins:[barLabels],
+    data:{ labels:list.map(r=>LOG.clock[r.s].slice(0,5)), datasets:[{ data:list.map(val), backgroundColor:c=>{ const r=list[c.dataIndex]; return r&&CURSOR!=null&&CURSOR>=r.s&&CURSOR<=r.e ? css('--warn') : css('--accent'); }, borderRadius:2, maxBarThickness:30 }] },
+    options:{ animation:false, maintainAspectRatio:false, layout:{padding:{top:16}},
+      plugins:{ legend:{display:false}, barLabels:{labels},
+        tooltip:{ callbacks:{ title:it=>'Steigflug '+(it[0].dataIndex+1)+' · '+LOG.clock[list[it[0].dataIndex].s].slice(0,8),
+          label:it=>{ const r=list[it.dataIndex]; return [`Gewinn +${fmt(r.gain,0)} m`,`Dauer ${fmtDur(r.dur)}`,`Ø Steigen ${fmt(r.rate,1)} m/s`]; } } } },
+      scales:{ x:{ticks:{color:fg,maxRotation:0,autoSkip:true},grid:{display:false}}, y:{beginAtZero:true,ticks:{color:fg,maxTicksLimit:5},grid:{color:grid},title:{display:true,text:unit,color:fg}} } } });
+}
+function drawBars(){
+  const mode=$('#thermMode').value;
+  const m = {rate:[r=>r.rate,'m/s','Steiggeschwindigkeit (m/s)'], height:[r=>r.gain,'m','Erreichte Höhe (m)'], dur:[r=>r.dur,'s','Steigdauer (s)']}[mode];
+  $('#thermTitle').textContent = m[2];
+  barChart('#thermBars', THERM, m[0], m[1], null);
+  barChart('#climbBars', CLIMB, r=>r.gain, 'm', CLIMB.map(r=>fmt(r.rate,1)));
+}
+// ---------- Rot markieren: solange ein gewählter Schalter in einem gewählten Zustand steht ----------
+const SW3_RE=/^S[A-Z]$/i;
+function stateName(col,v){
+  if (/^LS\d+$/i.test(col.name)) return v>0?'an':'aus';
+  if (SW3_RE.test(col.name)){ const n={'-1':'oben','0':'Mitte','1':'unten'}[String(v)]; if(n) return `${n} (${v})`; }
+  return String(v);
+}
+function markCols(){ // Schalter SA… und logische Schalter LS…, die im Log den Zustand wechseln
+  return LOG.cols.filter(c=>c.rc && !c.derived && /^(S[A-Z]|LS\d+)$/i.test(c.name)).map(c=>{ const s=new Set(); for(const v of c.vals){ if(isNaN(v)) continue; s.add(v); if(s.size>6) break; }
+    return {c, vals:[...s].sort((a,b)=>a-b)}; }).filter(o=>o.vals.length>=2 && o.vals.length<=6 && o.vals.every(Number.isInteger));
+}
+let MARKC=[];
+function markKey(){ return 'mark.'+(FILES[CUR]?.model||'_'); }
+// Automatik: derselbe Schalter wie für die Thermik, aber in der Gegenstellung (z.B. SB unten = Thermik → SB oben = rot)
+function autoMark(){
+  const pick=raw=>MARKC.find(o=>o.c.raw===raw);
+  const opp=o=>{ if(!o) return null; const lo=o.vals[0];
+    if (/^LS\d+$/i.test(o.c.name)) return lo<=0 ? {sw:o.c.raw, v:lo} : null;
+    return lo<0 ? {sw:o.c.raw, v:lo} : null; };
+  return opp(pick($('#thermSw').value)) || opp(MARKC.find(o=>o.c.name==='SB')) || {sw:'', v:null};
+}
+function fillMark(){
+  MARKC=markCols(); const sw=$('#markSw'), vl=$('#markVal');
+  let sv=null; try{ sv=JSON.parse(store.get(markKey())||'null'); }catch(e){}
+  const auto=!sv; if (auto) sv=autoMark();
+  $('#markAuto').hidden=!auto; $('#markReset').hidden=auto;
+  sw.innerHTML='<option value="">Aus</option>'+MARKC.map(o=>`<option value="${esc(o.c.raw)}">${esc(o.c.name)}</option>`).join('');
+  sw.value = MARKC.some(o=>o.c.raw===sv.sw) ? sv.sw : '';
+  fillMarkVal(sv.v); computeMark();
+}
+function fillMarkVal(want){
+  const sw=$('#markSw'), vl=$('#markVal'), o=MARKC.find(o=>o.c.raw===sw.value);
+  vl.hidden=!o; if(!o){ vl.innerHTML=''; return; }
+  vl.innerHTML=o.vals.map(v=>`<option value="${v}">${esc(stateName(o.c,v))}</option>`).join('');
+  vl.value = want!=null && o.vals.includes(+want) ? String(want) : String(o.vals[o.vals.length-1]);
+}
+function computeMark(){
+  MARK=[]; const o=MARKC.find(o=>o.c.raw===$('#markSw').value); if(!o) return;
+  const v=+$('#markVal').value, a=o.c.vals; let s=-1;
+  for (let i=0;i<=a.length;i++){ const on=i<a.length && a[i]===v; if(on&&s<0) s=i; else if(!on&&s>=0){ MARK.push({s,e:i-1}); s=-1; } }
+}
+function markChanged(){ store.set(markKey(), JSON.stringify({sw:$('#markSw').value, v:$('#markVal').value})); $('#markAuto').hidden=true; $('#markReset').hidden=false; computeMark(); charts.forEach(c=>c.draw()); drawNav(); }
+$('#markSw').addEventListener('change',()=>{ fillMarkVal(); markChanged(); });
+$('#markVal').addEventListener('change',markChanged);
+$('#markReset').addEventListener('click',()=>{ try{ localStorage.removeItem('ethoslv.'+markKey()); }catch(e){} fillMark(); charts.forEach(c=>c.draw()); drawNav(); });
+function refreshWidgets(){ computeWidgets(); fillMark(); drawBars(); drawCharts(); drawTrack(LOG,CH,CLIMB,THERM); renderCursor(); }
+// ---------- Wind nach Höhe: jeder akzeptierte Kreisfit zählt in der Höhenstufe, in der er gerechnet wurde ----------
+function fillWindAlt(){
+  const opts=LOG.cols.filter(c=>!c.rc && /^(Altitude|Alt|Höhe|GAlt|GPS Alt)/i.test(c.name));
+  $('#whAlt').innerHTML=opts.map(c=>`<option>${esc(c.raw)}</option>`).join('');
+  const sv=store.get('wh.alt'); $('#whAlt').value = sv && opts.some(c=>c.raw===sv) ? sv : (CH.alt?.raw||opts[0]?.raw||'');
+  const st=store.get('wh.step'); if (st) $('#whStep').value=st;
+}
+function renderWindHeight(){
+  const fits=LOG.windFits||[], alt=colBy($('#whAlt').value), step=+$('#whStep').value||50;
+  if (!fits.length || !alt){ $('#windh').innerHTML='<tr><td>Kein Wind berechnet. Dafür braucht es GPS-Position, GPS-Geschwindigkeit und Kurven im Flug.</td></tr>'; $('#windhhint').textContent=''; return; }
+  const bands=new Map();
+  for (const f of fits){ const h=alt.vals[f.row]; if (isNaN(h)) continue; const b=Math.floor(h/step)*step;
+    const o=bands.get(b)||{n:0,w:0,sx:0,sy:0,max:0}; const r=f.d*D2R;
+    o.n++; o.w+=f.w; o.sx+=Math.sin(r); o.sy+=Math.cos(r); o.max=Math.max(o.max,f.w); bands.set(b,o); }
+  const rows=[...bands.entries()].sort((a,b)=>b[0]-a[0]);
+  const top=Math.max(...rows.map(([,o])=>o.w/o.n));
+  const nm=d=>['N','NO','O','SO','S','SW','W','NW'][Math.round(d/45)%8];
+  $('#windh').innerHTML='<tr><th>Höhe</th><th>Wind Ø</th><th></th><th>aus</th><th>max</th><th>Fits</th></tr>'+rows.map(([b,o])=>{
+    const w=o.w/o.n, d=(Math.atan2(o.sx,o.sy)*R2D+360)%360, steady=Math.hypot(o.sx,o.sy)/o.n;
+    return `<tr data-b="${b}" data-step="${step}"><td>${fmt(b,0)}–${fmt(b+step,0)} m</td><td>${fmt(w,0)} ${esc(CH.spd?.unit||'km/h')}</td><td class="bar"><div class="wbar" style="width:${(w/top*100).toFixed(1)}%"></div></td>`+
+      `<td class="wdir">${steady<0.7?'<span class="ctag">wechselnd</span> ':''}<span class="warr" style="transform:rotate(${d.toFixed(0)}deg)" aria-hidden="true">↓</span> <span class="wdv">${nm(d)} ${fmt(d,0)}°</span></td><td>${fmt(o.max,0)}</td><td>${o.n}</td></tr>`;
+  }).join('');
+  $('#windhhint').textContent=`Gezählt werden die ${fits.length} akzeptierten Wind-Fits, jeweils in der Höhe (${alt.name}), in der sie gerechnet wurden. Richtung = Vektormittel; „wechselnd“ heisst, die Richtungen in dieser Stufe streuen stark. Der Pfeil zeigt, wohin der Wind weht.`;
+}
+$('#whAlt').addEventListener('change',e=>{ store.set('wh.alt',e.target.value); LOG&&renderWindHeight(); });
+$('#whStep').addEventListener('change',e=>{ store.set('wh.step',e.target.value); LOG&&renderWindHeight(); });
+function renderChips(){
+  const rc=$('#showRc').checked;
+  const list=LOG.cols.filter(c=>c.derived).concat(LOG.cols.filter(c=>!c.derived&&(rc||!c.rc)));
+  $('#chips').innerHTML = list.map(c=>`<button class="chip${c.derived?' calc':''}" data-k="${esc(c.raw)}" aria-pressed="${selected.has(c.raw)}"${c.note?` title="Berechnet: ${esc(c.note)}"`:''}><span class="sw" style="background:${c.color}"></span>${c.derived?'<span class="fx">ƒ</span>':''}${esc(c.raw)}</button>`).join('');
+}
+// senkrechte Bänder für Motorläufe
+const motorBands = { id:'motorBands', beforeDatasetsDraw(ch){
+  const {ctx, chartArea:a, scales:{x}} = ch; ctx.save(); ctx.beginPath(); ctx.rect(a.left,a.top,a.right-a.left,a.bottom-a.top); ctx.clip();
+  // rot zuunterst, damit Blau und Grün darüber erkennbar bleiben
+  ctx.globalAlpha=.2; ctx.fillStyle=css('--bad');
+  MARK.forEach(r=>{ const x0=x.getPixelForValue(LOG.t[r.s]), x1=x.getPixelForValue(LOG.t[Math.min(r.e+1,LOG.t.length-1)]); ctx.fillRect(x0,a.top,Math.max(2,x1-x0),a.bottom-a.top); });
+  ctx.globalAlpha=1; ctx.fillStyle=css('--accent-soft');
+  CLIMB.forEach(r=>{ const x0=x.getPixelForValue(LOG.t[r.s]), x1=x.getPixelForValue(LOG.t[r.e]); ctx.fillRect(x0,a.top,Math.max(2,x1-x0),a.bottom-a.top); });
+  ctx.globalAlpha=.16; ctx.fillStyle=css('--good');
+  THERM.forEach(r=>{ const x0=x.getPixelForValue(LOG.t[r.s]), x1=x.getPixelForValue(LOG.t[r.e]); ctx.fillRect(x0,a.top,Math.max(2,x1-x0),a.bottom-a.top); });
+  ctx.restore(); } };
+function drawCharts(){
+  charts.forEach(c=>c.destroy()); charts=[];
+  const box=$('#charts'); box.innerHTML='';
+  const fg=css('--muted'), grid=css('--line');
+  for (const c of orderedSelected()){
+    const s=stats(c.vals)||{};
+    const el=document.createElement('div'); el.className='cbox';
+    el.dataset.k=c.raw;
+    el.innerHTML=`<div class="ct"><span class="nm"><button type="button" class="grip" title="Ziehen zum Umsortieren" aria-label="${esc(c.name)} verschieben">⋮⋮</button>${esc(c.name)}${c.derived?'<span class="ctag">berechnet</span>':''}<span class="curv"></span></span><span class="meta">${esc(c.unit)} · min ${fmt(s.min,1)} · max ${fmt(s.max,1)}<button type="button" class="mv" data-d="-1" aria-label="${esc(c.name)} nach oben">▲</button><button type="button" class="mv" data-d="1" aria-label="${esc(c.name)} nach unten">▼</button></span></div><div class="cv"><canvas></canvas></div>`;
+    box.appendChild(el);
+    const pts = LOG.t.map((x,i)=>({x, y:c.vals[i]})).filter(p=>!isNaN(p.x)&&!isNaN(p.y));   // LTTB verträgt keine Lücken
+    charts.push(new Chart(el.querySelector('canvas'),{
+      type:'line', plugins:[motorBands, cursorLine],
+      data:{datasets:[{data:pts,borderColor:c.color,backgroundColor:c.color+'22',fill:true,borderWidth:1.5,pointRadius:0,spanGaps:true}]},
+      options:{animation:false,maintainAspectRatio:false,parsing:false,normalized:true,
+        interaction:{mode:'index',intersect:false},
+        plugins:{legend:{display:false},decimation:{enabled:true,algorithm:'lttb',samples:800},
+          tooltip:{callbacks:{title:it=>LOG.clock[LOG.t.indexOf(it[0].parsed.x)]?.slice(0,8)||fmtDur(it[0].parsed.x),label:it=>fmt(it.parsed.y,2)+' '+c.unit}}},
+        scales:{x:{type:'linear',min:VIEW.min,max:VIEW.max,ticks:{color:fg,callback:v=>fmtDur(v),maxTicksLimit:12},grid:{color:grid}},
+                y:{ticks:{color:fg,maxTicksLimit:5},grid:{color:grid}}}}
+    }));
+    attachZoom(charts[charts.length-1]);
+  }
+  drawNav();
+  if (!charts.length) box.innerHTML='<p class="hint">Wähle oben einen oder mehrere Kanäle aus.</p>';
+  else box.insertAdjacentHTML('afterbegin','<p class="hint">Zeitachse in Minuten ab Logbeginn. Hinterlegt: Steigflüge blau, Thermik grün, rot der oben gewählte Schalterzustand. Reihenfolge ändern: Diagramm am Griff ⋮⋮ ziehen oder mit ▲ ▼ verschieben.</p>');
+}
+// ---------- Zoom & Verschieben: alle Zeitdiagramme teilen denselben Ausschnitt ----------
+const MIN_SPAN=5;
+function tEnd(){ for (let i=LOG.t.length-1;i>=0;i--) if(!isNaN(LOG.t[i])) return LOG.t[i]; return 1; }
+function setView(min,max){
+  const T=tEnd(), span=Math.min(Math.max(max-min,MIN_SPAN),T);
+  min=Math.max(0,Math.min(min,T-span)); VIEW={min,max:min+span};
+  for (const c of charts){ c.options.scales.x.min=VIEW.min; c.options.scales.x.max=VIEW.max; c.update('none'); }
+  drawNav(); scheduleTrack();
+}
+function zoomAt(f, center){ const c=center??(VIEW.min+VIEW.max)/2; setView(c-(c-VIEW.min)*f, c+(VIEW.max-c)*f); }
+const wheelFactor = e => Math.exp(Math.max(-.5,Math.min(.5,e.deltaY*(e.deltaMode?0.05:0.01))));
+function attachZoom(chart){
+  const cv=chart.canvas; let drag=null;
+  cv.addEventListener('wheel',e=>{
+    const a=chart.chartArea, r=cv.getBoundingClientRect();
+    if (e.ctrlKey||e.metaKey){ e.preventDefault(); zoomAt(wheelFactor(e), chart.scales.x.getValueForPixel(e.clientX-r.left)); }
+    else if (Math.abs(e.deltaX)>Math.abs(e.deltaY)){ e.preventDefault(); const k=(VIEW.max-VIEW.min)/(a.right-a.left); setView(VIEW.min+e.deltaX*k, VIEW.max+e.deltaX*k); }
+  },{passive:false});
+  cv.addEventListener('pointerdown',e=>{ if(e.button===0) drag={x:e.clientX, v:{...VIEW}, w:chart.chartArea.right-chart.chartArea.left, id:e.pointerId}; });
+  cv.addEventListener('pointermove',e=>{
+    if(!drag) return; const dx=e.clientX-drag.x; if(!drag.on && Math.abs(dx)<4) return;
+    if(!drag.on){ drag.on=1; cv.setPointerCapture(drag.id); cv.style.cursor='grabbing'; }
+    const k=(drag.v.max-drag.v.min)/drag.w; setView(drag.v.min-dx*k, drag.v.max-dx*k);
+  });
+  const end=()=>{ drag=null; cv.style.cursor=''; };
+  cv.addEventListener('pointerup',e=>{ if (drag && !drag.on){ const r=cv.getBoundingClientRect(), a=chart.chartArea, x=e.clientX-r.left; if (x>=a.left&&x<=a.right) setCursor(idxAt(chart.scales.x.getValueForPixel(x))); } end(); });
+  cv.addEventListener('pointercancel',end);
+  cv.addEventListener('dblclick',()=>setView(0,tEnd()));
+}
+// Übersichtsleiste: ganzer Flug (Höhe), Fenster = sichtbarer Ausschnitt
+function drawNav(){
+  if (!LOG) return;
+  const nav=$('#nav'), cv=$('#navc'), r=nav.getBoundingClientRect(), dpr=window.devicePixelRatio||1;
+  cv.width=Math.max(1,nav.clientWidth*dpr); cv.height=Math.max(1,nav.clientHeight*dpr);
+  const ctx=cv.getContext('2d'), W=cv.width, H=cv.height, T=tEnd();
+  const src = CH.alt || LOG.cols.find(c=>selected.has(c.raw));
+  ctx.clearRect(0,0,W,H);
+  ctx.globalAlpha=.3; ctx.fillStyle=css('--bad');
+  MARK.forEach(p=>{ const e=Math.min(p.e+1,LOG.t.length-1); ctx.fillRect(LOG.t[p.s]/T*W,0,Math.max(1,(LOG.t[e]-LOG.t[p.s])/T*W),H); });
+  ctx.globalAlpha=1;
+  ctx.fillStyle=css('--accent-soft');
+  CLIMB.forEach(p=>ctx.fillRect(LOG.t[p.s]/T*W,0,Math.max(1,(LOG.t[p.e]-LOG.t[p.s])/T*W),H));
+  ctx.globalAlpha=.25; ctx.fillStyle=css('--good');
+  THERM.forEach(p=>ctx.fillRect(LOG.t[p.s]/T*W,0,Math.max(1,(LOG.t[p.e]-LOG.t[p.s])/T*W),H));
+  ctx.globalAlpha=1;
+  if (src){ const s=stats(src.vals), rg=(s.max-s.min)||1; ctx.strokeStyle=css('--muted'); ctx.lineWidth=1.2*dpr; ctx.beginPath();
+    let first=true; const step=Math.max(1,Math.floor(LOG.t.length/W));
+    for (let i=0;i<LOG.t.length;i+=step){ const v=src.vals[i]; if(isNaN(v)||isNaN(LOG.t[i])) continue; const x=LOG.t[i]/T*W, y=H-4*dpr-(v-s.min)/rg*(H-8*dpr); first?ctx.moveTo(x,y):ctx.lineTo(x,y); first=false; }
+    ctx.stroke(); }
+  if (CURSOR!=null){ const x=LOG.t[CURSOR]/T*W; ctx.strokeStyle=css('--warn'); ctx.lineWidth=2*dpr; ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+  const win=$('#navwin'); win.style.left=(VIEW.min/T*100)+'%'; win.style.width=((VIEW.max-VIEW.min)/T*100)+'%';
+  const c=i=>LOG.clock[Math.max(0,LOG.t.findIndex(x=>x>=i))]?.slice(0,8)||'';
+  $('#zRange').textContent = `${c(VIEW.min)} – ${c(VIEW.max)} · ${fmtDur(VIEW.max-VIEW.min)} von ${fmtDur(T)}`;
+}
+(function navEvents(){
+  const nav=$('#nav'); let d=null;
+  nav.addEventListener('pointerdown',e=>{
+    if (!LOG) return; const r=nav.getBoundingClientRect(), T=tEnd(), t=(e.clientX-r.left)/r.width*T;
+    // Zeitpunkt-Linie in der Leiste direkt ziehen
+    if (CURSOR!=null && Math.abs(e.clientX-r.left-nav.clientLeft-LOG.t[CURSOR]/T*nav.clientWidth)<=6){ d={cur:true}; nav.setPointerCapture(e.pointerId); e.preventDefault(); return; }
+    const h=e.target.dataset?.h;
+    if (!h && e.target.id!=='navwin'){ const sp=VIEW.max-VIEW.min; setView(t-sp/2,t+sp/2); }
+    d={x:e.clientX, v:{...VIEW}, h, k:T/r.width}; nav.setPointerCapture(e.pointerId); e.preventDefault();
+  });
+  nav.addEventListener('pointermove',e=>{
+    if (LOG && CURSOR!=null && !d){ const r=nav.getBoundingClientRect(); nav.style.cursor = Math.abs(e.clientX-r.left-nav.clientLeft-LOG.t[CURSOR]/tEnd()*nav.clientWidth)<=6 ? 'ew-resize' : ''; }
+    if(!d) return;
+    if (d.cur){ const r=nav.getBoundingClientRect(); setCursor(idxAt(Math.max(0,Math.min(1,(e.clientX-r.left-nav.clientLeft)/nav.clientWidth))*tEnd()), true); return; }
+    const dt=(e.clientX-d.x)*d.k;
+    if (d.h==='l') setView(Math.min(d.v.min+dt, d.v.max-MIN_SPAN), d.v.max);
+    else if (d.h==='r') setView(d.v.min, Math.max(d.v.max+dt, d.v.min+MIN_SPAN));
+    else setView(d.v.min+dt, d.v.max+dt);
+  });
+  const end=()=>d=null; nav.addEventListener('pointerup',end); nav.addEventListener('pointercancel',end);
+  nav.addEventListener('dblclick',()=>LOG&&setView(0,tEnd()));
+  $('#zIn').addEventListener('click',()=>LOG&&zoomAt(.5));
+  $('#zOut').addEventListener('click',()=>LOG&&zoomAt(2));
+  $('#zAll').addEventListener('click',()=>LOG&&setView(0,tEnd()));
+  window.addEventListener('resize',()=>LOG&&drawNav());
+})();
+// GPS-Spur: eigener Zoom, Mittelpunkt bleibt unter dem Zeiger
+let trkPending=false;
+function scheduleTrack(){ if(trkPending) return; trkPending=true; requestAnimationFrame(()=>{ trkPending=false; LOG&&drawTrack(LOG,CH,CLIMB,THERM); }); }
+function trkZoom(f, sx, sy){
+  const cv=$('#trk'), W=cv.width, H=cv.height; sx??=W/2; sy??=H/2;
+  const z2=Math.max(1,Math.min(40,TZ.z*f)), k=z2/TZ.z;
+  TZ={z:z2, px:sx-W/2-(sx-W/2-TZ.px)*k, py:sy-H/2-(sy-H/2-TZ.py)*k};
+  if (z2===1) TZ={z:1,px:0,py:0};
+  scheduleTrack();
+}
+(function trkEvents(){
+  const cv=$('#trk'); let d=null;
+  const toCanvas=e=>{ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)*cv.width/r.width,(e.clientY-r.top)*cv.height/r.height, cv.width/r.width]; };
+  cv.addEventListener('wheel',e=>{ if(!(e.ctrlKey||e.metaKey)) return; e.preventDefault(); const [x,y]=toCanvas(e); trkZoom(1/wheelFactor(e),x,y); },{passive:false});
+  cv.addEventListener('pointerdown',e=>{ if(e.button===0){ d={x:e.clientX,y:e.clientY,px:TZ.px,py:TZ.py,k:toCanvas(e)[2],id:e.pointerId}; } });
+  cv.addEventListener('pointermove',e=>{ if(!d) return; const dx=e.clientX-d.x, dy=e.clientY-d.y;
+    if(!d.on && Math.hypot(dx,dy)<4) return; if(!d.on){ d.on=1; cv.setPointerCapture(d.id); cv.style.cursor='grabbing'; }
+    TZ.px=d.px+dx*d.k; TZ.py=d.py+dy*d.k; scheduleTrack(); });
+  const end=()=>{ d=null; cv.style.cursor=''; }; cv.addEventListener('pointerup',end); cv.addEventListener('pointercancel',end);
+  cv.addEventListener('dblclick',e=>{ const [x,y]=toCanvas(e); trkZoom(2,x,y); });
+  $('#tIn').addEventListener('click',()=>trkZoom(2)); $('#tOut').addEventListener('click',()=>trkZoom(.5));
+  $('#tAll').addEventListener('click',()=>{ TZ={z:1,px:0,py:0}; scheduleTrack(); });
+})();
+// ---------- Zeitstrahl: ein Datensatz wird in allen Ansichten hervorgehoben ----------
+function idxAt(tv){ const t=LOG.t; let lo=0, hi=t.length-1; while(lo<hi){ const m=(lo+hi)>>1; if (t[m]<tv) lo=m+1; else hi=m; }
+  return lo>0 && Math.abs(t[lo-1]-tv)<Math.abs(t[lo]-tv) ? lo-1 : lo; }
+const fv = v => isNaN(v)||v==null ? '–' : fmt(v, Math.abs(v)<10?2:Math.abs(v)<100?1:0);
+const cursorLine = { id:'cursorLine', afterDatasetsDraw(ch){
+  if (CURSOR==null) return; const {ctx, chartArea:a, scales:{x,y}}=ch, px=x.getPixelForValue(LOG.t[CURSOR]);
+  if (px<a.left||px>a.right) return;
+  ctx.save(); ctx.strokeStyle=css('--warn'); ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(px,a.top); ctx.lineTo(px,a.bottom); ctx.stroke();
+  const c=colBy(ch.canvas.closest('.cbox')?.dataset.k), v=c?.vals[CURSOR];
+  if (v!=null && !isNaN(v)){ const py=y.getPixelForValue(v); if (py>=a.top&&py<=a.bottom){ ctx.fillStyle=css('--warn'); ctx.beginPath(); ctx.arc(px,py,4,0,7); ctx.fill(); } }
+  ctx.restore(); } };
+function setCursor(i, follow){
+  if (!LOG) return;
+  CURSOR = i==null ? null : Math.max(0, Math.min(LOG.t.length-1, i));
+  // das Zoomfenster wird nie vom Zeitpunkt verschoben (Christoph, 2026-10-03)
+  scheduleCursor();
+}
+let curPending=false;
+function scheduleCursor(){ if(curPending) return; curPending=true; requestAnimationFrame(()=>{ curPending=false; renderCursor(); }); }
+function renderCursor(){
+  if (!LOG) return;
+  const i=CURSOR, on=i!=null;
+  const ct=$('#curTime'); ct.classList.toggle('off',!on);
+  ct.textContent = on ? `${LOG.clock[i]} · ${fmtDur(LOG.t[i])} ab Start · #${(i+1).toLocaleString('de-CH')}` : 'Ziehen oder ins Diagramm klicken';
+  $('#curOff').hidden=!on;
+  const tr=$('#curTrack'), pc=on?LOG.t[i]/tEnd()*100:0; tr.classList.toggle('off',!on);
+  $('#curHdl').style.left=pc+'%'; $('#curFill').style.width=pc+'%';
+  tr.setAttribute('aria-valuenow',on?i+1:0); tr.setAttribute('aria-valuetext',on?LOG.clock[i]:'kein Zeitpunkt');
+  // Diagramme und Übersichtsleiste
+  charts.forEach(c=>{ c.draw(); const k=c.canvas.closest('.cbox')?.dataset.k, col=colBy(k), sp=c.canvas.closest('.cbox')?.querySelector('.curv'); if (sp) sp.textContent = on&&col ? '▸ '+fv(col.vals[i])+' '+col.unit : ''; });
+  drawNav(); scheduleTrack();
+  // Übersicht: Werte am Zeitpunkt
+  const th=on?THERM.findIndex(r=>i>=r.s&&i<=r.e):-1, cl=on?CLIMB.findIndex(r=>i>=r.s&&i<=r.e):-1;
+  const keys=[CH.alt,CH.vario,CH.spd,calc('tas'),calc('wind'),calc('winddir'),...CH.lq,...CH.rssi,CH.volt,CH.cur,calc('pwr:ESC'),CH.mah,CH.temp,CH.rxb,CH.txb].filter(Boolean);
+  $('#curvals').innerHTML = !on ? '<div class="kpi"><span class="l">Kein Zeitpunkt gewählt</span><span class="d">Oben den Zeitstrahl ziehen oder in ein Diagramm klicken.</span></div>' :
+    `<div class="kpi on"><span class="l">Uhrzeit</span><span class="v">${esc(LOG.clock[i].slice(0,8))}</span><span class="d">${fmtDur(LOG.t[i])} ab Start</span></div>`+
+    `<div class="kpi ${th>=0||cl>=0?'on':''}"><span class="l">Phase</span><span class="v">${th>=0?'Thermik':cl>=0?'Steigflug':'–'}</span><span class="d">${th>=0?'#'+(th+1)+' von '+THERM.length:cl>=0?'#'+(cl+1)+' von '+CLIMB.length:'kein Schalter aktiv'}</span></div>`+
+    keys.map(c=>`<div class="kpi"><span class="l">${esc(c.name)}</span><span class="v">${fv(c.vals[i])}<small>${esc(c.unit)}</small></span></div>`).join('');
+  // Alle Werte
+  document.querySelectorAll('#stats td.cval').forEach(td=>{ const c=colBy(td.dataset.k); td.textContent = on&&c ? fv(c.vals[i]) : '–'; });
+  // Thermik & Steigflüge
+  document.querySelectorAll('#therm tr[data-s], #climb tr[data-s]').forEach(r=>r.classList.toggle('cur', on && i>=+r.dataset.s && i<=+r.dataset.e));
+  Object.values(bars).forEach(b=>b?.update('none'));
+  // Wind nach Höhe
+  const alt=colBy($('#whAlt').value), h=on&&alt?alt.vals[i]:NaN;
+  document.querySelectorAll('#windh tr[data-b]').forEach(r=>r.classList.toggle('cur', !isNaN(h) && h>=+r.dataset.b && h<+r.dataset.b + +r.dataset.step));
+  const w=calc('wind'), d=calc('winddir');
+  $('#windcur').textContent = on && w ? `Am Zeitpunkt ${LOG.clock[i].slice(0,8)}: ${fv(w.vals[i])} ${w.unit} aus ${fmt(d.vals[i],0)}° in ${fmt(h,0)} m.` : '';
+}
+(function cursorEvents(){
+  const tr=$('#curTrack'); let drag=false; const cur=()=>CURSOR??0;
+  const at=e=>{ const r=tr.getBoundingClientRect(), w=tr.clientWidth, x=Math.max(0,Math.min(w,e.clientX-r.left-tr.clientLeft)); return idxAt(x/w*tEnd()); };
+  tr.addEventListener('pointerdown',e=>{ if(!LOG||e.button>0) return; drag=true; tr.setPointerCapture(e.pointerId); tr.focus({preventScroll:true}); setCursor(at(e),true); e.preventDefault(); });
+  tr.addEventListener('pointermove',e=>{ if(drag) setCursor(at(e),true); });
+  const end=()=>drag=false; tr.addEventListener('pointerup',end); tr.addEventListener('pointercancel',end);
+  tr.addEventListener('keydown',e=>{ if(!LOG) return; const n=e.shiftKey?10:1, k={ArrowRight:n,ArrowUp:n,ArrowLeft:-n,ArrowDown:-n,PageUp:100,PageDown:-100}[e.key];
+    if (k){ e.preventDefault(); setCursor(cur()+k,true); } else if (e.key==='Home'){ e.preventDefault(); setCursor(0,true); } else if (e.key==='End'){ e.preventDefault(); setCursor(LOG.t.length-1,true); } else if (e.key==='Escape') setCursor(null); });
+  $('#curPrev').addEventListener('click',()=>setCursor(cur()-1, true));
+  $('#curNext').addEventListener('click',()=>setCursor(cur()+1, true));
+  $('#curOff').addEventListener('click',()=>setCursor(null));
+  // Höhe der Zeitstrahl-Leiste für die darunter klebende Zoom-Leiste
+  const bar=$('#curbar'); const upd=()=>document.documentElement.style.setProperty('--curbar-h', (bar.classList.contains('inzoom')?0:bar.offsetHeight)+'px');
+  try{ new ResizeObserver(upd).observe(bar); }catch(e){} upd();
+})();
+// ---------- Tabs ----------
+const TABS=['uebersicht','diagramme','steigen','karte','werte'];
+function showTab(id, focus){
+  if (!TABS.includes(id)) id='uebersicht';
+  document.querySelectorAll('.tab').forEach(b=>{ const on=b.dataset.tab===id; b.setAttribute('aria-selected',on); b.tabIndex=on?0:-1; if(on&&focus) b.focus(); });
+  document.querySelectorAll('.pane').forEach(p=>p.hidden = p.dataset.tab!==id);
+  // Zeitpunkt-Leiste: im Diagramme-Tab direkt unter der Übersichtsleiste, sonst oben über den Tabs
+  const cb=$('#curbar'), inz=id==='diagramme';
+  if (inz) $('#zoombar').appendChild(cb); else $('#curhome').after(cb);
+  cb.classList.toggle('inzoom',inz); document.documentElement.style.setProperty('--curbar-h',(inz?0:cb.offsetHeight)+'px');
+  store.set('tab',id);
+  try{ history.replaceState(null,'','#'+id); }catch(e){}
+  if (!LOG) return;
+  // Diagramme in versteckten Tabs haben keine Grösse: beim Anzeigen neu ausmessen
+  if (id==='diagramme'){ charts.forEach(c=>c.resize()); drawNav(); }
+  if (id==='steigen') Object.values(bars).forEach(c=>c?.resize());
+  if (id==='karte') scheduleTrack();
+}
+$('.tabs').addEventListener('click',e=>{ const b=e.target.closest('.tab'); if(b) showTab(b.dataset.tab); });
+$('.tabs').addEventListener('keydown',e=>{
+  const i=TABS.indexOf(document.activeElement?.dataset?.tab); if (i<0) return;
+  const j = e.key==='ArrowRight' ? (i+1)%TABS.length : e.key==='ArrowLeft' ? (i+TABS.length-1)%TABS.length : e.key==='Home' ? 0 : e.key==='End' ? TABS.length-1 : -1;
+  if (j>=0){ e.preventDefault(); showTab(TABS[j], true); }
+});
+showTab(location.hash.slice(1) || store.get('tab') || 'uebersicht');
+function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+$('#chips').addEventListener('click',e=>{
+  const b=e.target.closest('.chip'); if(!b) return;
+  const k=b.dataset.k; selected.has(k)?selected.delete(k):selected.add(k);
+  b.setAttribute('aria-pressed',selected.has(k));
+  if (selected.has(k)){ ORDER=ORDER.filter(x=>x!==k).concat(k); saveOrder(); }
+  store.set('sel', JSON.stringify([...selected])); drawCharts();
+});
+// ---------- eigene Reihenfolge der Diagramme ----------
+function orderedSelected(){
+  const sel=[...selected], pos=k=>{ const i=ORDER.indexOf(k); return i<0 ? 1e6+sel.indexOf(k) : i; };
+  return sel.sort((a,b)=>pos(a)-pos(b)).map(colBy).filter(Boolean);
+}
+function saveOrder(){ store.set('order', JSON.stringify(ORDER)); }
+function orderFromDom(){
+  const dom=[...$('#charts').querySelectorAll('.cbox')].map(e=>e.dataset.k);
+  ORDER = dom.concat(ORDER.filter(k=>!dom.includes(k))); saveOrder();
+  charts.sort((a,b)=>dom.indexOf(a.canvas.closest('.cbox').dataset.k)-dom.indexOf(b.canvas.closest('.cbox').dataset.k));
+}
+(function chartSort(){
+  const box=$('#charts'); let d=null;
+  box.addEventListener('click',e=>{
+    const b=e.target.closest('.mv'); if(!b) return;
+    const el=b.closest('.cbox'), dir=+b.dataset.d, sib=dir<0?el.previousElementSibling:el.nextElementSibling;
+    if (!sib || !sib.classList.contains('cbox')) return;
+    dir<0 ? box.insertBefore(el,sib) : box.insertBefore(sib,el);
+    orderFromDom(); b.focus();
+  });
+  box.addEventListener('pointerdown',e=>{
+    const g=e.target.closest('.grip'); if(!g) return; e.preventDefault();
+    const el=g.closest('.cbox'); d={el, y:e.clientY, id:e.pointerId};
+    g.setPointerCapture(e.pointerId); el.classList.add('dragging');
+  });
+  box.addEventListener('pointermove',e=>{
+    if(!d) return;
+    d.el.style.transform=`translateY(${e.clientY-d.y}px)`;
+    const others=[...box.querySelectorAll('.cbox')].filter(x=>x!==d.el);
+    for (const o of others){
+      const r=o.getBoundingClientRect(), mid=r.top+r.height/2;
+      const before = d.el.compareDocumentPosition(o) & Node.DOCUMENT_POSITION_PRECEDING;
+      if (before && e.clientY<mid){ const top0=d.el.getBoundingClientRect().top; box.insertBefore(d.el,o); d.y+=d.el.getBoundingClientRect().top-top0+0; d.el.style.transform=`translateY(${e.clientY-d.y}px)`; break; }
+      if (!before && e.clientY>mid){ const top0=d.el.getBoundingClientRect().top; box.insertBefore(d.el,o.nextSibling); d.y+=d.el.getBoundingClientRect().top-top0; d.el.style.transform=`translateY(${e.clientY-d.y}px)`; }
+    }
+    // am Fensterrand automatisch scrollen
+    if (e.clientY<70) scrollBy(0,-12); else if (e.clientY>innerHeight-50) scrollBy(0,12);
+  });
+  const end=()=>{ if(!d) return; d.el.style.transform=''; d.el.classList.remove('dragging'); d=null; orderFromDom(); };
+  box.addEventListener('pointerup',end); box.addEventListener('pointercancel',end);
+})();
+for (const [k,w] of Object.entries(W)){
+  $(w.sw).addEventListener('change',e=>{ store.set(k+'.sw',e.target.value); LOG&&refreshWidgets(); });
+  if (k==='climb') $('#climbThr').addEventListener('change',e=>{ store.set('climb.thr',e.target.value); LOG&&refreshWidgets(); });
+  $(w.h).addEventListener('change',e=>{ store.set(k+'.h',e.target.value); LOG&&refreshWidgets(); });
+}
+$('#thermMode').addEventListener('change',e=>{ store.set('therm.mode',e.target.value); LOG&&drawBars(); });
+$('#showRc').addEventListener('change',()=>LOG&&renderChips());
+// ---------- Log-Auswahl ----------
+let FILES=[], CUR=-1;
+const readText = f => new Promise((ok,ko)=>{ const r=new FileReader(); r.onload=()=>ok(r.result); r.onerror=()=>ko(r.error); r.readAsText(f); });
+// Ethos benennt Logs "Modell-JJJJ-MM-TT-hh-mm-ss.csv"
+function nameInfo(n){
+  const m=/^(.*?)-(\d{4}-\d{2}-\d{2})-(\d{2})-(\d{2})-(\d{2})\.csv$/i.exec(n);
+  return m ? {model:m[1], date:m[2], time:m[3]+':'+m[4]+':'+m[5]} : {model:n.replace(/\.csv$/i,''), date:'', time:''};
+}
+// Sensoren, GPS und ungefähre Zeilenzahl aus Kopfzeile und Dateigrösse
+function headerInfo(txt, size){
+  const lines=txt.split(/\r?\n/), d=(lines[0].split(';').length>lines[0].split(',').length)?';':',';
+  const h=splitLine(lines[0],d).filter(x=>x && !/^(date|datum|time|zeit)$/i.test(x));
+  const sensors=h.filter(x=>!RC_RE.test(splitUnit(x).name) && !/^GPS(-?Zeit.*)?$/i.test(splitUnit(x).name)).length;
+  const body=lines.slice(1,-1), avg=body.length?body.reduce((a,l)=>a+l.length+1,0)/body.length:0;
+  return {sensors, gps:h.some(x=>/^GPS$/i.test(x)), rows: avg ? Math.round((size-lines[0].length)/avg) : null};
+}
+async function summarize(f){
+  const info={file:f, name:f.name, ...nameInfo(f.name), size:f.size, dur:null};
+  try{ fillInfo(info, await readText(f.slice(0,4000)), await readText(f.slice(Math.max(0,f.size-4000)))); }catch(e){}
+  return info;
+}
+// Dauer, Datum und Sensoren aus Anfang und Ende einer Datei
+function fillInfo(info, txt, tail){
+  const first=txt.split(/\r?\n/)[1]||'', last=tail.trim().split(/\r?\n/).pop()||'';
+  const a=parseTime(first.split(/[,;]/)[1]||''), b=parseTime(last.split(/[,;]/)[1]||'');
+  if (a!=null && b!=null) info.dur = b>=a ? b-a : b+86400-a;
+  if (!info.date) info.date=first.split(/[,;]/)[0]||'';
+  if (!info.time) info.time=(first.split(/[,;]/)[1]||'').slice(0,8);
+  Object.assign(info, headerInfo(txt, info.size));
+}
+async function addFiles(list){
+  const csv=[...list].filter(f=>/\.csv$/i.test(f.name));
+  if (!csv.length){ $('#fileinfo').innerHTML='<span class="err">Keine CSV-Dateien gefunden. Ethos speichert Logs im Ordner LOGS als .csv.</span>'; return; }
+  const infos=await Promise.all(csv.map(summarize));
+  FILES = FILES.filter(x=>(x.file||x.path) && !infos.some(n=>n.name===x.name)).concat(infos);
+  if (DESK && SETTINGS?.archiveManual) await archiveFiles(infos);
+  FILES.sort((a,b)=>(b.date+b.time).localeCompare(a.date+a.time));
+  CUR=-1;
+  if (csv.length===1){ openLog(FILES.findIndex(x=>x.name===infos[0].name && x.size===infos[0].size)); return; }
+  // Ordner: zuletzt gewähltes Modell, sonst das Modell des neuesten Logs
+  const M=models(), saved=store.get('model'), newest=FILES.reduce((b,f,i)=>b<0||logKey(f)>logKey(FILES[b])?i:b,-1);
+  openModel(saved && M.has(saved) ? saved : FILES[newest].model);
+}
+// Logs nach Modell gruppiert: Modell aus dem Dateinamen (alles vor dem Zeitstempel), pro Modell neuestes zuerst
+const logKey = f => f.date+' '+f.time;
+function models(){ const m=new Map(); FILES.forEach((f,i)=>{ (m.get(f.model)||m.set(f.model,[]).get(f.model)).push(i); });
+  for (const l of m.values()) l.sort((a,b)=>logKey(FILES[b]).localeCompare(logKey(FILES[a])));
+  return new Map([...m].sort((a,b)=>a[0].localeCompare(b[0],'de'))); }
+function renderLogs(){
+  $('#logsec').hidden = FILES.length===0; if (!FILES.length) return;
+  const M=models(), cur=FILES[CUR]?.model ?? [...M.keys()][0];
+  $('#selModel').innerHTML=[...M].map(([m,l])=>`<option value="${esc(m)}"${m===cur?' selected':''}>${esc(m)} (${l.length})</option>`).join('');
+  const list=M.get(cur)||[];
+  const c=FILES[CUR];
+  $('#logBtn').textContent = c ? `${c.date} · ${c.time}${c.dur!=null?' · '+fmtDur(c.dur):''}` : 'Log wählen';
+  $('#logTable').innerHTML='<tr><th>Datum</th><th>Start</th><th>Dauer</th><th>Sensoren</th><th>GPS</th><th>Zeilen</th><th>Grösse</th><th>Datei</th></tr>'+
+    list.map(i=>{ const f=FILES[i]; return `<tr role="option" data-i="${i}" aria-selected="${i===CUR}"><td>${esc(f.date)}</td><td>${esc(f.time)}</td><td>${f.dur!=null?fmtDur(f.dur):'–'}</td><td>${f.sensors??'–'}</td><td>${f.gps?'ja':f.gps===false?'nein':'–'}</td><td>${f.rows!=null?'≈ '+f.rows.toLocaleString('de-CH'):'–'}</td><td>${fmt(f.size/1048576,1)} MB</td><td class="fn">${esc(f.name)}</td></tr>`; }).join('');
+  const k=list.indexOf(CUR);
+  $('#prevLog').disabled = k<0 || k>=list.length-1; $('#nextLog').disabled = k<=0;
+  $('#logcount').textContent = `${FILES.length} Logs · ${M.size} ${M.size===1?'Modell':'Modelle'}`;
+}
+function openModel(m){ const l=models().get(m); if (l?.length){ store.set('model',m); openLog(l[0]); } }
+$('#selModel').addEventListener('change',e=>openModel(e.target.value));
+// Log-Auswahl als aufklappbare Liste mit allen Details
+(function logDropdown(){
+  const btn=$('#logBtn'), panel=$('#logPanel'), tbl=$('#logTable'); let act=-1;
+  const rows=()=>[...tbl.querySelectorAll('tr[data-i]')];
+  // nur die Liste selbst scrollen, nie die Seite (sonst springt das Layout)
+  const reveal=r=>{ if(!r) return; const h=tbl.querySelector('th')?.offsetHeight||0, top=r.offsetTop, bot=top+r.offsetHeight;
+    if (top-h<panel.scrollTop) panel.scrollTop=top-h; else if (bot>panel.scrollTop+panel.clientHeight) panel.scrollTop=bot-panel.clientHeight; };
+  const mark=(k,scroll=true)=>{ const r=rows(); act=Math.max(0,Math.min(r.length-1,k)); r.forEach((x,j)=>x.classList.toggle('act',j===act)); if(scroll) reveal(r[act]); };
+  // Overlay über die ganze Fensterbreite, oben an der Unterkante des Buttons
+  const place=()=>{ const b=btn.getBoundingClientRect(), vh=innerHeight; let top=b.bottom+6;
+    if (vh-top<260) top=Math.max(8,vh-Math.min(vh-16,480)-8);
+    panel.style.setProperty('--dd-top',top+'px'); panel.style.setProperty('--dd-h',Math.max(160,vh-top-12)+'px'); };
+  const open=()=>{ place(); panel.hidden=false; btn.setAttribute('aria-expanded','true'); mark(Math.max(0,rows().findIndex(r=>r.getAttribute('aria-selected')==='true'))); };
+  addEventListener('resize',()=>{ if(!panel.hidden) place(); });
+  addEventListener('scroll',()=>{ if(!panel.hidden) place(); },{passive:true});
+  const close=f=>{ panel.hidden=true; btn.setAttribute('aria-expanded','false'); if(f) btn.focus(); };
+  btn.addEventListener('click',()=>panel.hidden?open():close());
+  btn.addEventListener('keydown',e=>{
+    if (panel.hidden){ if (e.key==='ArrowDown'||e.key==='Enter'||e.key===' '){ e.preventDefault(); open(); } return; }
+    if (e.key==='ArrowDown'){ e.preventDefault(); mark(act+1); }
+    else if (e.key==='ArrowUp'){ e.preventDefault(); mark(act-1); }
+    else if (e.key==='Enter'||e.key===' '){ e.preventDefault(); const r=rows()[act]; close(true); if(r) openLog(+r.dataset.i); }
+    else if (e.key==='Escape'){ e.preventDefault(); close(true); }
+  });
+  tbl.addEventListener('click',e=>{ const r=e.target.closest('tr[data-i]'); if(!r) return; close(true); openLog(+r.dataset.i); });
+  tbl.addEventListener('mousemove',e=>{ const r=e.target.closest('tr[data-i]'); if(r) mark(rows().indexOf(r),false); });
+  document.addEventListener('pointerdown',e=>{ if(!panel.hidden && !e.target.closest('.ddwrap')) close(); });
+})();
+function stepLog(d){ const l=models().get(FILES[CUR]?.model)||[], k=l.indexOf(CUR)+d; if (k>=0&&k<l.length) openLog(l[k]); }
+$('#prevLog').addEventListener('click',()=>stepLog(1));
+$('#nextLog').addEventListener('click',()=>stepLog(-1));
+async function openLog(i){
+  const f=FILES[i]; if(!f) return; CUR=i; if (f.file||f.path) store.set('model',f.model); renderLogs();
+  $('#fileinfo').innerHTML=`<span class="hint">Lade ${esc(f.name)} …</span>`;
+  try{ const txt = f.file ? await readText(f.file) : f.path ? await DESK.readFile(f.path) : f.text; render(parseCSV(txt), f.name, !f.file && !f.path); deskFileinfo(f); }
+  catch(err){ $('#fileinfo').innerHTML=`<span class="err">${esc(f.name)}: ${esc(err.message||'Datei konnte nicht gelesen werden.')}</span>`; }
+}
+$('#pickFiles').addEventListener('click',()=>$('#file').click());
+$('#pickFolder').addEventListener('click',()=>$('#folder').click());
+$('#file').addEventListener('change',e=>{ e.target.files.length&&addFiles(e.target.files); e.target.value=''; });
+$('#folder').addEventListener('change',e=>{ e.target.files.length&&addFiles(e.target.files); e.target.value=''; });
+const drop=$('#drop');
+['dragenter','dragover'].forEach(ev=>document.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('over');}));
+['dragleave','drop'].forEach(ev=>document.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('over');}));
+document.addEventListener('drop',e=>{ if(e.dataTransfer.files.length) addFiles(e.dataTransfer.files); });
+const redraw=()=>{ if(LOG){ drawCharts(); drawTrack(LOG,CH,CLIMB,THERM); drawBars(); } };
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',redraw);
+new MutationObserver(redraw).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+
+// ---------- Desktop-App: Sync vom Sender, Archiv mit einem Ordner pro Modell ----------
+const DESK = window.ethosDesktop || null;
+let SETTINGS = null, lastSyncAt = 0;
+async function deskBoot(){
+  SETTINGS = await DESK.getSettings();
+  $('#syncbar').hidden = false;
+  $('.sub').textContent = 'Telemetrie-Logs vom Ethos-Sender auswerten. Neue Logs kommen automatisch vom Sender ins Archiv, sobald er angeschlossen ist.';
+  DESK.onSync(renderSync); renderSync(await DESK.syncStatus());
+  $('#syncNow').addEventListener('click', ()=>DESK.syncNow());
+  $('#openArchive').addEventListener('click', ()=>DESK.openArchive());
+  $('#openSettings').addEventListener('click', openSettings);
+  $('#setPick').addEventListener('click', async ()=>{ const p=await DESK.pickFolder($('#setArchive').value); if (p) $('#setArchive').value=p; });
+  $('#setCancel').addEventListener('click', ()=>$('#settingsDlg').close());
+  $('#setForm').addEventListener('submit', async e=>{ e.preventDefault();
+    SETTINGS = await DESK.setSettings({ senderPath:$('#setSender').value.trim()||'Radio/logs', archiveDir:$('#setArchive').value.trim()||SETTINGS.archiveDir, autoSync:$('#setAuto').checked, archiveManual:$('#setManual').checked });
+    $('#settingsDlg').close(); await loadArchive(); renderSync(await DESK.syncStatus()); });
+  await loadArchive();
+  if (FILES.length){ const M=models(), saved=store.get('model'); openModel(saved && M.has(saved) ? saved : FILES[0].model); }
+}
+function openSettings(){
+  $('#setSender').value=SETTINGS.senderPath; $('#setArchive').value=SETTINGS.archiveDir;
+  $('#setAuto').checked=!!SETTINGS.autoSync; $('#setManual').checked=!!SETTINGS.archiveManual;
+  $('#settingsDlg').showModal();
+}
+async function loadArchive(){
+  const list = await DESK.listArchive();
+  const infos = await Promise.all(list.map(async a=>{
+    const info={path:a.path, name:a.name, ...nameInfo(a.name), size:a.size, dur:null};
+    try{ const pk=await DESK.peekFile(a.path, 4000); fillInfo(info, pk.head, pk.tail); }catch(e){}
+    return info; }));
+  const cur = FILES[CUR]?.name, wasExample = !!FILES[CUR] && !FILES[CUR].file && !FILES[CUR].path;
+  // ein Log, das im Archiv liegt, wird aus dem Archiv gelesen; das Beispiel-Log fällt weg
+  FILES = FILES.filter(f=>f.file && !infos.some(n=>n.name===f.name)).concat(infos);
+  FILES.sort((a,b)=>(b.date+b.time).localeCompare(a.date+a.time));
+  CUR = cur ? FILES.findIndex(f=>f.name===cur) : -1;
+  if (wasExample && FILES.length){ const M=models(), saved=store.get('model'); CUR=-1; openModel(saved && M.has(saved) ? saved : FILES[0].model); return; }
+  renderLogs();
+}
+async function archiveFiles(infos){
+  let n=0;
+  for (const f of infos){ if (!f.file) continue; try{ const r=await DESK.saveToArchive(f.name, new Uint8Array(await f.file.arrayBuffer())); f.saved=true; if(!r.existed) n++; }catch(e){ console.error(e); } }
+  if (n) $('#syncSub').textContent = `${n} ${n===1?'Log':'Logs'} ins Archiv kopiert.`;
+  return n;
+}
+function deskFileinfo(f){
+  if (!DESK) return;
+  const fi=$('#fileinfo'), tag=fi.querySelector('.tag');
+  if (f.path && tag) tag.textContent='Archiv';
+  if (f.file && !f.saved){
+    fi.insertAdjacentHTML('beforeend','<button type="button" class="btn ghost" id="saveArc">Im Archiv sichern</button>');
+    $('#saveArc').addEventListener('click', async ()=>{ await archiveFiles([f]); $('#saveArc').replaceWith(Object.assign(document.createElement('span'),{textContent:'Im Archiv gesichert'})); loadArchive(); });
+  }
+}
+const nLogs = n => `${n.toLocaleString('de-CH')} ${n===1?'Log':'Logs'}`;
+function renderSync(s){
+  if (!s) return;
+  const bar=$('#syncbar'), txt=$('#syncText'), sub=$('#syncSub'), prog=$('#syncProg');
+  bar.dataset.state=s.state; prog.hidden = s.state!=='copy';
+  const arc = SETTINGS ? `Archiv: ${SETTINGS.archiveDir}` : '';
+  if (s.state==='copy'){
+    txt.textContent = s.total ? `Sync läuft: ${s.done} von ${nLogs(s.total)} kopiert` : 'Sender gefunden, suche neue Logs …';
+    $('#syncFill').style.width = (s.total ? (s.bytes ? s.doneBytes/s.bytes : s.done/s.total)*100 : 0)+'%';
+    sub.textContent = s.file ? s.file : (s.source||'');
+  } else if (s.state==='done'){
+    const n=s.copied.length;
+    txt.textContent = (n ? `${nLogs(n)} neu ins Archiv kopiert` : 'Keine neuen Logs auf dem Sender') + (s.errors.length ? ` · ${s.errors.length} Fehler` : '');
+    const models=[...new Set(s.copied.map(c=>c.model))];
+    sub.textContent = (s.connected ? 'Sender angeschlossen' : 'Sender getrennt') + ` · ${new Date(s.at).toLocaleTimeString('de-CH',{hour:'2-digit',minute:'2-digit'})}` +
+      (models.length ? ` · ${models.join(', ')}` : '') + (s.errors.length ? ` · ${s.errors[0].name}: ${s.errors[0].error}` : '') + (arc ? ' · '+arc : '');
+    if (s.at!==lastSyncAt){ lastSyncAt=s.at; if (n) loadArchive().then(()=>{ if (CUR<0 && FILES.length) openModel(store.get('model')||FILES[0].model); }); }
+  } else if (s.state==='error'){
+    txt.textContent='Sync fehlgeschlagen'; sub.textContent=s.error||'';
+  } else if (s.state==='off'){
+    txt.textContent='Automatischer Sync ist aus'; sub.textContent='Mit „Jetzt synchronisieren“ holst Du die Logs von Hand. '+arc;
+  } else {
+    txt.textContent='Sender nicht angeschlossen'; sub.textContent=`Sobald er angeschlossen ist, kopiere ich neue Logs aus „${SETTINGS?.senderPath||'Radio/logs'}“. ${arc}`;
+  }
+}
+(async function boot(){
+  if (typeof Chart==='undefined'){ $('#fileinfo').innerHTML='<span class="err">Die Diagramm-Bibliothek konnte nicht geladen werden. Lade die Seite neu.</span>'; return; }
+  if (DESK){ try{ await deskBoot(); if (FILES.length) return; }catch(e){ console.error(e); } }
+  try{ const r=await fetch('beispiel.csv'); if(!r.ok) throw 0; const text=await r.text(); const n='SB-10-2026-10-02-14-39-06.csv';
+    const lines=text.trim().split(/\r?\n/); const a=parseTime(lines[1].split(',')[1]), b=parseTime(lines[lines.length-1].split(',')[1]);
+    FILES=[{name:n, ...nameInfo(n), size:text.length, dur:b-a, text, ...headerInfo(text.slice(0,4000), text.length)}]; openLog(0); }
+  catch(e){ $('#fileinfo').innerHTML='<span class="hint">Öffne ein Ethos-Log (CSV), um es auszuwerten.</span>'; }
+})();
+</script>
