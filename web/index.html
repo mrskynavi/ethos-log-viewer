@@ -330,6 +330,7 @@ table.windh .wdv{display:inline-block;min-width:6.5ch;text-align:right}
   </section>
   <section>
     <h2>Werte am Zeitpunkt</h2>
+    <div id="curOver"></div>
     <div class="kpis curkpis" id="curvals"></div>
   </section>
 
@@ -1115,9 +1116,10 @@ function showTab(id, focus){
   if (!TABS.includes(id)) id='uebersicht';
   document.querySelectorAll('.tab').forEach(b=>{ const on=b.dataset.tab===id; b.setAttribute('aria-selected',on); b.tabIndex=on?0:-1; if(on&&focus) b.focus(); });
   document.querySelectorAll('.pane').forEach(p=>p.hidden = p.dataset.tab!==id);
-  // Zeitpunkt-Leiste: im Diagramme-Tab direkt unter der Übersichtsleiste, sonst oben über den Tabs
-  const cb=$('#curbar'), inz=id==='diagramme';
-  if (inz) $('#zoombar').appendChild(cb); else $('#curhome').after(cb);
+  // Zeitpunkt-Leiste: im Diagramme-Tab direkt unter der Übersichtsleiste, in der Übersicht unter
+  // „Werte am Zeitpunkt“, sonst oben über den Tabs
+  const cb=$('#curbar'), inz=id==='diagramme'||id==='uebersicht';
+  if (id==='diagramme') $('#zoombar').appendChild(cb); else if (id==='uebersicht') $('#curOver').appendChild(cb); else $('#curhome').after(cb);
   cb.classList.toggle('inzoom',inz); document.documentElement.style.setProperty('--curbar-h',(inz?0:cb.offsetHeight)+'px');
   store.set('tab',id);
   try{ history.replaceState(null,'','#'+id); }catch(e){}

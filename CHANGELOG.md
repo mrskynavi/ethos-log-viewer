@@ -7,6 +7,7 @@
 - Bei Fehlern oder einem abgebrochenen Sync zeigt ein ⓘ in der Sync-Zeile alle Details und die vollständigen Fehlermeldungen.
 - Erklärungen in den Tabs Diagramme, Thermik & Steigflüge sowie Karte & Wind stehen nicht mehr dauernd da, sondern hinter einem ⓘ neben der Überschrift.
 - Die Zeile mit Dateiname, Zeitraum und Sensoren steht jetzt zuoberst im Tab Übersicht.
+- Im Tab Übersicht steht die Zeitpunkt-Leiste direkt unter „Werte am Zeitpunkt“.
 - macOS: Die App wird jetzt (ad hoc) signiert, damit macOS sich das „Erlauben“ merken kann.
 
 ## 1.1.0 – 2026-10-04
