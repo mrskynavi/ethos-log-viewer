@@ -2,7 +2,7 @@
   "name": "ethos-log-viewer",
   "productName": "Ethos Log Viewer",
   "version": "1.2.0",
-  "description": "Telemetrie-Logs vom FrSky-Ethos-Sender auswerten und automatisch vom Sender ins Archiv synchronisieren",
+  "description": "Telemetrie-Logs vom Ethos-Sender auswerten und automatisch vom Sender ins Archiv synchronisieren",
   "author": "Christoph Mächler",
   "license": "UNLICENSED",
   "private": true,
