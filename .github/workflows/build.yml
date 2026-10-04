@@ -59,4 +59,4 @@ jobs:
           files: out/*
           body: |
             Windows: Ethos-Log-Viewer-Setup-${{ steps.v.outputs.version }}.exe herunterladen und ausführen.
-            Mac: Ethos-Log-Viewer-${{ steps.v.outputs.version }}.dmg öffnen und die App in „Programme“ ziehen. Beim ersten Start Rechtsklick auf die App, „Öffnen“, dann nochmals „Öffnen“ (die App ist nicht signiert).
+            Mac: Ethos-Log-Viewer-${{ steps.v.outputs.version }}.dmg öffnen und die App in „Programme“ ziehen. Die App ist nicht signiert: beim ersten Start unter Systemeinstellungen → Datenschutz & Sicherheit „Dennoch öffnen“ wählen.

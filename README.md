@@ -25,4 +25,4 @@ npm run dist    # Installer für das aktuelle System bauen
 
 GitHub Actions baut bei jedem Push den Windows-Installer (`.exe`) und das Mac-Image (`.dmg`, Intel und Apple Silicon) und legt beide unter „Releases“ als Version `v<version>` ab.
 
-Die Mac-App ist nicht signiert. Beim ersten Start: Rechtsklick auf die App, „Öffnen“, dann nochmals „Öffnen“.
+Die Mac-App ist nicht signiert. Beim ersten Start blockiert macOS sie: unter Systemeinstellungen → Datenschutz & Sicherheit „Dennoch öffnen“. Beim ersten Anschliessen des Senders fragt macOS einmal nach dem Zugriff auf Wechselmedien; „Erlauben“ wählen.

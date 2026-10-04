@@ -23,6 +23,17 @@ async function isDir(p) {
   try { return (await fsp.stat(p)).isDirectory(); } catch { return false; }
 }
 
+// macOS fragt beim ersten Zugriff auf ein Wechselmedium nach der Erlaubnis. Solange die Frage
+// offen ist, schlägt jeder Zugriff fehl und würde eine weitere Frage auslösen. Deshalb wird ein
+// Laufwerk nach "keine Berechtigung" eine Weile in Ruhe gelassen.
+const DENY_PAUSE = 30000;
+const denied = new Map();
+async function probeDir(p, root, force) {
+  if (!force && (denied.get(root) || 0) > Date.now()) return false;
+  try { return (await fsp.stat(p)).isDirectory(); }
+  catch (e) { if (e.code === 'EPERM' || e.code === 'EACCES') denied.set(root, Date.now() + DENY_PAUSE); return false; }
+}
+
 // Windows: Laufwerksbezeichnung über "vol", kurz gecacht
 const labelCache = new Map();
 function winLabel(letter) {
@@ -53,10 +64,10 @@ async function volumes(platform = process.platform) {
   const out = [];
   for (const b of bases) {
     let names = [];
-    try { names = await fsp.readdir(b); } catch { continue; }
-    for (const n of names) {
-      const root = path.join(b, n);
-      if (await isDir(root)) out.push({ root, label: n });
+    try { names = await fsp.readdir(b, { withFileTypes: true }); } catch { continue; }
+    for (const d of names) {
+      if (!d.isDirectory() && !d.isSymbolicLink()) continue;
+      out.push({ root: path.join(b, d.name), label: d.name });
     }
   }
   return out;
@@ -65,7 +76,7 @@ async function volumes(platform = process.platform) {
 // Wo liegen die Logs? senderPath ist relativ ("Radio/logs") oder absolut ("E:\\logs").
 // Relativ wird auf jedem Laufwerk gesucht; ist der erste Teil der Name des Laufwerks
 // (Laufwerk "RADIO" mit Ordner "logs"), zählt das auch.
-async function findSenderDirs(senderPath, vols) {
+async function findSenderDirs(senderPath, vols, force = false) {
   const p = String(senderPath || '').trim();
   if (!p) return [];
   if (path.isAbsolute(p) || /^[a-z]:[\\/]/i.test(p)) return (await isDir(p)) ? [p] : [];
@@ -75,7 +86,7 @@ async function findSenderDirs(senderPath, vols) {
     const cands = [path.join(v.root, ...parts)];
     if (parts.length > 1 && v.label && v.label.toLowerCase() === parts[0].toLowerCase())
       cands.push(path.join(v.root, ...parts.slice(1)));
-    for (const c of cands) if (!found.includes(c) && await isDir(c)) found.push(c);
+    for (const c of cands) if (!found.includes(c) && await probeDir(c, v.root, force)) found.push(c);
   }
   return found;
 }
@@ -191,7 +202,7 @@ class SyncWatcher extends EventEmitter {
     if (!force && !st.autoSync) { if (this.status.state !== 'off') this.set({ state: 'off' }); return this.status; }
     this.busy = true;
     try {
-      const dirs = await findSenderDirs(st.senderPath, await this.volumes());
+      const dirs = await findSenderDirs(st.senderPath, await this.volumes(), force);
       for (const d of [...this.synced]) if (!dirs.includes(d)) this.synced.delete(d);
       if (!dirs.length) {
         // Sender abgezogen: das letzte Ergebnis bleibt sichtbar
@@ -218,4 +229,4 @@ class SyncWatcher extends EventEmitter {
   }
 }
 
-module.exports = { modelOf, safeDir, volumes, findSenderDirs, listCsv, syncDir, archiveFile, listArchive, defaultArchive, SyncWatcher };
+module.exports = { denied, modelOf, safeDir, volumes, findSenderDirs, listCsv, syncDir, archiveFile, listArchive, defaultArchive, SyncWatcher };

@@ -70,3 +70,19 @@ test('Watcher synchronisiert einmal pro Anschluss', async () => {
   put(path.join(vol.root, 'logs', 'SB-10-2026-10-04-08-00-00.csv'), 'y'); plugged = true;
   s = await w.poll(); assert.equal(s.copied.length, 1, 'neuer Anschluss, neues Log');
 });
+
+test('Ohne Berechtigung wird ein Laufwerk nicht dauernd neu angefragt', async () => {
+  const root = tmp();
+  const vol = { root: path.join(root, 'RADIO'), label: 'RADIO' };
+  fs.mkdirSync(path.join(vol.root, 'logs'), { recursive: true });
+  fs.chmodSync(vol.root, 0o000);
+  const asRoot = process.getuid && process.getuid() === 0;
+  await S.findSenderDirs('Radio/logs', [vol]);
+  if (!asRoot) assert.ok(S.denied.get(vol.root) > Date.now(), 'Pause gesetzt');
+  fs.chmodSync(vol.root, 0o755);
+  if (!asRoot) {
+    assert.deepEqual(await S.findSenderDirs('Radio/logs', [vol]), [], 'während der Pause nicht anfassen');
+    assert.deepEqual(await S.findSenderDirs('Radio/logs', [vol], true), [path.join(vol.root, 'logs')], 'Jetzt synchronisieren fragt sofort');
+  }
+  S.denied.clear();
+});
