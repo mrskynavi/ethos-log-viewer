@@ -2,6 +2,7 @@
 
 ## 1.2.1 – noch nicht veröffentlicht
 
+- Eigenes App-Icon (Sender mit Log und Kurven) für Mac und Windows.
 - Der Knopf „↻ Sync“ ist weg. Neu gibt es „⏏ Auswerfen“, solange der Sender angeschlossen ist: Er wirft den Sender sicher aus (Mac: wie im Finder, Windows: wie „Auswerfen“ im Explorer). Danach steht in der Sync-Zeile „Sender ausgeworfen, Du kannst ihn abziehen“. Klappt es nicht, zum Beispiel weil eine Datei noch offen ist, steht der Grund dort.
 
 ## 1.2.0 – 2026-10-04
