@@ -110,3 +110,29 @@ test('Verweigerter Zugriff bricht den Sync ab, statt jede Datei zu versuchen', a
     assert.ok(!w.synced.has(logs), 'gilt nicht als synchronisiert, wird später wiederholt');
   } finally { Object.assign(fsp, orig); S.denied.clear(); }
 });
+
+test('Sender während dem Sync abgezogen: Abbruch statt Fehler pro Datei', async () => {
+  const root = tmp(), archive = path.join(root, 'Archiv');
+  const vol = { root: path.join(root, 'RADIO'), label: 'RADIO' };
+  const logs = path.join(vol.root, 'logs');
+  fs.mkdirSync(logs, { recursive: true });
+  const names = ['A-2026-01-01-10-00-00.csv', 'A-2026-01-02-10-00-00.csv', 'B-2026-01-03-10-00-00.csv', 'B-2026-01-04-10-00-00.csv'];
+  for (const n of names) fs.writeFileSync(path.join(logs, n), 'x');
+  const fsp = fs.promises, orig = fsp.copyFile;
+  let n = 0;
+  // nach der ersten Datei wird der Sender abgezogen
+  fsp.copyFile = async (a, b) => { if (++n === 2) fs.rmSync(vol.root, { recursive: true, force: true }); return orig(a, b); };
+  try {
+    const w = new S.SyncWatcher(() => ({ autoSync: true, senderPath: 'Radio/logs', archiveDir: archive }), { volumes: async () => [vol] });
+    const r = await w.poll();
+    assert.equal(r.state, 'done');
+    assert.equal(r.interrupted, true);
+    assert.equal(r.copied.length, 1);
+    assert.equal(r.errors.length, 0, 'kein Fehler pro Datei');
+    assert.equal(r.left, 3);
+    assert.equal(r.connected, false);
+    assert.ok(!w.synced.has(logs), 'beim nächsten Anschliessen wird weiter synchronisiert');
+    const left = fs.readdirSync(archive, { recursive: true }).filter(f => f.endsWith('.part'));
+    assert.deepEqual(left, [], 'keine halben Dateien im Archiv');
+  } finally { fsp.copyFile = orig; }
+});

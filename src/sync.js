@@ -125,7 +125,8 @@ async function plan(src, archive) {
 async function copyOne(f) {
   await fsp.mkdir(path.dirname(f.dest), { recursive: true });
   const tmp = f.dest + '.part';
-  await fsp.copyFile(f.src, tmp);
+  try { await fsp.copyFile(f.src, tmp); }
+  catch (e) { await fsp.unlink(tmp).catch(() => {}); throw e; }
   await fsp.rename(tmp, f.dest);
   const t = new Date(f.mtime);
   try { await fsp.utimes(f.dest, t, t); } catch {}
@@ -140,7 +141,12 @@ async function syncDir(src, archive, onProgress = () => {}) {
   for (const f of todo) {
     onProgress({ state: 'copy', source: src, total: todo.length, done: res.copied.length + res.errors.length, skipped, bytes, doneBytes, file: f.name });
     try { await copyOne(f); res.copied.push({ name: f.name, model: modelOf(f.name), path: f.dest }); }
-    catch (e) { if (isDenied(e)) throw e; res.errors.push({ name: f.name, error: e.message }); }
+    catch (e) {
+      if (isDenied(e)) throw e;
+      // Sender während dem Sync abgezogen: kein Fehler pro Datei, sondern abbrechen
+      if (!(await isDir(src))) { res.interrupted = true; res.left = todo.length - res.copied.length - res.errors.length; break; }
+      res.errors.push({ name: f.name, error: e.message });
+    }
     doneBytes += f.size;
   }
   return res;
@@ -225,7 +231,7 @@ class SyncWatcher extends EventEmitter {
       }
       const todo = force ? dirs : dirs.filter(d => !this.synced.has(d));
       if (!todo.length) return this.status;
-      const all = { state: 'done', connected: true, sources: [], copied: [], errors: [], skipped: 0, total: 0, at: Date.now() };
+      const all = { state: 'done', connected: true, archive: st.archiveDir, sources: [], copied: [], errors: [], skipped: 0, total: 0, interrupted: false, left: 0, at: Date.now() };
       for (const d of todo) {
         this.set({ state: 'copy', source: d, total: 0, done: 0 });
         let r;
@@ -238,7 +244,8 @@ class SyncWatcher extends EventEmitter {
           this.set({ state: 'denied', source: d });
           return this.status;
         }
-        this.synced.add(d);
+        if (r.interrupted) { all.interrupted = true; all.left += r.left; all.connected = false; }
+        else this.synced.add(d);
         all.sources.push(d); all.copied.push(...r.copied); all.errors.push(...r.errors);
         all.skipped += r.skipped; all.total += r.total;
       }

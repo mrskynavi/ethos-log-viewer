@@ -60,6 +60,15 @@ table.pick tr[data-i]:focus-visible{outline:2px solid var(--accent);outline-offs
 #syncbar[data-state="copy"] .sdot{background:var(--accent);animation:pulse 1s infinite alternate}
 #syncbar[data-state="done"] .sdot{background:var(--good)}
 #syncbar[data-state="error"] .sdot{background:var(--bad)}
+#syncbar[data-state="warn"] .sdot,#syncbar[data-state="denied"] .sdot{background:var(--warn)}
+dialog#syncDlg{border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--fg);padding:20px;width:min(640px,calc(100vw - 32px))}
+dialog#syncDlg::backdrop{background:color-mix(in srgb,#000 45%,transparent)}
+#syncDlg dl{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:12px 0;font-size:.9rem}
+#syncDlg dt{color:var(--muted)} #syncDlg dd{margin:0;overflow-wrap:anywhere}
+#syncDlg .errs{max-height:45vh;overflow:auto;border:1px solid var(--line);border-radius:8px}
+#syncDlg .errs div{padding:8px 10px;border-bottom:1px solid var(--line);font-size:.85rem;overflow-wrap:anywhere}
+#syncDlg .errs div:last-child{border-bottom:0} #syncDlg .errs b{display:block}
+#syncDlg .errs code{color:var(--bad);font:400 .8rem var(--mono,monospace)}
 @keyframes pulse{to{opacity:.35}}
 @media (prefers-reduced-motion:reduce){#syncbar .sdot{animation:none!important}}
 .sprog{display:block;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
@@ -251,9 +260,18 @@ table.windh .wdv{display:inline-block;min-width:6.5ch;text-align:right}
     <span class="sdot" id="syncDot"></span>
     <span class="stext"><b id="syncText">Sender wird gesucht …</b> <span class="hint" id="syncSub"></span></span>
     <span class="sprog" id="syncProg" hidden><i id="syncFill"></i></span>
+    <button type="button" class="iconbtn" id="syncInfo" hidden aria-haspopup="dialog" aria-label="Details zum Sync">i</button>
     <span class="updnote" id="updNote" hidden></span>
     <span class="sbtns"><button type="button" class="zb wide" id="syncNow" title="Jetzt vom Sender synchronisieren">↻ Sync</button><button type="button" class="zb wide" id="openArchive">Archiv öffnen</button></span>
   </div>
+
+  <dialog id="syncDlg" aria-labelledby="syncDlgTitle">
+    <form method="dialog" class="setform">
+      <h2 id="syncDlgTitle">Letzter Sync</h2>
+      <div id="syncDlgBody"></div>
+      <div class="row end"><button class="btn" value="ok">Schliessen</button></div>
+    </form>
+  </dialog>
 
   <dialog id="importDlg" aria-labelledby="impTitle">
     <form method="dialog" class="setform">
@@ -1232,7 +1250,7 @@ function renderLogs(){
     list.map(i=>{ const f=FILES[i]; return `<tr role="option" data-i="${i}" aria-selected="${i===CUR}"><td>${esc(f.date)}</td><td>${esc(f.time)}</td><td>${f.dur!=null?fmtDur(f.dur):'–'}</td><td>${f.sensors??'–'}</td><td>${f.gps?'ja':f.gps===false?'nein':'–'}</td><td>${f.rows!=null?'≈ '+f.rows.toLocaleString('de-CH'):'–'}</td><td>${fmt(f.size/1048576,1)} MB</td><td class="fn">${esc(f.name)}</td></tr>`; }).join('');
   const k=list.indexOf(CUR);
   $('#prevLog').disabled = k<0 || k>=list.length-1; $('#nextLog').disabled = k<=0;
-  $('#logcount').textContent = `${FILES.length} Logs · ${M.size} ${M.size===1?'Modell':'Modelle'}`;
+  $('#logcount').textContent = `${FILES.length} ${FILES.length===1?"Log":"Logs"} · ${M.size} ${M.size===1?'Modell':'Modelle'}`;
 }
 function openModel(m){ const l=models().get(m); if (l?.length){ store.set('model',m); openLog(l[0]); } }
 $('#selModel').addEventListener('change',e=>openModel(e.target.value));
@@ -1302,6 +1320,7 @@ async function deskBoot(){
   DESK.onSync(renderSync); renderSync(await DESK.syncStatus());
   if (DESK.onUpdate){ DESK.onUpdate(renderUpdate); DESK.checkUpdate().then(renderUpdate).catch(()=>{}); }
   $('#syncNow').addEventListener('click', ()=>DESK.syncNow());
+  $('#syncInfo').addEventListener('click', showSyncInfo);
   $('#openArchive').addEventListener('click', ()=>DESK.openArchive());
   $('#openSettings').addEventListener('click', openSettings);
   $('#setPick').addEventListener('click', async ()=>{ const p=await DESK.pickFolder($('#setArchive').value); if (p) $('#setArchive').value=p; });
@@ -1367,7 +1386,9 @@ const nLogs = n => `${n.toLocaleString('de-CH')} ${n===1?'Log':'Logs'}`;
 function renderSync(s){
   if (!s) return;
   const bar=$('#syncbar'), txt=$('#syncText'), sub=$('#syncSub'), prog=$('#syncProg');
-  bar.dataset.state=s.state; prog.hidden = s.state!=='copy';
+  const warn = s.state==='done' && (s.interrupted || s.errors.length);
+  bar.dataset.state = warn ? 'warn' : s.state; prog.hidden = s.state!=='copy';
+  lastSync = s; $('#syncInfo').hidden = !(warn || s.state==='error');
   if (SETTINGS){ const i=$('#infoSync'); i.hidden=false;
     i.textContent=`Sync: Sobald der Sender angeschlossen ist, kopiert die App neue Logs aus „${SETTINGS.senderPath}“ ins Archiv, ein Ordner pro Modell. Archiv: ${SETTINGS.archiveDir}`; }
   const at = t => new Date(t).toLocaleTimeString('de-CH',{hour:'2-digit',minute:'2-digit'});
@@ -1377,8 +1398,13 @@ function renderSync(s){
     sub.textContent = s.file||'';
   } else if (s.state==='done'){
     const n=s.copied.length, models=[...new Set(s.copied.map(c=>c.model))];
-    txt.textContent = (n ? `${nLogs(n)} neu im Archiv` : 'Keine neuen Logs') + (s.errors.length ? ` · ${s.errors.length} Fehler` : '');
-    sub.textContent = `${s.connected?'Sender angeschlossen':'Sender getrennt'} · ${at(s.at)}` + (models.length ? ` · ${models.join(', ')}` : '') + (s.errors.length ? ` · ${s.errors[0].name}: ${s.errors[0].error}` : '');
+    if (s.interrupted){
+      txt.textContent = 'Sync unterbrochen, Sender getrennt';
+      sub.textContent = `${nLogs(n)} kopiert, ${nLogs(s.left)} fehlen noch · ${at(s.at)} · geht beim nächsten Anschliessen weiter`;
+    } else {
+      txt.textContent = (n ? `${nLogs(n)} neu im Archiv` : 'Keine neuen Logs') + (s.errors.length ? ` · ${s.errors.length} Fehler` : '');
+      sub.textContent = `${s.connected?'Sender angeschlossen':'Sender getrennt'} · ${at(s.at)}` + (models.length ? ` · ${models.join(', ')}` : '');
+    }
     if (s.at!==lastSyncAt){ lastSyncAt=s.at; if (n) loadArchive(); }
   } else if (s.state==='error'){
     txt.textContent='Sync fehlgeschlagen'; sub.textContent=s.error||'';
@@ -1389,6 +1415,24 @@ function renderSync(s){
   } else {
     txt.textContent='Sender nicht angeschlossen'; sub.textContent='';
   }
+}
+// Details zum letzten Sync mit allen Fehlermeldungen
+let lastSync=null;
+function showSyncInfo(){
+  const s=lastSync; if (!s) return;
+  const t = x => new Date(x).toLocaleString('de-CH',{dateStyle:'short',timeStyle:'short'});
+  const rows = [];
+  if (s.state==='error') rows.push(['Fehler', s.error||'']);
+  else {
+    rows.push(['Zeit', t(s.at)], ['Kopiert', nLogs(s.copied.length)]);
+    if (s.interrupted) rows.push(['Nicht kopiert', `${nLogs(s.left)}, der Sender wurde während dem Sync getrennt. Beim nächsten Anschliessen werden sie geholt.`]);
+    const models=[...new Set(s.copied.map(c=>c.model))]; if (models.length) rows.push(['Modelle', models.join(', ')]);
+    if (s.sources?.length) rows.push(['Sender', s.sources.join(', ')]);
+    if (s.archive) rows.push(['Archiv', s.archive]);
+  }
+  $('#syncDlgBody').innerHTML = `<dl>${rows.map(([k,v])=>`<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>`
+    + (s.errors?.length ? `<p><b>${s.errors.length} Fehler</b></p><div class="errs">${s.errors.map(e=>`<div><b>${esc(e.name)}</b><code>${esc(e.error)}</code></div>`).join('')}</div>` : '');
+  $('#syncDlg').showModal();
 }
 // Neue Version verfügbar
 function renderUpdate(u){
