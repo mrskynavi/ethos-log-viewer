@@ -13,4 +13,7 @@ contextBridge.exposeInMainWorld('ethosDesktop', {
   openArchive: () => ipcRenderer.invoke('archive:open'),
   readFile: p => ipcRenderer.invoke('file:read', p),
   peekFile: (p, n) => ipcRenderer.invoke('file:peek', p, n),
+  checkUpdate: () => ipcRenderer.invoke('update:check'),
+  onUpdate: cb => ipcRenderer.on('update', (_, u) => cb(u)),
+  openUpdate: url => ipcRenderer.invoke('update:open', url),
 });

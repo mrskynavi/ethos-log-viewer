@@ -1,3 +1,5 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ethos Log Viewer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -20,32 +22,47 @@
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--fg);font:15px/1.5 var(--body)}
 .wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:20px 48px;display:grid;gap:18px}
-header{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:end;justify-content:space-between}
-h1{font:700 2rem/1 var(--display);letter-spacing:.01em;margin:0;text-wrap:balance}
+header.appbar{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center}
+.brand{display:flex;align-items:center;gap:8px}
+header.appbar .logpick{flex:1 1 420px;min-width:0}
+header.appbar .actions{display:flex;gap:6px;align-items:center;margin-left:auto}
+.iconbtn{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--muted);background:none;color:var(--muted);font:700 .85rem/1 var(--body);cursor:pointer;display:inline-grid;place-items:center;padding:0}
+.iconbtn[aria-expanded="true"],.iconbtn:hover{border-color:var(--accent);color:var(--accent)}
+.iconbtn.gear{border:0;font-size:1.25rem;width:32px;height:32px}
+.iconbtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.infopop{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:.88rem;color:var(--muted)}
+.infopop p{margin:0} .infopop p+p{margin-top:6px}
+.syncline{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;font-size:.88rem;padding:6px 0;border-block:1px solid var(--line);min-width:0}
+.syncline .stext{flex:1 1 260px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.syncline .updnote{color:var(--accent);font-weight:600;display:inline-flex;gap:8px;align-items:center}
+.syncline .sbtns{display:flex;gap:6px}
+.syncline .zb{height:26px;font-size:.82rem}
+.syncline .sprog{flex:0 1 160px;height:6px;min-width:60px}
+.impopts{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.impopt{display:grid;gap:2px;text-align:left;padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg);cursor:pointer;font:400 .85rem var(--body)}
+.impopt b{font:600 1rem var(--body);color:var(--accent)} .impopt span{color:var(--muted)}
+.impopt:hover,.impopt:focus-visible{border-color:var(--accent);outline:none}
+dialog#importDlg{border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--fg);padding:20px;width:min(520px,calc(100vw - 32px))}
+dialog#importDlg::backdrop{background:color-mix(in srgb,#000 45%,transparent)}
+.dropover{position:fixed;inset:0;z-index:100;display:none;place-items:center;background:color-mix(in srgb,var(--accent) 18%,transparent);border:3px dashed var(--accent);pointer-events:none}
+.dropover span{font:600 1.4rem var(--display);color:var(--accent);background:var(--panel);padding:10px 18px;border-radius:8px}
+.dropover.over{display:grid}
+h1{font:700 1.6rem/1 var(--display);white-space:nowrap;letter-spacing:.01em;margin:0;text-wrap:balance}
 h2{font:600 1.15rem/1.2 var(--display);letter-spacing:.04em;text-transform:uppercase;margin:0;color:var(--muted)}
-.sub{color:var(--muted);margin:.25rem 0 0;max-width:62ch}
-.drop{border:1.5px dashed var(--line);border-radius:10px;padding:14px 18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:var(--panel);cursor:pointer}
-.drop.over{border-color:var(--accent);background:var(--accent-soft)}
-.drop input{display:none}
 .btn{font:600 .95rem var(--body);background:var(--accent);color:#fff;border:0;border-radius:6px;padding:7px 14px;cursor:pointer}
 .btn.ghost{background:transparent;color:var(--accent);box-shadow:inset 0 0 0 1.5px var(--accent)}
 table.pick tr[data-i]{cursor:pointer}
 table.pick tr[data-i]:hover td{background:var(--accent-soft)}
 table.pick tr[aria-selected="true"] td{background:var(--accent-soft);font-weight:600}
 table.pick tr[data-i]:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
-.btn:focus-visible,.chip:focus-visible,.drop:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.syncbar{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
-.syncbar .stext{flex:1 1 280px;min-width:0;display:grid;gap:4px}
-.syncbar #syncText{font-weight:600;overflow-wrap:anywhere}
-.syncbar .sbtns{display:flex;flex-wrap:wrap;gap:6px}
-.syncbar .sbtns .btn{padding:5px 10px;font-size:.88rem}
+.btn:focus-visible,.chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .sdot{width:12px;height:12px;border-radius:50%;background:var(--muted);flex:none}
-.syncbar[data-state="copy"] .sdot{background:var(--accent);animation:pulse 1s infinite alternate}
-.syncbar[data-state="done"] .sdot{background:var(--good)}
-.syncbar[data-state="error"] .sdot{background:var(--bad)}
+#syncbar[data-state="copy"] .sdot{background:var(--accent);animation:pulse 1s infinite alternate}
+#syncbar[data-state="done"] .sdot{background:var(--good)}
+#syncbar[data-state="error"] .sdot{background:var(--bad)}
 @keyframes pulse{to{opacity:.35}}
-@media (prefers-reduced-motion:reduce){.syncbar .sdot{animation:none!important}}
-.sprog{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+@media (prefers-reduced-motion:reduce){#syncbar .sdot{animation:none!important}}
+.sprog{display:block;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
 .sprog i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
 dialog#settingsDlg{border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--fg);padding:20px;width:min(560px,calc(100vw - 32px))}
 dialog#settingsDlg::backdrop{background:color-mix(in srgb,#000 45%,transparent)}
@@ -205,39 +222,12 @@ table.windh .wdv{display:inline-block;min-width:6.5ch;text-align:right}
 .toggle{font:.85rem var(--body);color:var(--muted);display:inline-flex;gap:6px;align-items:center}
 </style>
 <div class="wrap">
-  <header>
-    <div>
+  <header class="appbar">
+    <div class="brand">
       <h1>Ethos Log Viewer</h1>
-      <p class="sub">Telemetrie-Log (CSV) vom Ethos-Sender laden: Flugzeit, Motorläufe, Empfang, Akku, GPS-Spur und alle Sensoren. Wähle einzelne Logs oder gleich den ganzen LOGS-Ordner. Die Dateien bleiben in Deinem Browser.</p>
+      <button type="button" class="iconbtn" id="infoBtn" aria-expanded="false" aria-controls="infoPop" aria-label="Info zur App">i</button>
     </div>
-    <div class="drop" id="drop">
-      <input type="file" id="file" accept=".csv,text/csv,text/plain" multiple>
-      <input type="file" id="folder" webkitdirectory multiple>
-      <button class="btn" type="button" id="pickFiles">Logs auswählen</button>
-      <button class="btn ghost" type="button" id="pickFolder">Ordner öffnen</button>
-      <span class="hint">oder CSVs hierher ziehen</span>
-    </div>
-  </header>
-
-  <div class="syncbar" id="syncbar" hidden>
-    <span class="sdot" id="syncDot"></span>
-    <div class="stext"><div id="syncText">Sender wird gesucht …</div><div class="sprog" id="syncProg" hidden><i id="syncFill"></i></div><div class="hint" id="syncSub"></div></div>
-    <div class="sbtns"><button type="button" class="btn ghost" id="syncNow">Jetzt synchronisieren</button><button type="button" class="btn ghost" id="openArchive">Archiv öffnen</button><button type="button" class="btn ghost" id="openSettings">Einstellungen</button></div>
-  </div>
-  <dialog id="settingsDlg" aria-labelledby="setTitle">
-    <form method="dialog" class="setform" id="setForm">
-      <h2 id="setTitle">Einstellungen</h2>
-      <label>Log-Ordner auf dem Sender<input type="text" id="setSender" placeholder="Radio/logs" spellcheck="false"><span class="hint">Wird auf jedem angeschlossenen Laufwerk gesucht. Ein vollständiger Pfad wie E:\logs geht auch.</span></label>
-      <label>Archiv-Ordner<span class="row"><input type="text" id="setArchive" spellcheck="false"><button type="button" class="btn ghost" id="setPick">Wählen …</button></span><span class="hint">Am besten ein Ordner in Google Drive oder OneDrive, dann sind die Logs auf allen Geräten da. Pro Modell entsteht ein Unterordner.</span></label>
-      <label class="check"><input type="checkbox" id="setAuto"> Automatisch synchronisieren, sobald der Sender angeschlossen ist</label>
-      <label class="check"><input type="checkbox" id="setManual"> Manuell eingelesene Logs immer ins Archiv kopieren</label>
-      <div class="row end"><button type="button" class="btn ghost" id="setCancel">Abbrechen</button><button type="submit" class="btn" id="setSave">Speichern</button></div>
-    </form>
-  </dialog>
-
-  <section id="logsec" hidden>
-    <h2>Logs</h2>
-    <div class="logpick settings">
+    <div class="logpick settings" id="logsec" hidden>
       <label for="selModel">Modell <select id="selModel"></select></label>
       <span class="ddlabel" id="logLbl">Log</span>
       <div class="ddwrap">
@@ -247,7 +237,50 @@ table.windh .wdv{display:inline-block;min-width:6.5ch;text-align:right}
       <span class="zbtns"><button type="button" class="zb" id="prevLog" aria-label="Älteres Log">◀</button><button type="button" class="zb" id="nextLog" aria-label="Neueres Log">▶</button></span>
       <span class="hint" id="logcount"></span>
     </div>
-  </section>
+    <div class="actions">
+      <button class="btn" type="button" id="importBtn">Import …</button>
+      <button type="button" class="iconbtn gear" id="openSettings" aria-label="Einstellungen" title="Einstellungen" hidden>⚙</button>
+    </div>
+  </header>
+  <div class="infopop" id="infoPop" hidden>
+    <p id="infoText">Wertet Telemetrie-Logs (CSV) vom Ethos-Sender aus: Flugzeit, Motorläufe, Empfang, Akku, GPS-Spur, Thermik, Steigflüge, Wind und alle Sensoren. Logs lädst Du über „Import …“ oder ziehst die CSV-Dateien einfach ins Fenster. Die Dateien bleiben auf Deinem Gerät.</p>
+    <p id="infoSync" hidden></p>
+  </div>
+
+  <div class="syncline" id="syncbar" hidden>
+    <span class="sdot" id="syncDot"></span>
+    <span class="stext"><b id="syncText">Sender wird gesucht …</b> <span class="hint" id="syncSub"></span></span>
+    <span class="sprog" id="syncProg" hidden><i id="syncFill"></i></span>
+    <span class="updnote" id="updNote" hidden></span>
+    <span class="sbtns"><button type="button" class="zb wide" id="syncNow" title="Jetzt vom Sender synchronisieren">↻ Sync</button><button type="button" class="zb wide" id="openArchive">Archiv öffnen</button></span>
+  </div>
+
+  <dialog id="importDlg" aria-labelledby="impTitle">
+    <form method="dialog" class="setform">
+      <h2 id="impTitle">Logs importieren</h2>
+      <input type="file" id="file" accept=".csv,text/csv,text/plain" multiple hidden>
+      <input type="file" id="folder" webkitdirectory multiple hidden>
+      <div class="impopts">
+        <button class="impopt" type="button" id="pickFiles"><b>Dateien auswählen</b><span>Ein oder mehrere Logs (.csv)</span></button>
+        <button class="impopt" type="button" id="pickFolder"><b>Ordner öffnen</b><span>Alle Logs eines Ordners, z.B. LOGS vom Sender</span></button>
+      </div>
+      <p class="hint">Du kannst CSV-Dateien auch einfach irgendwo ins Fenster ziehen.</p>
+      <label class="check" id="impArcL" hidden><input type="checkbox" id="impArc"> Importierte Logs ins Archiv kopieren</label>
+      <div class="row end"><button type="submit" class="btn ghost">Schliessen</button></div>
+    </form>
+  </dialog>
+  <div class="dropover" id="drop" aria-hidden="true"><span>Logs hier ablegen</span></div>
+
+  <dialog id="settingsDlg" aria-labelledby="setTitle">
+    <form method="dialog" class="setform" id="setForm">
+      <h2 id="setTitle">Einstellungen</h2>
+      <label>Log-Ordner auf dem Sender<input type="text" id="setSender" placeholder="Radio/logs" spellcheck="false"><span class="hint">Wird auf jedem angeschlossenen Laufwerk gesucht. Ein vollständiger Pfad wie E:\logs geht auch.</span></label>
+      <label>Archiv-Ordner<span class="row"><input type="text" id="setArchive" spellcheck="false"><button type="button" class="btn ghost" id="setPick">Wählen …</button></span><span class="hint">Am besten ein Ordner in Google Drive oder OneDrive, dann sind die Logs auf allen Geräten da. Pro Modell entsteht ein Unterordner.</span></label>
+      <label class="check"><input type="checkbox" id="setAuto"> Automatisch synchronisieren, sobald der Sender angeschlossen ist</label>
+      <label class="check"><input type="checkbox" id="setManual"> Importierte Logs immer ins Archiv kopieren</label>
+      <div class="row end"><button type="button" class="btn ghost" id="setCancel">Abbrechen</button><button type="submit" class="btn" id="setSave">Speichern</button></div>
+    </form>
+  </dialog>
 
   <div class="fileinfo" id="fileinfo"><span class="hint">Lade Beispiel-Log …</span></div>
 
@@ -1242,11 +1275,17 @@ async function openLog(i){
 }
 $('#pickFiles').addEventListener('click',()=>$('#file').click());
 $('#pickFolder').addEventListener('click',()=>$('#folder').click());
-$('#file').addEventListener('change',e=>{ e.target.files.length&&addFiles(e.target.files); e.target.value=''; });
-$('#folder').addEventListener('change',e=>{ e.target.files.length&&addFiles(e.target.files); e.target.value=''; });
+$('#file').addEventListener('change',e=>{ $('#importDlg').close(); e.target.files.length&&addFiles(e.target.files); e.target.value=''; });
+$('#folder').addEventListener('change',e=>{ $('#importDlg').close(); e.target.files.length&&addFiles(e.target.files); e.target.value=''; });
 const drop=$('#drop');
-['dragenter','dragover'].forEach(ev=>document.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('over');}));
-['dragleave','drop'].forEach(ev=>document.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('over');}));
+let dragDepth=0;
+const isFileDrag=e=>[...(e.dataTransfer?.types||[])].includes('Files');
+document.addEventListener('dragenter',e=>{ if(!isFileDrag(e)) return; e.preventDefault(); dragDepth++; drop.classList.add('over'); });
+document.addEventListener('dragover',e=>{ if(isFileDrag(e)) e.preventDefault(); });
+document.addEventListener('dragleave',e=>{ if(!isFileDrag(e)) return; if(--dragDepth<=0){ dragDepth=0; drop.classList.remove('over'); } });
+document.addEventListener('drop',e=>{ e.preventDefault(); dragDepth=0; drop.classList.remove('over'); $('#importDlg').open&&$('#importDlg').close(); });
+$('#importBtn').addEventListener('click',()=>$('#importDlg').showModal());
+$('#infoBtn').addEventListener('click',e=>{ const p=$('#infoPop'), on=p.hidden; p.hidden=!on; e.currentTarget.setAttribute('aria-expanded',on); });
 document.addEventListener('drop',e=>{ if(e.dataTransfer.files.length) addFiles(e.dataTransfer.files); });
 const redraw=()=>{ if(LOG){ drawCharts(); drawTrack(LOG,CH,CLIMB,THERM); drawBars(); } };
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',redraw);
@@ -1258,8 +1297,10 @@ let SETTINGS = null, lastSyncAt = 0;
 async function deskBoot(){
   SETTINGS = await DESK.getSettings();
   $('#syncbar').hidden = false;
-  $('.sub').textContent = 'Telemetrie-Logs vom Ethos-Sender auswerten. Neue Logs kommen automatisch vom Sender ins Archiv, sobald er angeschlossen ist.';
+  $('#openSettings').hidden = false; $('#impArcL').hidden = false; $('#impArc').checked = !!SETTINGS.archiveManual;
+  $('#impArc').addEventListener('change', async e=>{ SETTINGS = await DESK.setSettings({ archiveManual:e.target.checked }); });
   DESK.onSync(renderSync); renderSync(await DESK.syncStatus());
+  if (DESK.onUpdate){ DESK.onUpdate(renderUpdate); DESK.checkUpdate().then(renderUpdate).catch(()=>{}); }
   $('#syncNow').addEventListener('click', ()=>DESK.syncNow());
   $('#openArchive').addEventListener('click', ()=>DESK.openArchive());
   $('#openSettings').addEventListener('click', openSettings);
@@ -1267,28 +1308,45 @@ async function deskBoot(){
   $('#setCancel').addEventListener('click', ()=>$('#settingsDlg').close());
   $('#setForm').addEventListener('submit', async e=>{ e.preventDefault();
     SETTINGS = await DESK.setSettings({ senderPath:$('#setSender').value.trim()||'Radio/logs', archiveDir:$('#setArchive').value.trim()||SETTINGS.archiveDir, autoSync:$('#setAuto').checked, archiveManual:$('#setManual').checked });
+    $('#impArc').checked = !!SETTINGS.archiveManual;
     $('#settingsDlg').close(); await loadArchive(); renderSync(await DESK.syncStatus()); });
   await loadArchive();
-  if (FILES.length){ const M=models(), saved=store.get('model'); openModel(saved && M.has(saved) ? saved : FILES[0].model); }
 }
 function openSettings(){
   $('#setSender').value=SETTINGS.senderPath; $('#setArchive').value=SETTINGS.archiveDir;
   $('#setAuto').checked=!!SETTINGS.autoSync; $('#setManual').checked=!!SETTINGS.archiveManual;
   $('#settingsDlg').showModal();
 }
+// Details (Dauer, Sensoren) je Datei werden gemerkt: Cloud-Ordner laden sonst jede Datei herunter
+let peekCache=null;
+function peekGet(){ if(!peekCache){ try{ peekCache=JSON.parse(store.get('peek')||'{}'); }catch(e){ peekCache={}; } } return peekCache; }
+let peekSave=0;
+function peekPut(k,v){ peekGet()[k]=v; clearTimeout(peekSave); peekSave=setTimeout(()=>store.set('peek',JSON.stringify(peekCache)),1000); }
 async function loadArchive(){
-  const list = await DESK.listArchive();
-  const infos = await Promise.all(list.map(async a=>{
-    const info={path:a.path, name:a.name, ...nameInfo(a.name), size:a.size, dur:null};
-    try{ const pk=await DESK.peekFile(a.path, 4000); fillInfo(info, pk.head, pk.tail); }catch(e){}
-    return info; }));
+  const list = await DESK.listArchive(), cache=peekGet(), todo=[];
+  const infos = list.map(a=>{
+    const info={path:a.path, name:a.name, ...nameInfo(a.name), size:a.size, dur:null}, k=a.path+'|'+a.size;
+    if (cache[k]) Object.assign(info, cache[k]); else todo.push([info,k]);
+    return info; });
   const cur = FILES[CUR]?.name, wasExample = !!FILES[CUR] && !FILES[CUR].file && !FILES[CUR].path;
   // ein Log, das im Archiv liegt, wird aus dem Archiv gelesen; das Beispiel-Log fällt weg
   FILES = FILES.filter(f=>f.file && !infos.some(n=>n.name===f.name)).concat(infos);
   FILES.sort((a,b)=>(b.date+b.time).localeCompare(a.date+a.time));
   CUR = cur ? FILES.findIndex(f=>f.name===cur) : -1;
-  if (wasExample && FILES.length){ const M=models(), saved=store.get('model'); CUR=-1; openModel(saved && M.has(saved) ? saved : FILES[0].model); return; }
-  renderLogs();
+  if ((wasExample || CUR<0) && FILES.length){ const M=models(), saved=store.get('model'); CUR=-1; openModel(saved && M.has(saved) ? saved : FILES[0].model); }
+  else { if (!FILES.length) CUR=-1; renderLogs(); }
+  fillDetails(todo);
+}
+// fehlende Details nach und nach lesen, ohne die Oberfläche aufzuhalten
+let detailRun=0;
+async function fillDetails(todo){
+  const run=++detailRun; let next=0, changed=0;
+  const worker=async()=>{ while(next<todo.length && run===detailRun){ const [info,k]=todo[next++];
+    try{ const pk=await DESK.peekFile(info.path, 4000); fillInfo(info, pk.head, pk.tail);
+      peekPut(k,{dur:info.dur, sensors:info.sensors, gps:info.gps, rows:info.rows, date:info.date, time:info.time}); changed++; }catch(e){} } };
+  const tick=setInterval(()=>{ if(changed && run===detailRun){ changed=0; renderLogs(); } },800);
+  await Promise.all([worker(),worker(),worker(),worker()]);
+  clearInterval(tick); if (run===detailRun) renderLogs();
 }
 async function archiveFiles(infos){
   let n=0;
@@ -1310,25 +1368,32 @@ function renderSync(s){
   if (!s) return;
   const bar=$('#syncbar'), txt=$('#syncText'), sub=$('#syncSub'), prog=$('#syncProg');
   bar.dataset.state=s.state; prog.hidden = s.state!=='copy';
-  const arc = SETTINGS ? `Archiv: ${SETTINGS.archiveDir}` : '';
+  if (SETTINGS){ const i=$('#infoSync'); i.hidden=false;
+    i.textContent=`Sync: Sobald der Sender angeschlossen ist, kopiert die App neue Logs aus „${SETTINGS.senderPath}“ ins Archiv, ein Ordner pro Modell. Archiv: ${SETTINGS.archiveDir}`; }
+  const at = t => new Date(t).toLocaleTimeString('de-CH',{hour:'2-digit',minute:'2-digit'});
   if (s.state==='copy'){
-    txt.textContent = s.total ? `Sync läuft: ${s.done} von ${nLogs(s.total)} kopiert` : 'Sender gefunden, suche neue Logs …';
+    txt.textContent = s.total ? `Sync läuft: ${s.done} von ${nLogs(s.total)}` : 'Sender gefunden, suche neue Logs …';
     $('#syncFill').style.width = (s.total ? (s.bytes ? s.doneBytes/s.bytes : s.done/s.total)*100 : 0)+'%';
-    sub.textContent = s.file ? s.file : (s.source||'');
+    sub.textContent = s.file||'';
   } else if (s.state==='done'){
-    const n=s.copied.length;
-    txt.textContent = (n ? `${nLogs(n)} neu ins Archiv kopiert` : 'Keine neuen Logs auf dem Sender') + (s.errors.length ? ` · ${s.errors.length} Fehler` : '');
-    const models=[...new Set(s.copied.map(c=>c.model))];
-    sub.textContent = (s.connected ? 'Sender angeschlossen' : 'Sender getrennt') + ` · ${new Date(s.at).toLocaleTimeString('de-CH',{hour:'2-digit',minute:'2-digit'})}` +
-      (models.length ? ` · ${models.join(', ')}` : '') + (s.errors.length ? ` · ${s.errors[0].name}: ${s.errors[0].error}` : '') + (arc ? ' · '+arc : '');
-    if (s.at!==lastSyncAt){ lastSyncAt=s.at; if (n) loadArchive().then(()=>{ if (CUR<0 && FILES.length) openModel(store.get('model')||FILES[0].model); }); }
+    const n=s.copied.length, models=[...new Set(s.copied.map(c=>c.model))];
+    txt.textContent = (n ? `${nLogs(n)} neu im Archiv` : 'Keine neuen Logs') + (s.errors.length ? ` · ${s.errors.length} Fehler` : '');
+    sub.textContent = `${s.connected?'Sender angeschlossen':'Sender getrennt'} · ${at(s.at)}` + (models.length ? ` · ${models.join(', ')}` : '') + (s.errors.length ? ` · ${s.errors[0].name}: ${s.errors[0].error}` : '');
+    if (s.at!==lastSyncAt){ lastSyncAt=s.at; if (n) loadArchive(); }
   } else if (s.state==='error'){
     txt.textContent='Sync fehlgeschlagen'; sub.textContent=s.error||'';
   } else if (s.state==='off'){
-    txt.textContent='Automatischer Sync ist aus'; sub.textContent='Mit „Jetzt synchronisieren“ holst Du die Logs von Hand. '+arc;
+    txt.textContent='Automatischer Sync aus'; sub.textContent='';
   } else {
-    txt.textContent='Sender nicht angeschlossen'; sub.textContent=`Sobald er angeschlossen ist, kopiere ich neue Logs aus „${SETTINGS?.senderPath||'Radio/logs'}“. ${arc}`;
+    txt.textContent='Sender nicht angeschlossen'; sub.textContent='';
   }
+}
+// Neue Version verfügbar
+function renderUpdate(u){
+  if (!u || !u.newer) return;
+  const el=$('#updNote'); el.hidden=false;
+  el.innerHTML=`Version ${esc(u.latest)} ist verfügbar <button type="button" class="zb wide" id="updGet">Herunterladen</button>`;
+  $('#updGet').addEventListener('click',()=>DESK.openUpdate(u.url));
 }
 (async function boot(){
   if (typeof Chart==='undefined'){ $('#fileinfo').innerHTML='<span class="err">Die Diagramm-Bibliothek konnte nicht geladen werden. Lade die Seite neu.</span>'; return; }

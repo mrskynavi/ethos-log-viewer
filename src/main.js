@@ -3,6 +3,7 @@ const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron');
 const fs = require('fs');
 const path = require('path');
 const S = require('./sync');
+const U = require('./update');
 
 const SETTINGS_FILE = () => path.join(app.getPath('userData'), 'settings.json');
 const DEFAULTS = () => ({ senderPath: 'Radio/logs', archiveDir: S.defaultArchive(), autoSync: true, archiveManual: false });
@@ -48,6 +49,8 @@ ipcMain.handle('sync:status', () => watcher.status);
 ipcMain.handle('archive:list', () => S.listArchive(settings.archiveDir));
 ipcMain.handle('archive:save', (_, name, bytes) => S.archiveFile(settings.archiveDir, name, Buffer.from(bytes)));
 ipcMain.handle('archive:open', () => { fs.mkdirSync(settings.archiveDir, { recursive: true }); return shell.openPath(settings.archiveDir); });
+ipcMain.handle('update:check', () => U.check(app.getVersion()));
+ipcMain.handle('update:open', (_, url) => { if (/^https:\/\/github\.com\/mrskynavi\/ethos-log-viewer\//.test(url)) shell.openExternal(url); });
 ipcMain.handle('file:read', async (_, p) => { if (!allowed(p)) throw new Error('Kein Zugriff'); return fs.promises.readFile(p, 'utf8'); });
 ipcMain.handle('file:peek', async (_, p, n) => {
   if (!allowed(p)) throw new Error('Kein Zugriff');
@@ -66,6 +69,8 @@ app.whenReady().then(() => {
   watcher.on('status', s => win && !win.isDestroyed() && win.webContents.send('sync:status', s));
   createWindow();
   watcher.start();
+  // alle 6 Stunden nach einer neuen Version schauen
+  setInterval(async () => { const u = await U.check(app.getVersion()); if (u.newer && win && !win.isDestroyed()) win.webContents.send('update', u); }, 6 * 3600 * 1000);
   app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) createWindow(); });
 });
 app.on('window-all-closed', () => { watcher?.stop(); app.quit(); });

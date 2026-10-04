@@ -157,8 +157,15 @@ async function listArchive(archive) {
   const out = [];
   const add = async dir => { for (const f of await listCsv(dir)) out.push({ ...f, path: path.join(dir, f.name) }); };
   if (!(await isDir(archive))) return out;
-  await add(archive);
-  for (const d of await fsp.readdir(archive, { withFileTypes: true })) if (d.isDirectory()) await add(path.join(archive, d.name));
+  // Modell-Ordner direkt im Archiv; ältere Ablagen mit tieferen Ordnern werden bis 3 Ebenen mitgenommen
+  const walk = async (dir, depth) => {
+    await add(dir);
+    if (depth >= 3) return;
+    let ents = [];
+    try { ents = await fsp.readdir(dir, { withFileTypes: true }); } catch { return; }
+    for (const d of ents) if (d.isDirectory() && !d.name.startsWith('.')) await walk(path.join(dir, d.name), depth + 1);
+  };
+  await walk(archive, 0);
   return out;
 }
 
