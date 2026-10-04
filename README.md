@@ -10,6 +10,8 @@ Wertet Telemetrie-Logs (CSV) von FrSky-Ethos-Sendern aus und holt neue Logs auto
 - Als Archiv eignet sich ein Ordner in Google Drive für den Desktop oder OneDrive. Die App schlägt beim ersten Start `…/My Drive/Ethos Logs` bzw. den OneDrive-Ordner vor, sonst `Dokumente/Ethos Logs`.
 - Manuell eingelesene Logs lassen sich mit „Im Archiv sichern“ ablegen, oder immer automatisch (Einstellung).
 
+Sprache: Deutsch oder Englisch, standardmässig die Sprache des Betriebssystems, wählbar unter ⚙ Einstellungen.
+
 Die Einstellungen liegen in `settings.json` im App-Datenordner.
 
 ## Entwicklung

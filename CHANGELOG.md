@@ -1,7 +1,9 @@
 # Changelog
 
-## 1.1.1 – noch nicht veröffentlicht
+## 1.2.0 – 2026-10-04
 
+- Die App gibt es auf Deutsch und Englisch. Standard ist die Sprache des Betriebssystems, unter ⚙ Einstellungen lässt sich die Sprache wählen. Die Sensornamen kommen aus dem Log und bleiben in der Sprache des Senders.
+- Die Kacheln unter „Werte am Zeitpunkt“ haben eine feste Grösse. Lange Texte verändern die Höhe nicht mehr.
 - macOS: Die Frage nach dem Zugriff auf Wechselmedien kam bei jeder Datei. Wird der Zugriff verweigert oder ist die Frage noch offen, bricht der Sync jetzt sofort ab, lässt den Sender 30 Sekunden in Ruhe und versucht es danach erneut. Die Sync-Zeile zeigt solange „Zugriff auf den Sender erlauben“.
 - Wird der Sender während dem Sync getrennt, bricht der Sync ab, statt für jede restliche Datei einen Fehler zu melden. Der Punkt in der Sync-Zeile wird orange, und beim nächsten Anschliessen geht es weiter. Angefangene Dateien bleiben nicht im Archiv liegen.
 - Bei Fehlern oder einem abgebrochenen Sync zeigt ein ⓘ in der Sync-Zeile alle Details und die vollständigen Fehlermeldungen.
