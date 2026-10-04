@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const S = require('./sync');
 const U = require('./update');
+const E = require('./eject');
 
 const SETTINGS_FILE = () => path.join(app.getPath('userData'), 'settings.json');
 const DEFAULTS = () => ({ senderPath: 'Radio/logs', archiveDir: S.defaultArchive(), autoSync: true, archiveManual: false });
@@ -46,6 +47,19 @@ ipcMain.handle('dialog:folder', async (_, current) => {
 });
 ipcMain.handle('sync:now', () => watcher.poll(true));
 ipcMain.handle('sync:status', () => watcher.status);
+// Sender auswerfen: Sync anhalten, alle gefundenen Sender-Laufwerke auswerfen, Ergebnis in den Status
+ipcMain.handle('sender:eject', async () => {
+  if (watcher.busy) throw new Error('Der Sync läuft noch.');
+  const vols = await S.volumes();
+  const roots = [...new Set(watcher.roots.map(r => E.volumeOf(r, vols)).filter(Boolean))];
+  if (!roots.length) throw new Error('Kein Sender angeschlossen.');
+  watcher.paused = true;
+  try {
+    for (const r of roots) await E.eject(r);
+    watcher.roots = []; watcher.synced.clear();
+    watcher.set({ ...watcher.status, connected: false, ejected: true });
+  } finally { watcher.paused = false; }
+});
 ipcMain.handle('archive:list', () => S.listArchive(settings.archiveDir));
 ipcMain.handle('archive:save', (_, name, bytes) => S.archiveFile(settings.archiveDir, name, Buffer.from(bytes)));
 ipcMain.handle('archive:open', () => { fs.mkdirSync(settings.archiveDir, { recursive: true }); return shell.openPath(settings.archiveDir); });

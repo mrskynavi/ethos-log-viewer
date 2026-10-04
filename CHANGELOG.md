@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.1 – noch nicht veröffentlicht
+
+- Der Knopf „↻ Sync“ ist weg. Neu gibt es „⏏ Auswerfen“, solange der Sender angeschlossen ist: Er wirft den Sender sicher aus (Mac: wie im Finder, Windows: wie „Auswerfen“ im Explorer). Danach steht in der Sync-Zeile „Sender ausgeworfen, Du kannst ihn abziehen“. Klappt es nicht, zum Beispiel weil eine Datei noch offen ist, steht der Grund dort.
+
 ## 1.2.0 – 2026-10-04
 
 - Die App gibt es auf Deutsch und Englisch. Standard ist die Sprache des Betriebssystems, unter ⚙ Einstellungen lässt sich die Sprache wählen. Die Sensornamen kommen aus dem Log und bleiben in der Sprache des Senders.

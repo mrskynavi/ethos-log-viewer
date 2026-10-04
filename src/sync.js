@@ -199,6 +199,11 @@ function defaultArchive(env = process.env, home = os.homedir(), platform = proce
   return path.join(home, 'Documents', 'Ethos Logs');
 }
 
+function rootOf(d, vols) {
+  const v = vols.filter(v => d.startsWith(v.root)).sort((a, b) => b.root.length - a.root.length)[0];
+  return v ? v.root : d;
+}
+
 // Schaut alle paar Sekunden nach dem Sender und synchronisiert einmal pro Anschluss
 class SyncWatcher extends EventEmitter {
   constructor(getSettings, opts = {}) {
@@ -209,18 +214,21 @@ class SyncWatcher extends EventEmitter {
     this.synced = new Set();
     this.busy = false;
     this.status = { state: 'idle' };
+    this.roots = [];        // Laufwerke der zuletzt gefundenen Sender
+    this.paused = false;    // während dem Auswerfen nicht auf den Sender zugreifen
   }
   start() { this.stop(); this.timer = setInterval(() => this.poll(), this.interval); this.poll(); }
   stop() { clearInterval(this.timer); this.timer = null; }
   set(s) { this.status = s; this.emit('status', s); }
   async poll(force = false) {
-    if (this.busy) return this.status;
+    if (this.busy || this.paused) return this.status;
     const st = this.getSettings();
     if (!force && !st.autoSync) { if (this.status.state !== 'off') this.set({ state: 'off' }); return this.status; }
     this.busy = true;
     try {
       const vols = await this.volumes();
       const dirs = await findSenderDirs(st.senderPath, vols, force);
+      this.roots = [...new Set(dirs.map(d => rootOf(d, vols)))];
       for (const d of [...this.synced]) if (!dirs.includes(d)) this.synced.delete(d);
       if (!dirs.length) {
         // Sender abgezogen: das letzte Ergebnis bleibt sichtbar
@@ -239,8 +247,7 @@ class SyncWatcher extends EventEmitter {
         catch (e) {
           if (!isDenied(e)) throw e;
           // Zugriff verweigert (macOS fragt gerade nach): Laufwerk in Ruhe lassen, später nochmals
-          const v = vols.filter(v => d.startsWith(v.root)).sort((a, b) => b.root.length - a.root.length)[0];
-          denied.set(v ? v.root : d, Date.now() + DENY_PAUSE);
+          denied.set(rootOf(d, vols), Date.now() + DENY_PAUSE);
           this.set({ state: 'denied', source: d });
           return this.status;
         }
