@@ -7,6 +7,8 @@ const root = path.join(__dirname, '..');
 const out = path.join(root, 'site');
 const pwa = path.join(root, 'pwa');
 const version = require(path.join(root, 'package.json')).version;
+// --ohne-beispiel: für die öffentliche Version, das Beispiel-Log enthält eine echte GPS-Spur
+const sample = !process.argv.includes('--ohne-beispiel');
 
 fs.rmSync(out, { recursive: true, force: true });
 fs.mkdirSync(path.join(out, 'icons'), { recursive: true });
@@ -53,7 +55,7 @@ fs.copyFileSync(path.join(root, 'node_modules', 'chart.js', 'dist', 'chart.umd.j
 fs.copyFileSync(path.join(pwa, 'manifest.webmanifest'), path.join(out, 'manifest.webmanifest'));
 const icons = fs.readdirSync(path.join(pwa, 'icons'));
 for (const f of icons) fs.copyFileSync(path.join(pwa, 'icons', f), path.join(out, 'icons', f));
-if (fs.existsSync(path.join(root, 'web', 'beispiel.csv'))) fs.copyFileSync(path.join(root, 'web', 'beispiel.csv'), path.join(out, 'beispiel.csv'));
+if (sample && fs.existsSync(path.join(root, 'web', 'beispiel.csv'))) fs.copyFileSync(path.join(root, 'web', 'beispiel.csv'), path.join(out, 'beispiel.csv'));
 fs.writeFileSync(path.join(out, '.nojekyll'), '');
 
 // Offline-Grundausstattung; das Beispiel-Log (2,7 MB) wird erst beim ersten Laden gemerkt
