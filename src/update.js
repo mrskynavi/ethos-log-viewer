@@ -25,7 +25,7 @@ function getJson(url) {
   });
 }
 
-// Fehler (offline, privates Repository) zählen als "keine neue Version"
+// Fehler (offline, privates Repository) zählen als "keine neue Version", werden aber mitgeliefert
 async function check(current, fetchJson = getJson) {
   try {
     const r = await fetchJson(API);

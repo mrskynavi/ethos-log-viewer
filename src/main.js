@@ -1,5 +1,5 @@
 // Desktop-Hülle: zeigt den Ethos Log Viewer und synchronisiert Logs vom Sender ins Archiv
-const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, shell, net } = require('electron');
 const fs = require('fs');
 const path = require('path');
 const S = require('./sync');
@@ -63,7 +63,22 @@ ipcMain.handle('sender:eject', async () => {
 ipcMain.handle('archive:list', () => S.listArchive(settings.archiveDir));
 ipcMain.handle('archive:save', (_, name, bytes) => S.archiveFile(settings.archiveDir, name, Buffer.from(bytes)));
 ipcMain.handle('archive:open', () => { fs.mkdirSync(settings.archiveDir, { recursive: true }); return shell.openPath(settings.archiveDir); });
-ipcMain.handle('update:check', () => U.check(app.getVersion()));
+// Update-Suche über das Netz von Chromium: nutzt Proxy und Zertifikate des Systems
+async function netJson(url) {
+  const r = await net.fetch(url, { headers: { 'User-Agent': 'ethos-log-viewer', Accept: 'application/vnd.github+json' } });
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  return r.json();
+}
+let lastUpdate = null;
+async function checkUpdate() {
+  let u = await U.check(app.getVersion(), netJson);
+  if (u.error) u = await U.check(app.getVersion());   // zweiter Versuch über Node
+  lastUpdate = { ...u, at: Date.now() };
+  if (win && !win.isDestroyed()) win.webContents.send('update', lastUpdate);
+  return lastUpdate;
+}
+ipcMain.handle('update:check', () => checkUpdate());
+ipcMain.handle('app:version', () => app.getVersion());
 ipcMain.handle('update:open', (_, url) => { if (/^https:\/\/github\.com\/mrskynavi\/ethos-log-viewer\//.test(url)) shell.openExternal(url); });
 ipcMain.handle('file:read', async (_, p) => { if (!allowed(p)) throw new Error('Kein Zugriff'); return fs.promises.readFile(p, 'utf8'); });
 ipcMain.handle('file:peek', async (_, p, n) => {
@@ -83,8 +98,9 @@ app.whenReady().then(() => {
   watcher.on('status', s => win && !win.isDestroyed() && win.webContents.send('sync:status', s));
   createWindow();
   watcher.start();
-  // alle 6 Stunden nach einer neuen Version schauen
-  setInterval(async () => { const u = await U.check(app.getVersion()); if (u.newer && win && !win.isDestroyed()) win.webContents.send('update', u); }, 6 * 3600 * 1000);
+  // alle 6 Stunden nach einer neuen Version schauen, und wenn das Fenster nach mehr als einer Stunde wieder nach vorne kommt
+  setInterval(checkUpdate, 6 * 3600 * 1000);
+  app.on('browser-window-focus', () => { if (!lastUpdate || Date.now() - lastUpdate.at > 3600 * 1000) checkUpdate(); });
   app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) createWindow(); });
 });
 app.on('window-all-closed', () => { watcher?.stop(); app.quit(); });
