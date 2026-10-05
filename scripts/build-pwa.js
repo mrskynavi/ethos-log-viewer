@@ -9,6 +9,8 @@ const pwa = path.join(root, 'pwa');
 const version = require(path.join(root, 'package.json')).version;
 // --ohne-beispiel: für die öffentliche Version, das Beispiel-Log enthält eine echte GPS-Spur
 const sample = !process.argv.includes('--ohne-beispiel');
+// --beispiel-verschoben: Beispiel-Log mit an einen anderen Ort verschobener GPS-Spur (Form, Höhen und Wind bleiben gleich)
+const shifted = process.argv.includes('--beispiel-verschoben');
 
 fs.rmSync(out, { recursive: true, force: true });
 fs.mkdirSync(path.join(out, 'icons'), { recursive: true });
@@ -66,7 +68,17 @@ if (clientId) {
 }
 const icons = fs.readdirSync(path.join(pwa, 'icons'));
 for (const f of icons) fs.copyFileSync(path.join(pwa, 'icons', f), path.join(out, 'icons', f));
-if (sample && fs.existsSync(path.join(root, 'web', 'beispiel.csv'))) fs.copyFileSync(path.join(root, 'web', 'beispiel.csv'), path.join(out, 'beispiel.csv'));
+if (sample && fs.existsSync(path.join(root, 'web', 'beispiel.csv'))) {
+  let csv = fs.readFileSync(path.join(root, 'web', 'beispiel.csv'), 'utf8');
+  if (shifted) {
+    // erste Position landet über dem Neuenburgersee, alle anderen um denselben Betrag verschoben
+    const first = /(?:^|,)(-?\d+\.\d+) (-?\d+\.\d+)(?=,)/m.exec(csv);
+    if (!first) throw new Error('Keine GPS-Position im Beispiel-Log gefunden');
+    const dLat = 46.9 - Number(first[1]), dLon = 6.85 - Number(first[2]);
+    csv = csv.replace(/(^|,)(-?\d+\.\d+) (-?\d+\.\d+)(?=,)/gm, (m, p, la, lo) => `${p}${(Number(la) + dLat).toFixed(la.split('.')[1].length)} ${(Number(lo) + dLon).toFixed(lo.split('.')[1].length)}`);
+  }
+  fs.writeFileSync(path.join(out, 'beispiel.csv'), csv);
+}
 fs.writeFileSync(path.join(out, '.nojekyll'), '');
 
 // Offline-Grundausstattung; das Beispiel-Log (2,7 MB) wird erst beim ersten Laden gemerkt
