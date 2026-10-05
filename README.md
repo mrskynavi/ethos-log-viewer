@@ -23,9 +23,16 @@ npm install
 npm test        # Sync-Engine
 npm start       # App starten
 npm run dist    # Installer für das aktuelle System bauen
+npm run build-pwa  # Web-App (PWA) nach site/ bauen
 ```
 
 `web/index.html` ist dieselbe Seite wie die Web-Version. `npm run prepare-app` kopiert sie nach `app/` und bindet Chart.js lokal ein, damit die App offline läuft.
+
+## Web-App (PWA)
+
+`npm run build-pwa` baut aus `web/index.html` die installierbare Web-App nach `site/`: Chart.js lokal, Manifest und Icons aus `pwa/`, Service Worker für den Betrieb ohne Netz. Auf iPhone und iPad in Safari „Teilen → Zum Home-Bildschirm“, auf Android in Chrome „App installieren“. Logs kommen über „Import …“ aus der Dateien-App bzw. dem Datei-Dialog; eine Ordner-Auswahl und der Sync vom Sender gibt es dort nicht.
+
+Die Seite braucht HTTPS. Der Workflow „Web-App (GitHub Pages)“ läuft nur von Hand und veröffentlicht `site/` auf GitHub Pages. Nach einer Änderung holen sich installierte Geräte die neue Version beim nächsten Öffnen mit Netz.
 
 GitHub Actions baut bei jedem Push den Windows-Installer (`.exe`) und das Mac-Image (`.dmg`, Intel und Apple Silicon) und legt beide unter „Releases“ als Version `v<version>` ab. Der Release-Text kommt aus dem Abschnitt der Version in `CHANGELOG.md`; vor dem Erhöhen der Version dort einen Abschnitt `## <version> – <datum>` anlegen.
 

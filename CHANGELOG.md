@@ -2,6 +2,7 @@
 
 ## Noch nicht veröffentlicht
 
+- Web-App zum Installieren (PWA) für iPhone, iPad, Android und den Browser am Computer: läuft nach dem ersten Öffnen auch ohne Netz, eigenes Icon auf dem Home-Bildschirm. Logs werden über „Import …“ aus der Dateien-App gewählt; auf dem Handy entfällt „Ordner öffnen“, auf Android zeigt der Dialog alle Dateien, damit keine Logs ausgegraut sind.
 - Einstellungen pro Modell: Sensor-Auswahl und Reihenfolge der Diagramme, „Einzeln/Überlagert“, „Sender-Kanäle anzeigen“, Thermik- und Steigflug-Schalter samt Höhenkanal, Schwelle, Balkenart und die Einstellungen von „Wind nach Höhe“ werden automatisch beim jeweiligen Modell gespeichert. Wird ein Log geladen, kommen die Einstellungen dieses Modells zurück. Ein Modell ohne eigene Einstellungen startet mit den zuletzt benutzten.
 - Versionsnummer sichtbar: unter ⚙ Einstellungen (unten, mit Knopf „Nach Updates suchen“) und im ⓘ. Dort steht auch, ob die Version aktuell ist oder warum die Suche nicht geklappt hat.
 - Update-Hinweis zuverlässiger: Die Suche nutzt jetzt Proxy und Zertifikate des Systems (mit zweitem Versuch auf dem alten Weg) und läuft zusätzlich, wenn die App nach mehr als einer Stunde wieder in den Vordergrund kommt, nicht nur beim Start und alle 6 Stunden.
