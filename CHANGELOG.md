@@ -1,5 +1,9 @@
 # Changelog
 
+## Noch nicht veröffentlicht
+
+- Einstellungen pro Modell: Sensor-Auswahl und Reihenfolge der Diagramme, „Einzeln/Überlagert“, „Sender-Kanäle anzeigen“, Thermik- und Steigflug-Schalter samt Höhenkanal, Schwelle, Balkenart und die Einstellungen von „Wind nach Höhe“ werden automatisch beim jeweiligen Modell gespeichert. Wird ein Log geladen, kommen die Einstellungen dieses Modells zurück. Ein Modell ohne eigene Einstellungen startet mit den zuletzt benutzten.
+
 ## 1.3.0 – 2026-10-04
 
 - Neues Tab „Rohdaten“: alle Zeilen und Spalten des Logs als Tabelle, auch bei grossen Logs flüssig. Ein Klick auf eine Zeile setzt den Zeitpunkt, die Zeile des gewählten Zeitpunkts ist hervorgehoben und wird ins Bild geholt.

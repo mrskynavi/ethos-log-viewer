@@ -805,10 +805,11 @@ function render(log, name, example){
   VIEW={min:0,max:tEnd()}; TZ={z:1,px:0,py:0}; CURSOR=null; $('#curTrack').setAttribute('aria-valuemax',log.t.length);
   const pref=[CH.alt,CH.vario,CH.spd,CH.lq[0],CH.cur,CH.volt].filter(Boolean);
   selected = new Set(pref.map(c=>c.raw));
-  try{ ORDER=JSON.parse(store.get('order')||'[]'); }catch(e){ ORDER=[]; }
-  try{ const sv=JSON.parse(store.get('sel')||'null'); if (Array.isArray(sv)){ const ok=sv.filter(k=>log.cols.some(c=>c.raw===k)); if (ok.length) selected=new Set(ok); } }catch(e){}
+  try{ ORDER=JSON.parse(mstore.get('order')||'[]'); }catch(e){ ORDER=[]; }
+  try{ const sv=JSON.parse(mstore.get('sel')||'null'); if (Array.isArray(sv)){ const ok=sv.filter(k=>log.cols.some(c=>c.raw===k)); if (ok.length) selected=new Set(ok); } }catch(e){}
   for (const k of selected) if (!ORDER.includes(k)) ORDER.push(k);
   log.cols.forEach((c,i)=>c.color=PALETTE[i%PALETTE.length]);
+  OVERLAY = mstore.get('overlay')==='1'; $('#showRc').checked = mstore.get('showRc')==='1';
   renderChips();
   $('#stats').innerHTML = `<tr><th>${T('Kanal')}</th><th>${T('Einheit')}</th><th>${T('Am Zeitpunkt')}</th><th>Min</th><th>Ø</th><th>Max</th><th>${T('Werte')}</th></tr>` +
     log.cols.filter(c=>!c.rc).map(c=>{const s=stats(c.vals)||{}; return `<tr><td>${esc(c.name)}${c.derived?`<span class="ctag">${T('berechnet')}</span>`:''}</td><td class="u">${esc(c.unit)}</td><td class="cval" data-k="${esc(c.raw)}">–</td><td>${fmt(s.min,2)}</td><td>${fmt(s.avg,2)}</td><td>${fmt(s.max,2)}</td><td>${(s.n||0).toLocaleString(LOC)}</td></tr>`}).join('');
@@ -824,13 +825,16 @@ const W = {
   climb:{ sw:'#climbSw', h:'#climbH', min:1, def:['LS9'] },
 };
 const store = { get(k){ try{return localStorage.getItem('ethoslv.'+k);}catch(e){return null;} }, set(k,v){ try{localStorage.setItem('ethoslv.'+k,v);}catch(e){} } };
+// Einstellungen pro Modell; ein Modell ohne eigene Werte übernimmt die zuletzt benutzten
+const mkey = k => 'm.'+(FILES[CUR]?.model||'_')+'.'+k;
+const mstore = { get(k){ const v=store.get(mkey(k)); return v!=null ? v : store.get(k); }, set(k,v){ store.set(mkey(k),v); store.set(k,v); } };
 function colBy(raw){ return LOG.cols.find(c=>c.raw===raw); }
 function fillSelects(){
   const swOpts = `<option value="">${T('– wählen –')}</option>` + LOG.cols.filter(c=>c.rc).concat(LOG.cols.filter(c=>!c.rc)).map(c=>`<option>${esc(c.raw)}</option>`).join('');
   const hOpts  = LOG.cols.filter(c=>!c.rc).map(c=>`<option>${esc(c.raw)}</option>`).join('');
   for (const [k,w] of Object.entries(W)){
     $(w.sw).innerHTML=swOpts; $(w.h).innerHTML=hOpts;
-    const savedSw=store.get(k+'.sw'), savedH=store.get(k+'.h');
+    const savedSw=mstore.get(k+'.sw'), savedH=mstore.get(k+'.h');
     if (k==='climb' && CH.cur) $(w.sw).querySelector('option').insertAdjacentHTML('afterend',`<option value="${CUR_SW}">${esc(T('{n} (automatisch)',{n:CH.cur.name}))}</option>`);
     let sw = savedSw===CUR_SW && CH.cur ? CUR_SW : (savedSw && colBy(savedSw)) ? savedSw : null;
     if (!sw){ const d=w.def.map(n=>LOG.cols.find(c=>c.name===n)).find(c=>c && c.vals.some(v=>v>0));
@@ -839,8 +843,8 @@ function fillSelects(){
     $(w.sw).value = sw;
     $(w.h).value = (savedH && colBy(savedH)) ? savedH : (CH.alt?.raw || '');
   }
-  const m=store.get('therm.mode'); if (m) $('#thermMode').value=m;
-  const th=store.get('climb.thr'); if (th) $('#climbThr').value=th;
+  const m=mstore.get('therm.mode'); if (m) $('#thermMode').value=m;
+  const th=mstore.get('climb.thr'); if (th) $('#climbThr').value=th;
 }
 // Steigflug ohne Schalter: Motor an, solange der ESC-Strom über der Schwelle liegt; Lücken bis 1 s werden überbrückt
 const CUR_SW='@cur';
@@ -942,8 +946,8 @@ function refreshWidgets(){ computeWidgets(); fillMark(); drawBars(); drawCharts(
 function fillWindAlt(){
   const opts=LOG.cols.filter(c=>!c.rc && /^(Altitude|Alt|Höhe|GAlt|GPS Alt)/i.test(c.name));
   $('#whAlt').innerHTML=opts.map(c=>`<option>${esc(c.raw)}</option>`).join('');
-  const sv=store.get('wh.alt'); $('#whAlt').value = sv && opts.some(c=>c.raw===sv) ? sv : (CH.alt?.raw||opts[0]?.raw||'');
-  const st=store.get('wh.step'); if (st) $('#whStep').value=st;
+  const sv=mstore.get('wh.alt'); $('#whAlt').value = sv && opts.some(c=>c.raw===sv) ? sv : (CH.alt?.raw||opts[0]?.raw||'');
+  const st=mstore.get('wh.step'); if (st) $('#whStep').value=st;
 }
 function renderWindHeight(){
   const fits=LOG.windFits||[], alt=colBy($('#whAlt').value), step=+$('#whStep').value||50;
@@ -962,8 +966,8 @@ function renderWindHeight(){
   }).join('');
   $('#windhhint').textContent=T('Gezählt werden die {n} akzeptierten Wind-Fits, jeweils in der Höhe ({a}), in der sie gerechnet wurden. Richtung = Vektormittel; „wechselnd“ heisst, die Richtungen in dieser Stufe streuen stark. Der Pfeil zeigt, wohin der Wind weht.',{n:fits.length,a:alt.name});
 }
-$('#whAlt').addEventListener('change',e=>{ store.set('wh.alt',e.target.value); LOG&&renderWindHeight(); });
-$('#whStep').addEventListener('change',e=>{ store.set('wh.step',e.target.value); LOG&&renderWindHeight(); });
+$('#whAlt').addEventListener('change',e=>{ mstore.set('wh.alt',e.target.value); LOG&&renderWindHeight(); });
+$('#whStep').addEventListener('change',e=>{ mstore.set('wh.step',e.target.value); LOG&&renderWindHeight(); });
 function renderChips(){
   const rc=$('#showRc').checked;
   const list=LOG.cols.filter(c=>c.derived).concat(LOG.cols.filter(c=>!c.derived&&(rc||!c.rc)));
@@ -980,7 +984,7 @@ const motorBands = { id:'motorBands', beforeDatasetsDraw(ch){
   ctx.globalAlpha=.16; ctx.fillStyle=css('--good');
   THERM.forEach(r=>{ const x0=x.getPixelForValue(LOG.t[r.s]), x1=x.getPixelForValue(LOG.t[r.e]); ctx.fillRect(x0,a.top,Math.max(2,x1-x0),a.bottom-a.top); });
   ctx.restore(); } };
-let OVERLAY = store.get('overlay')==='1';
+let OVERLAY = false;
 function seriesPts(c){ return LOG.t.map((x,i)=>({x, y:c.vals[i]})).filter(p=>!isNaN(p.x)&&!isNaN(p.y)); }   // LTTB verträgt keine Lücken
 // alle gewählten Kanäle in einem Diagramm, jeder mit eigener Skala über die ganze Höhe
 function drawOverlay(box, list, fg, grid){
@@ -1259,14 +1263,14 @@ $('#chips').addEventListener('click',e=>{
   const k=b.dataset.k; selected.has(k)?selected.delete(k):selected.add(k);
   b.setAttribute('aria-pressed',selected.has(k));
   if (selected.has(k)){ ORDER=ORDER.filter(x=>x!==k).concat(k); saveOrder(); }
-  store.set('sel', JSON.stringify([...selected])); drawCharts();
+  mstore.set('sel', JSON.stringify([...selected])); drawCharts();
 });
 // ---------- eigene Reihenfolge der Diagramme ----------
 function orderedSelected(){
   const sel=[...selected], pos=k=>{ const i=ORDER.indexOf(k); return i<0 ? 1e6+sel.indexOf(k) : i; };
   return sel.sort((a,b)=>pos(a)-pos(b)).map(colBy).filter(Boolean);
 }
-function saveOrder(){ store.set('order', JSON.stringify(ORDER)); }
+function saveOrder(){ mstore.set('order', JSON.stringify(ORDER)); }
 function orderFromDom(){
   const dom=[...$('#charts').querySelectorAll('.cbox')].map(e=>e.dataset.k);
   ORDER = dom.concat(ORDER.filter(k=>!dom.includes(k))); saveOrder();
@@ -1303,14 +1307,14 @@ function orderFromDom(){
   box.addEventListener('pointerup',end); box.addEventListener('pointercancel',end);
 })();
 for (const [k,w] of Object.entries(W)){
-  $(w.sw).addEventListener('change',e=>{ store.set(k+'.sw',e.target.value); LOG&&refreshWidgets(); });
-  if (k==='climb') $('#climbThr').addEventListener('change',e=>{ store.set('climb.thr',e.target.value); LOG&&refreshWidgets(); });
-  $(w.h).addEventListener('change',e=>{ store.set(k+'.h',e.target.value); LOG&&refreshWidgets(); });
+  $(w.sw).addEventListener('change',e=>{ mstore.set(k+'.sw',e.target.value); LOG&&refreshWidgets(); });
+  if (k==='climb') $('#climbThr').addEventListener('change',e=>{ mstore.set('climb.thr',e.target.value); LOG&&refreshWidgets(); });
+  $(w.h).addEventListener('change',e=>{ mstore.set(k+'.h',e.target.value); LOG&&refreshWidgets(); });
 }
-$('#thermMode').addEventListener('change',e=>{ store.set('therm.mode',e.target.value); LOG&&drawBars(); });
-$('#showRc').addEventListener('change',()=>LOG&&renderChips());
+$('#thermMode').addEventListener('change',e=>{ mstore.set('therm.mode',e.target.value); LOG&&drawBars(); });
+$('#showRc').addEventListener('change',e=>{ mstore.set('showRc', e.target.checked?'1':'0'); LOG&&renderChips(); });
 document.querySelector('.seg').addEventListener('click',e=>{ const b=e.target.closest('[data-ov]'); if(!b) return;
-  OVERLAY = b.dataset.ov==='1'; store.set('overlay', OVERLAY?'1':'0'); if (LOG){ drawCharts(); renderCursor(); } });
+  OVERLAY = b.dataset.ov==='1'; mstore.set('overlay', OVERLAY?'1':'0'); if (LOG){ drawCharts(); renderCursor(); } });
 // ---------- Log-Auswahl ----------
 let FILES=[], CUR=-1;
 const readText = f => new Promise((ok,ko)=>{ const r=new FileReader(); r.onload=()=>ok(r.result); r.onerror=()=>ko(r.error); r.readAsText(f); });
