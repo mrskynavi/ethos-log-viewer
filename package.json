@@ -14,8 +14,8 @@
     "dist": "npm run prepare-app && electron-builder --publish never",
     "build-pwa": "node scripts/build-pwa.js"
   },
-  "dependencies": {},
   "devDependencies": {
+    "@azure/msal-browser": "4.30.0",
     "chart.js": "4.4.1",
     "electron": "^33.4.11",
     "electron-builder": "^26.0.0"

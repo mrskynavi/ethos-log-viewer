@@ -48,22 +48,34 @@ const tail = `
 })();
 </script>
 `;
-html = html.trimEnd() + '\n' + tail;
+// OneDrive: nur mit Client-ID der App-Registrierung bei Microsoft (pwa/config.json oder ONEDRIVE_CLIENT_ID)
+const cfg = JSON.parse(fs.readFileSync(path.join(pwa, 'config.json'), 'utf8'));
+const clientId = process.env.ONEDRIVE_CLIENT_ID || cfg.onedriveClientId || '';
+const od = clientId ? `<script>window.ETHOS_ONEDRIVE = ${JSON.stringify({ clientId })};</script>
+<script src="msal-browser.min.js"></script>
+<script src="onedrive.js"></script>
+` : '';
+html = html.trimEnd() + '\n' + tail + od;
 
 fs.writeFileSync(path.join(out, 'index.html'), html);
 fs.copyFileSync(path.join(root, 'node_modules', 'chart.js', 'dist', 'chart.umd.js'), path.join(out, 'chart.umd.min.js'));
 fs.copyFileSync(path.join(pwa, 'manifest.webmanifest'), path.join(out, 'manifest.webmanifest'));
+if (clientId) {
+  fs.copyFileSync(path.join(root, 'node_modules', '@azure', 'msal-browser', 'lib', 'msal-browser.min.js'), path.join(out, 'msal-browser.min.js'));
+  fs.copyFileSync(path.join(pwa, 'onedrive.js'), path.join(out, 'onedrive.js'));
+}
 const icons = fs.readdirSync(path.join(pwa, 'icons'));
 for (const f of icons) fs.copyFileSync(path.join(pwa, 'icons', f), path.join(out, 'icons', f));
 if (sample && fs.existsSync(path.join(root, 'web', 'beispiel.csv'))) fs.copyFileSync(path.join(root, 'web', 'beispiel.csv'), path.join(out, 'beispiel.csv'));
 fs.writeFileSync(path.join(out, '.nojekyll'), '');
 
 // Offline-Grundausstattung; das Beispiel-Log (2,7 MB) wird erst beim ersten Laden gemerkt
-const shell = ['./', 'index.html', 'chart.umd.min.js', 'manifest.webmanifest', ...icons.map(f => 'icons/' + f)];
+const shell = ['./', 'index.html', 'chart.umd.min.js', 'manifest.webmanifest', ...icons.map(f => 'icons/' + f),
+  ...(clientId ? ['msal-browser.min.js', 'onedrive.js'] : [])];
 const hash = crypto.createHash('sha256');
 for (const f of shell.slice(1)) hash.update(fs.readFileSync(path.join(out, f)));
 const sw = fs.readFileSync(path.join(pwa, 'sw.js'), 'utf8')
   .replace('__VERSION__', version + '-' + hash.digest('hex').slice(0, 10))
   .replace('__SHELL__', JSON.stringify(shell));
 fs.writeFileSync(path.join(out, 'sw.js'), sw);
-console.log('site/ vorbereitet');
+console.log('site/ vorbereitet' + (clientId ? ' (mit OneDrive)' : ' (ohne OneDrive, keine Client-ID)'));
