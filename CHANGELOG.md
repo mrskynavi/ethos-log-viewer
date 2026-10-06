@@ -3,6 +3,7 @@
 ## Noch nicht veröffentlicht
 
 - Web-App zum Installieren (PWA) für iPhone, iPad, Android und den Browser am Computer: läuft nach dem ersten Öffnen auch ohne Netz, eigenes Icon auf dem Home-Bildschirm. Logs werden über „Import …“ aus der Dateien-App gewählt; auf dem Handy entfällt „Ordner öffnen“, auf Android zeigt der Dialog alle Dateien, damit keine Logs ausgegraut sind.
+- Android-App (APK) mit Beispiel-Log: dieselbe Web-App als eigene App, ohne Browser und ohne Netz, Einstellungen pro Modell wie überall. Logs über „Import …“ aus Dateien, Downloads oder Google Drive. Das Beispiel-Log hat die GPS-Spur an einen anderen Ort verschoben.
 - Web-App mit OneDrive: Nach einmaliger Anmeldung zeigt die Web-App die Logs aus dem OneDrive-Ordner „Ethos Logs“ (pro Modell ein Unterordner) direkt in der Log-Liste, auch neu hinzugekommene. Geöffnete Logs bleiben auf dem Gerät und gehen auch ohne Netz auf.
 - Einstellungen pro Modell: Sensor-Auswahl und Reihenfolge der Diagramme, „Einzeln/Überlagert“, „Sender-Kanäle anzeigen“, Thermik- und Steigflug-Schalter samt Höhenkanal, Schwelle, Balkenart und die Einstellungen von „Wind nach Höhe“ werden automatisch beim jeweiligen Modell gespeichert. Wird ein Log geladen, kommen die Einstellungen dieses Modells zurück. Ein Modell ohne eigene Einstellungen startet mit den zuletzt benutzten.
 - Versionsnummer sichtbar: unter ⚙ Einstellungen (unten, mit Knopf „Nach Updates suchen“) und im ⓘ. Dort steht auch, ob die Version aktuell ist oder warum die Suche nicht geklappt hat.

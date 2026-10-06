@@ -12,10 +12,14 @@
     "start": "npm run prepare-app && electron .",
     "test": "node --test test/sync.test.js test/update.test.js test/eject.test.js",
     "dist": "npm run prepare-app && electron-builder --publish never",
-    "build-pwa": "node scripts/build-pwa.js"
+    "build-pwa": "node scripts/build-pwa.js",
+    "build-android": "node scripts/build-pwa.js --beispiel-verschoben && cap sync android"
   },
   "devDependencies": {
     "@azure/msal-browser": "4.30.0",
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/cli": "^8.5.2",
+    "@capacitor/core": "^8.5.2",
     "chart.js": "4.4.1",
     "electron": "^33.4.11",
     "electron-builder": "^26.0.0"
