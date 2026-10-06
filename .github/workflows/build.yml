@@ -60,9 +60,12 @@ jobs:
 
           - Windows: Ethos-Log-Viewer-Setup-$V.exe herunterladen und ausführen.
           - Mac: Ethos-Log-Viewer-$V.dmg öffnen und die App in „Programme“ ziehen. Die App ist nicht signiert: beim ersten Start unter Systemeinstellungen → Datenschutz & Sicherheit „Dennoch öffnen“ wählen.
+          - Handbuch: Ethos-Log-Viewer-Bedienanleitung.pdf (Installation, alle Tabs und Knöpfe, Troubleshooting/FAQ).
           EOT
       - uses: actions/download-artifact@v4
         with: { path: out, merge-multiple: true }
+      # Handbuch liegt im Release neben Installer und Image
+      - run: cp docs/Ethos-Log-Viewer-Bedienanleitung.pdf out/
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.v.outputs.version }}

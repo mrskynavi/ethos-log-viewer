@@ -4,6 +4,8 @@
 
 Wertet Telemetrie-Logs (CSV) von Ethos-Sendern aus und holt neue Logs automatisch vom Sender, sobald er per USB angeschlossen ist.
 
+Download und Handbuch: unter [Releases](https://github.com/mrskynavi/ethos-log-viewer/releases/latest) liegen der Windows-Installer, das Mac-Image und die [Bedienanleitung als PDF](docs/Ethos-Log-Viewer-Bedienanleitung.pdf).
+
 ## Log-Sync
 
 - Die App sucht alle paar Sekunden auf allen angeschlossenen Laufwerken nach dem Log-Ordner des Senders. Standard ist `Radio/logs`. Der erste Teil darf auch der Name des Laufwerks sein, also ein Laufwerk `RADIO` mit dem Ordner `logs`. Ein vollständiger Pfad wie `E:\logs` geht auch.
