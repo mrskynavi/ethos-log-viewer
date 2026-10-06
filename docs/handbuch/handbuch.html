@@ -1,0 +1,497 @@
+<!doctype html>
+<!-- Vorlage für das Handbuch. scripts/handbuch.js setzt Version, Stand und Changelog ein und erzeugt die Bilder in bilder/. -->
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Ethos Log Viewer – Bedienanleitung</title>
+<style>
+@page { size: A4; margin: 18mm 16mm 18mm 16mm; }
+:root { --acc:#1f6feb; --acc2:#e8590c; --ink:#1d232b; --mut:#5b6673; --line:#d7dde4; --soft:#f3f6f9; }
+* { box-sizing: border-box; }
+body { font-family: "DejaVu Sans", "Noto Sans", Arial, sans-serif; color: var(--ink); font-size: 10pt; line-height: 1.5; margin: 0; }
+h1 { font-size: 20pt; margin: 0 0 4mm; color: var(--ink); break-before: page; padding-bottom: 2mm; border-bottom: 2px solid var(--acc); }
+h1 .n { color: var(--acc); margin-right: 3mm; }
+h2 { font-size: 13pt; margin: 6mm 0 2mm; color: var(--acc); break-after: avoid; }
+h3 { font-size: 11pt; margin: 4mm 0 1mm; break-after: avoid; }
+p { margin: 0 0 2.5mm; }
+ul, ol { margin: 0 0 3mm; padding-left: 6mm; }
+li { margin-bottom: 1mm; }
+figure { margin: 3mm 0 4mm; break-inside: avoid; }
+figure img { width: 100%; border: 1px solid var(--line); border-radius: 2mm; display: block; }
+figure.half img { width: 62%; margin: 0 auto; }
+figure.third img { width: 45%; margin: 0 auto; }
+figcaption { font-size: 8.5pt; color: var(--mut); margin-top: 1.2mm; text-align: center; }
+.key { display: inline-block; min-width: 5mm; padding: 0 1.5mm; border: 1px solid #b9c2cc; border-bottom-width: 2px; border-radius: 1mm; background: #fff; font-size: 8.5pt; line-height: 1.5; text-align: center; white-space: nowrap; }
+.btn { display: inline-block; padding: 0 2mm; border-radius: 1mm; background: #e7eef8; color: #0b3d91; font-weight: bold; font-size: 9pt; white-space: nowrap; }
+.num { display: inline-block; width: 5.2mm; height: 5.2mm; border-radius: 50%; background: var(--acc2); color: #fff; font-weight: bold; font-size: 8pt; line-height: 5.2mm; text-align: center; }
+table { border-collapse: collapse; width: 100%; margin: 2mm 0 4mm; font-size: 9pt; break-inside: auto; }
+th, td { border-bottom: 1px solid var(--line); padding: 1.4mm 2mm; text-align: left; vertical-align: top; }
+th { background: var(--soft); font-size: 8.5pt; color: var(--mut); text-transform: uppercase; letter-spacing: .03em; }
+tr { break-inside: avoid; }
+td.c { text-align: center; width: 9mm; }
+.tip, .warn, .note { border-left: 1.2mm solid; padding: 2mm 3mm; margin: 3mm 0; border-radius: 0 1.5mm 1.5mm 0; break-inside: avoid; }
+.tip { border-color: #2da44e; background: #eef8f1; }
+.warn { border-color: #d29922; background: #fdf6e3; }
+.note { border-color: var(--acc); background: #eef4fd; }
+.tip b:first-child, .warn b:first-child, .note b:first-child { display: block; margin-bottom: .5mm; }
+.state { width: 100%; }
+.state td:first-child { width: 58%; }
+.state img { width: 100%; border: 1px solid var(--line); border-radius: 1mm; display: block; }
+code { font-family: "DejaVu Sans Mono", monospace; font-size: 8.5pt; background: var(--soft); padding: 0 1mm; border-radius: .8mm; }
+.cover { height: 250mm; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+.cover img { width: 48mm; margin-bottom: 8mm; }
+.cover h1 { break-before: auto; border: 0; font-size: 30pt; margin: 0; }
+.cover .sub { font-size: 15pt; color: var(--mut); margin: 3mm 0 12mm; }
+.cover .meta { font-size: 10pt; color: var(--mut); }
+.cover .shot { width: 150mm; border-radius: 2mm; margin: 0 0 10mm; border: 1px solid var(--line); }
+.toc { columns: 1; font-size: 10.5pt; }
+.toc a { color: var(--ink); text-decoration: none; }
+.toc li { margin-bottom: 1.6mm; }
+.toc ol { padding-left: 7mm; }
+.toc ol ol { font-size: 9.5pt; color: var(--mut); margin-top: 1mm; }
+.faq h3 { color: var(--ink); }
+.faq h3::before { content: "? "; color: var(--acc2); }
+.two { display: flex; gap: 4mm; }
+.two > * { flex: 1; }
+.changelog h2 { margin-top: 5mm; }
+.changelog ul { margin-bottom: 2mm; }
+a { color: var(--acc); }
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <img src="bilder/icon.png" alt="">
+  <h1>Ethos Log Viewer</h1>
+  <div class="sub">Bedienanleitung</div>
+  <img class="shot" src="bilder/02-uebersicht.png" alt="">
+  <div class="meta">Version {{VERSION}} · Windows, macOS und Web-Version<br>Stand {{STAND}}</div>
+</section>
+
+<h1 style="border:0">Inhalt</h1>
+<div class="toc">
+<ol>
+  <li><a href="#k1">Was der Ethos Log Viewer macht</a></li>
+  <li><a href="#k2">Installation</a>
+    <ol><li>Download</li><li>Windows</li><li>macOS</li><li>Updates</li><li>Deinstallieren</li></ol></li>
+  <li><a href="#k3">Erster Start und Einstellungen</a></li>
+  <li><a href="#k4">Das Hauptfenster auf einen Blick</a></li>
+  <li><a href="#k5">Logs in die App bringen</a>
+    <ol><li>Automatischer Sync vom Sender</li><li>Import von Dateien und Ordnern</li><li>Das Archiv</li><li>Modell und Log wählen</li></ol></li>
+  <li><a href="#k6">Die Sync-Zeile</a></li>
+  <li><a href="#k7">Der Zeitpunkt</a></li>
+  <li><a href="#k8">Tab „Übersicht“</a></li>
+  <li><a href="#k9">Tab „Diagramme“</a></li>
+  <li><a href="#k10">Tab „Thermik &amp; Steigflüge“</a></li>
+  <li><a href="#k11">Tab „Karte &amp; Wind“</a></li>
+  <li><a href="#k12">Tab „Alle Werte“</a></li>
+  <li><a href="#k13">Tab „Rohdaten“</a></li>
+  <li><a href="#k14">Darstellung, Sprache und Web-Version</a></li>
+  <li><a href="#k15">Was die App speichert</a></li>
+  <li><a href="#k16">Troubleshooting und FAQ</a></li>
+  <li><a href="#k17">Kurzreferenz Maus und Tastatur</a></li>
+  <li><a href="#k18">Änderungen pro Version</a></li>
+</ol>
+</div>
+
+<!-- 1 -->
+<h1 id="k1"><span class="n">1</span>Was der Ethos Log Viewer macht</h1>
+<p>Der Ethos Log Viewer wertet die Telemetrie-Logs aus, die Dein Ethos-Sender als CSV-Dateien speichert. Du siehst auf einen Blick Flugzeit, Motorläufe, Empfangsqualität, Akkus, Höhe, GPS-Spur, Thermik, Steigflüge und Wind, und Du kannst jeden Sensor im Diagramm, als Tabelle oder Zeile für Zeile anschauen.</p>
+<p>Die App gibt es in zwei Formen:</p>
+<table>
+<tr><th>Form</th><th>Was sie kann</th></tr>
+<tr><td><b>Desktop-App</b> für Windows und Mac</td><td>Alle Auswertungen und zusätzlich der <b>automatische Sync</b>: Sobald Du den Sender per USB anschliesst, kopiert die App neue Logs in Dein Archiv, ein Ordner pro Modell. Dazu kommen „Archiv öffnen“, „Auswerfen“ und der Update-Hinweis.</td></tr>
+<tr><td><b>Web-Version</b> im Browser</td><td>Dieselbe Oberfläche mit allen Auswertungen. Logs lädst Du von Hand über „Import …“ oder per Ziehen ins Fenster. Kein Sync, kein Archiv.</td></tr>
+</table>
+<p>Die Logs bleiben immer auf Deinem Gerät bzw. in Deinem eigenen Archivordner. Die App schickt keine Logdaten ins Internet.</p>
+<div class="note"><b>Hinweis</b>Der Ethos Log Viewer ist ein inoffizielles Werkzeug und nicht mit dem Hersteller von Ethos verbunden. Ethos ist eine Marke ihres Inhabers.</div>
+<p>Diese Anleitung beschreibt Version {{VERSION}}. Was sich in welcher Version geändert hat, steht in <a href="#k18">Kapitel 18</a>. Die Screenshots zeigen die Desktop-App in der dunklen Darstellung mit dem Beispiel-Log eines Elektroseglers (SB-10).</p>
+
+<!-- 2 -->
+<h1 id="k2"><span class="n">2</span>Installation</h1>
+<h2>2.1 Download</h2>
+<p>Die Installationsdateien liegen auf GitHub unter <b>Releases</b>:<br>
+<a href="https://github.com/mrskynavi/ethos-log-viewer/releases/latest">github.com/mrskynavi/ethos-log-viewer/releases/latest</a></p>
+<p>Unter „Assets“ findest Du die Installationsdateien und dieses Handbuch:</p>
+<table>
+<tr><th>System</th><th>Datei</th></tr>
+<tr><td>Windows 10/11 (64 Bit)</td><td><code>Ethos-Log-Viewer-Setup-{{VERSION}}.exe</code></td></tr>
+<tr><td>macOS (Intel und Apple Silicon)</td><td><code>Ethos-Log-Viewer-{{VERSION}}.dmg</code></td></tr>
+<tr><td>Handbuch</td><td><code>Ethos-Log-Viewer-Bedienanleitung.pdf</code></td></tr>
+</table>
+
+<h2>2.2 Windows</h2>
+<ol>
+<li>Lade <code>Ethos-Log-Viewer-Setup-{{VERSION}}.exe</code> herunter und starte die Datei.</li>
+<li>Die App ist nicht mit einem Herausgeber-Zertifikat signiert. Windows zeigt deshalb eventuell „Der Computer wurde durch Windows geschützt“. Klicke auf <b>Weitere Informationen</b> und dann auf <b>Trotzdem ausführen</b>.</li>
+<li>Der Installer fragt nach dem Installationsordner. Den vorgeschlagenen Ordner kannst Du übernehmen oder ändern.</li>
+<li>Nach der Installation startest Du die App über das Startmenü oder die Verknüpfung „Ethos Log Viewer“.</li>
+</ol>
+
+<h2>2.3 macOS</h2>
+<ol>
+<li>Lade <code>Ethos-Log-Viewer-{{VERSION}}.dmg</code> herunter und öffne die Datei per Doppelklick.</li>
+<li>Ziehe <b>Ethos Log Viewer</b> in den Ordner <b>Programme</b>.</li>
+<li>Beim ersten Start blockiert macOS die App, weil sie nicht von einem registrierten Entwickler stammt. Öffne <b>Systemeinstellungen → Datenschutz &amp; Sicherheit</b>, scrolle nach unten und klicke bei „Ethos Log Viewer wurde blockiert“ auf <b>Dennoch öffnen</b>. Bestätige danach noch einmal mit „Öffnen“.</li>
+<li>Wenn Du den Sender zum ersten Mal anschliesst, fragt macOS, ob die App auf <b>Wechselmedien</b> zugreifen darf. Wähle <b>Erlauben</b>. Ohne diese Erlaubnis kann die App keine Logs vom Sender holen (siehe <a href="#k16">Troubleshooting</a>).</li>
+</ol>
+<div class="tip"><b>Tipp</b>macOS merkt sich die Erlaubnis. Die Frage kommt nur einmal, nicht für jede Datei.</div>
+
+<h2>2.4 Updates</h2>
+<p>Die Desktop-App schaut beim Start, danach alle 6 Stunden und wenn Du sie nach mehr als einer Stunde wieder in den Vordergrund holst auf GitHub nach einer neueren Version. Gibt es eine, erscheint rechts in der Sync-Zeile ein Hinweis mit Knopf:</p>
+<figure><img src="bilder/s-update.png" alt=""><figcaption>Hinweis auf eine neue Version (Beispiel)</figcaption></figure>
+<p><span class="btn">Herunterladen</span> öffnet die Release-Seite im Browser. Installiere die neue Version wie oben beschrieben über die alte. Einstellungen und Archiv bleiben erhalten.</p>
+<p>Welche Version Du hast, siehst Du unten in den Einstellungen <span class="btn">⚙</span> und im <span class="btn">ⓘ</span>. In den Einstellungen sucht <span class="btn">Nach Updates suchen</span> sofort; daneben steht „Das ist die neueste Version.“, „Version … ist verfügbar“ oder warum die Suche nicht geklappt hat.</p>
+
+<h2>2.5 Deinstallieren</h2>
+<ul>
+<li><b>Windows:</b> Einstellungen → Apps → „Ethos Log Viewer“ → Deinstallieren.</li>
+<li><b>Mac:</b> Die App aus „Programme“ in den Papierkorb ziehen.</li>
+</ul>
+<p>Dein Archiv mit den Logs wird dabei nicht gelöscht.</p>
+
+<!-- 3 -->
+<h1 id="k3"><span class="n">3</span>Erster Start und Einstellungen</h1>
+<p>Beim ersten Start sucht die App einen guten Ort für das Archiv. Hast Du <b>Google Drive für den Desktop</b> installiert, schlägt sie <code>…/My Drive/Ethos Logs</code> vor, sonst Deinen <b>OneDrive</b>-Ordner und als letzte Wahl <code>Dokumente/Ethos Logs</code>. Prüfe den Vorschlag einmal in den Einstellungen.</p>
+<p>Die Einstellungen öffnest Du mit dem Zahnrad <span class="btn">⚙</span> oben rechts.</p>
+<figure class="third"><img src="bilder/06-einstellungen.png" alt="" style="width:34%"><figcaption>Einstellungen in der Desktop-App</figcaption></figure>
+<div class="note"><b>Web-Version</b>Im Browser enthalten die Einstellungen nur Sprache und Darstellung, weil es dort keinen Sync und kein Archiv gibt.</div>
+<table>
+<tr><th>Feld</th><th>Bedeutung</th></tr>
+<tr><td><b>Sprache</b></td><td>„Systemsprache“, „Deutsch“ oder „English“. Standard ist die Sprache des Betriebssystems. Nach dem Speichern lädt die Oberfläche neu. Sensornamen kommen aus dem Log und bleiben in der Sprache des Senders.</td></tr>
+<tr><td><b>Darstellung</b></td><td>„Wie System“, „Hell“ oder „Dunkel“. Die Wahl wirkt sofort.</td></tr>
+<tr><td><b>Log-Ordner auf dem Sender</b></td><td>Wo die Logs auf dem Sender liegen. Standard <code>Radio/logs</code>. Die App sucht diesen Pfad auf jedem angeschlossenen Laufwerk. Der erste Teil darf auch der Name des Laufwerks sein, also ein Laufwerk <code>RADIO</code> mit dem Ordner <code>logs</code>. Ein vollständiger Pfad wie <code>E:\logs</code> geht auch.</td></tr>
+<tr><td><b>Archiv-Ordner</b></td><td>Wohin die Logs kopiert werden. <span class="btn">Wählen …</span> öffnet die Ordnerauswahl. Am besten ein Ordner in Google Drive oder OneDrive, dann hast Du die Logs auf allen Geräten. Pro Modell entsteht ein Unterordner.</td></tr>
+<tr><td><b>Automatisch synchronisieren …</b></td><td>Ein: Sobald der Sender angeschlossen ist, holt die App neue Logs. Aus: Die Sync-Zeile zeigt „Automatischer Sync aus“.</td></tr>
+<tr><td><b>Importierte Logs immer ins Archiv kopieren</b></td><td>Logs, die Du über „Import …“ öffnest, landen dann automatisch auch im Archiv.</td></tr>
+<tr><td><b>Version</b> und <b>Nach Updates suchen</b></td><td>Zeigt die installierte Version und sucht auf Knopfdruck nach einer neueren (siehe <a href="#k2">Kapitel 2.4</a>).</td></tr>
+</table>
+<p><span class="btn">Speichern</span> übernimmt die Änderungen, <span class="btn">Abbrechen</span> verwirft sie. Wechselst Du den Archiv-Ordner, lädt die App die Liste der Modelle und Logs neu.</p>
+
+<!-- 4 -->
+<h1 id="k4"><span class="n">4</span>Das Hauptfenster auf einen Blick</h1>
+<figure><img src="bilder/01-hauptfenster.png" alt=""><figcaption>Kopfzeile, Sync-Zeile und Tabs der Desktop-App</figcaption></figure>
+<table>
+<tr><th></th><th>Element</th><th>Funktion</th></tr>
+<tr><td class="c"><span class="num">1</span></td><td>Titel</td><td>Name der App.</td></tr>
+<tr><td class="c"><span class="num">2</span></td><td>ⓘ Info</td><td>Kurze Erklärung der App, wohin der Sync kopiert (Log-Ordner und Archivpfad), die installierte Version und der Hinweis „inoffizielles Werkzeug“. Nochmals klicken schliesst die Info.</td></tr>
+<tr><td class="c"><span class="num">3</span></td><td>Modell</td><td>Wählt das Modell. In Klammern steht die Anzahl Logs. Darunter: Anzahl Logs und Modelle insgesamt.</td></tr>
+<tr><td class="c"><span class="num">4</span></td><td>Log</td><td>Zeigt Datum, Startzeit und Dauer des offenen Logs. Ein Klick öffnet die Liste aller Logs des Modells (<a href="#k5">Kapitel 5.4</a>).</td></tr>
+<tr><td class="c"><span class="num">5</span></td><td>◀ ▶</td><td>Älteres bzw. neueres Log desselben Modells.</td></tr>
+<tr><td class="c"><span class="num">6</span></td><td>Import …</td><td>Logs von Hand öffnen (Dateien oder ganzer Ordner).</td></tr>
+<tr><td class="c"><span class="num">7</span></td><td>⚙</td><td>Einstellungen.</td></tr>
+<tr><td class="c"><span class="num">8</span></td><td>Sync-Zeile</td><td>Zustand des Senders und des letzten Syncs. Der Punkt ist grün, wenn alles gut ist, orange bei Warnungen und rot bei Fehlern (<a href="#k6">Kapitel 6</a>). Nur in der Desktop-App.</td></tr>
+<tr><td class="c"><span class="num">9</span></td><td>⏏ Auswerfen</td><td>Wirft den Sender sicher aus, damit Du das USB-Kabel ziehen kannst. Erscheint nur, solange der Sender angeschlossen und der Sync fertig ist.</td></tr>
+<tr><td class="c"><span class="num">10</span></td><td>Archiv öffnen</td><td>Öffnet den Archivordner im Explorer bzw. Finder.</td></tr>
+<tr><td class="c"><span class="num">11</span></td><td>Tabs</td><td>Übersicht, Diagramme, Thermik &amp; Steigflüge, Karte &amp; Wind, Alle Werte, Rohdaten. Die App merkt sich den zuletzt offenen Tab.</td></tr>
+<tr><td class="c"><span class="num">12</span></td><td>Dateizeile</td><td>Herkunft (<b>Archiv</b>, <b>Geladen</b> oder <b>Beispiel: Dein Log</b>), Dateiname, Zeitraum und Anzahl Sensoren. Bei importierten Logs steht hier der Knopf „Im Archiv sichern“.</td></tr>
+</table>
+<div class="tip"><b>Tipp</b>Ist noch kein Log vorhanden, öffnet die App ein Beispiel-Log. Daran kannst Du alles ausprobieren. Sobald Logs im Archiv liegen, verschwindet das Beispiel.</div>
+
+<!-- 5 -->
+<h1 id="k5"><span class="n">5</span>Logs in die App bringen</h1>
+<h2>5.1 Automatischer Sync vom Sender</h2>
+<ol>
+<li>Schalte den Sender ein und verbinde ihn per USB mit dem Computer. Wähle am Sender den USB-Modus, in dem er als Laufwerk erscheint.</li>
+<li>Die App sucht alle paar Sekunden auf allen Laufwerken nach dem Log-Ordner (Standard <code>Radio/logs</code>).</li>
+<li>Findet sie ihn, kopiert sie alle Logs, die noch nicht im Archiv sind. Die Sync-Zeile zeigt den Fortschritt.</li>
+<li>Danach steht dort zum Beispiel „2 Logs neu im Archiv“. Die neuen Logs erscheinen sofort in der Modell- und Log-Auswahl.</li>
+<li>Klicke auf <span class="btn">⏏ Auswerfen</span> und ziehe den Sender ab, wenn „Sender ausgeworfen, Du kannst ihn abziehen“ erscheint.</li>
+</ol>
+<p>Pro Anschluss synchronisiert die App einmal. Logs, die mit gleicher Grösse schon im Archiv liegen, überspringt sie. Wird der Sender während dem Sync getrennt, bricht der Sync sauber ab, angefangene Dateien bleiben nicht liegen, und beim nächsten Anschliessen geht es weiter.</p>
+
+<h2>5.2 Import von Dateien und Ordnern</h2>
+<p><span class="btn">Import …</span> öffnet dieses Fenster:</p>
+<figure class="half"><img src="bilder/05-import.png" alt=""><figcaption>Logs importieren</figcaption></figure>
+<ul>
+<li><b>Dateien auswählen:</b> ein oder mehrere Logs (.csv).</li>
+<li><b>Ordner öffnen:</b> alle Logs eines Ordners, zum Beispiel den Ordner LOGS direkt vom Sender oder eine Sicherung.</li>
+<li><b>Ziehen und Ablegen:</b> Du kannst CSV-Dateien auch einfach irgendwo ins Fenster ziehen. Es erscheint „Logs hier ablegen“.</li>
+<li><b>Importierte Logs ins Archiv kopieren</b> (nur Desktop-App): kopiert die importierten Dateien gleich ins Archiv.</li>
+</ul>
+<p>Öffnest Du eine einzelne Datei, zeigt die App sie sofort an. Bei mehreren Dateien öffnet sie das zuletzt gewählte Modell, sonst das Modell des neuesten Logs. Ein importiertes Log, das nicht im Archiv ist, kannst Du später mit <span class="btn">Im Archiv sichern</span> in der Dateizeile ablegen.</p>
+
+<h2>5.3 Das Archiv</h2>
+<p>Ethos benennt Logs nach dem Muster <code>Modell-JJJJ-MM-TT-hh-mm-ss.csv</code>. Die App liest daraus das Modell und legt jedes Log in einen Unterordner mit dem Modellnamen:</p>
+<p><code>Ethos Logs/SB-10/SB-10-2026-10-02-14-39-06.csv</code><br><code>Ethos Logs/PlusX/PlusX-2026-10-01-17-20-31.csv</code></p>
+<p>Dateien, deren Name nicht diesem Muster folgt, landen im Ordner „Ohne Modell“. Die App löscht nie etwas im Archiv und nie etwas auf dem Sender.</p>
+<div class="tip"><b>Tipp</b>Liegt das Archiv in Google Drive oder OneDrive, siehst Du die Logs auf allen Computern, auf denen die App läuft. Die App merkt sich Dauer und Sensoren jeder Datei, damit Cloud-Dateien nicht bei jedem Start ganz heruntergeladen werden müssen.</div>
+
+<h2>5.4 Modell und Log wählen</h2>
+<p>Wähle oben links das <b>Modell</b>. Ein Klick auf das Feld <b>Log</b> öffnet die Liste aller Logs dieses Modells, das neueste zuoberst:</p>
+<figure><img src="bilder/04-logliste.png" alt=""><figcaption>Log-Liste mit Datum, Startzeit, Dauer, Sensoren, GPS, Zeilen, Grösse und Dateiname</figcaption></figure>
+<p>Ein Klick auf eine Zeile öffnet das Log. Mit der Tastatur geht es auch: <span class="key">↓</span> öffnet die Liste, <span class="key">↑</span> <span class="key">↓</span> wählen, <span class="key">Enter</span> öffnet, <span class="key">Esc</span> schliesst. Mit <span class="btn">◀</span> <span class="btn">▶</span> blätterst Du zum älteren bzw. neueren Log.</p>
+<p>Die Details der Liste (Dauer, Sensoren, Zeilen) liest die App im Hintergrund nach und nach ein. Bis dahin steht „–“.</p>
+
+<!-- 6 -->
+<h1 id="k6"><span class="n">6</span>Die Sync-Zeile</h1>
+<p>Die Sync-Zeile unter der Kopfzeile zeigt in der Desktop-App immer, was mit dem Sender los ist. Diese Zustände gibt es:</p>
+<table class="state">
+<tr><th>Anzeige</th><th>Bedeutung und was zu tun ist</th></tr>
+<tr><td><img src="bilder/s-idle.png" alt=""></td><td>Kein Sender gefunden. Sender anschliessen und einschalten.</td></tr>
+<tr><td><img src="bilder/s-copy.png" alt=""></td><td>Sync läuft. Der Balken zeigt den Fortschritt, rechts steht die aktuelle Datei. Sender nicht abziehen.</td></tr>
+<tr><td><img src="bilder/s-done.png" alt=""></td><td>Fertig. Anzahl neuer Logs, Uhrzeit und betroffene Modelle. Jetzt kannst Du auswerfen.</td></tr>
+<tr><td><img src="bilder/s-none.png" alt=""></td><td>Fertig, alle Logs waren schon im Archiv.</td></tr>
+<tr><td><img src="bilder/s-ejected.png" alt=""></td><td>Sender ausgeworfen. Du kannst das Kabel ziehen.</td></tr>
+<tr><td><img src="bilder/s-interrupted.png" alt=""></td><td>Der Sender wurde während dem Sync getrennt (oranger Punkt). Was schon kopiert ist, bleibt; der Rest kommt beim nächsten Anschliessen. ⓘ zeigt Details.</td></tr>
+<tr><td><img src="bilder/s-denied.png" alt=""></td><td>Nur Mac: macOS fragt nach dem Zugriff auf das Wechselmedium. „Erlauben“ wählen, der Sync startet dann von selbst. Die App wartet 30 Sekunden und versucht es erneut.</td></tr>
+<tr><td><img src="bilder/s-error.png" alt=""></td><td>Sync fehlgeschlagen (roter Punkt), zum Beispiel weil der Archiv-Ordner nicht erreichbar ist. Die Meldung steht dahinter, ⓘ zeigt sie vollständig.</td></tr>
+<tr><td><img src="bilder/s-off.png" alt=""></td><td>Automatischer Sync in den Einstellungen ausgeschaltet.</td></tr>
+</table>
+
+<h2>Details zum letzten Sync</h2>
+<p>Bei Fehlern oder einem abgebrochenen Sync erscheint in der Sync-Zeile ein <span class="btn">ⓘ</span>. Es öffnet „Letzter Sync“ mit Zeit, Anzahl kopierter und fehlender Logs, Modellen, Pfad auf dem Sender, Archivpfad und allen Fehlermeldungen pro Datei.</p>
+<figure class="third"><img src="bilder/s-details.png" alt=""><figcaption>Details zum letzten Sync</figcaption></figure>
+
+<h2>Auswerfen</h2>
+<p><span class="btn">⏏ Auswerfen</span> wirft den Sender so aus wie der Finder (Mac) bzw. „Auswerfen“ im Explorer (Windows). Klappt es nicht, zum Beispiel weil noch eine Datei auf dem Sender offen ist, steht der Grund in der Sync-Zeile („Auswerfen fehlgeschlagen: …“). Während ein Sync läuft, ist Auswerfen nicht möglich.</p>
+
+<!-- 7 -->
+<h1 id="k7"><span class="n">7</span>Der Zeitpunkt</h1>
+<p>Der <b>Zeitpunkt</b> ist ein gewählter Datensatz im Log. Er wird in allen Tabs gleichzeitig hervorgehoben: als Linie in den Diagrammen, als Punkt auf der GPS-Spur, als markierte Zeile in den Tabellen und als Werte in der Übersicht.</p>
+<figure><img src="bilder/07-zeitpunkt.png" alt=""><figcaption>Zeitpunkt-Leiste und Werte am Zeitpunkt im Tab Übersicht</figcaption></figure>
+<table>
+<tr><th></th><th>Element</th><th>Funktion</th></tr>
+<tr><td class="c"><span class="num">1</span></td><td>Zeitstrahl</td><td>Ziehen oder hineinklicken setzt den Zeitpunkt. Der Strahl umfasst immer das ganze Log.</td></tr>
+<tr><td class="c"><span class="num">2</span></td><td>◀</td><td>Einen Datensatz zurück.</td></tr>
+<tr><td class="c"><span class="num">3</span></td><td>▶</td><td>Einen Datensatz vor.</td></tr>
+<tr><td class="c"><span class="num">4</span></td><td>Zeitangabe</td><td>Uhrzeit, Zeit ab Logbeginn und Nummer des Datensatzes.</td></tr>
+<tr><td class="c"><span class="num">5</span></td><td>Aus</td><td>Hebt den Zeitpunkt wieder auf.</td></tr>
+</table>
+<p>Den Zeitpunkt setzt Du auch mit einem Klick in ein Diagramm oder auf eine Zeile der Rohdaten. Hat der Zeitstrahl den Fokus, geht es mit der Tastatur: <span class="key">←</span> <span class="key">→</span> einen Datensatz, mit <span class="key">Shift</span> zehn, <span class="key">Bild ↑</span> <span class="key">Bild ↓</span> hundert.</p>
+<p>Wo die Leiste steht, hängt vom Tab ab: In der Übersicht steht sie unter „Werte am Zeitpunkt“, im Tab Diagramme direkt unter der Übersichtsleiste, in den anderen Tabs oben über den Tabs.</p>
+<div class="note"><b>Gut zu wissen</b>Der Zeitpunkt verschiebt nie den sichtbaren Ausschnitt der Diagramme. Liegt er ausserhalb des Ausschnitts, siehst Du ihn nur auf dem Zeitstrahl und in der Übersichtsleiste.</div>
+
+<!-- 8 -->
+<h1 id="k8"><span class="n">8</span>Tab „Übersicht“</h1>
+<figure><img src="bilder/02-uebersicht.png" alt="" style="width:80%;margin:0 auto"><figcaption>Tab Übersicht mit Kennzahlen</figcaption></figure>
+<h2>Kennzahlen</h2>
+<p>Die Kacheln fassen das ganze Log zusammen. Welche erscheinen, hängt von den Sensoren im Log ab.</p>
+<table>
+<tr><th>Kachel</th><th>Bedeutung</th></tr>
+<tr><td>Logdauer</td><td>Zeit vom ersten bis zum letzten Datensatz, darunter Anzahl Zeilen und Aufzeichnungsrate.</td></tr>
+<tr><td>Flugzeit</td><td>Zeit, in der die Höhe über 5 m lag.</td></tr>
+<tr><td>Motorläufe</td><td>Anzahl Motorläufe und gesamte Motorzeit. Motor an = Drehzahl über 300 U/min bzw. Strom über 3 A; Lücken unter 2 s zählen mit, Läufe ab 1 s.</td></tr>
+<tr><td>Max. Höhe, Max. Tempo, Vario</td><td>Höchstwerte; darunter Höhenquelle, Durchschnitt bzw. stärkstes Sinken.</td></tr>
+<tr><td>VFR / RSSI min</td><td>Schlechtester Empfang und Durchschnitt. <span style="color:#d29922"><b>Orange</b></span> und <span style="color:#cf222e"><b>rot</b></span> warnen: VFR unter 70 % bzw. 40 %, RSSI unter 40 bzw. 25 dB.</td></tr>
+<tr><td>Spannung min, Strom max, Verbraucht</td><td>Antriebsakku: tiefste Spannung (mit Start- und Endwert), höchster Strom, verbrauchte Kapazität.</td></tr>
+<tr><td>Wind Ø, TAS Ø</td><td>Berechneter Durchschnittswind mit Richtung und Höchstwert sowie Geschwindigkeit gegenüber der Luft (siehe <a href="#k11">Kapitel 11</a>).</td></tr>
+<tr><td>… Leistung max</td><td>Höchste Leistung (Strom × Spannung) mit gesamter Energie in Wh, für jedes Paar wie ESC, SRV1, SRV2.</td></tr>
+<tr><td>Temp. max, Empf.Bat. min, Senderakku min</td><td>Höchste Temperatur, tiefste Empfänger- und Senderspannung.</td></tr>
+</table>
+<h2>Werte am Zeitpunkt</h2>
+<p>Ist ein Zeitpunkt gesetzt, zeigen die Kacheln darunter alle wichtigen Werte genau in diesem Moment: Uhrzeit, Phase (Thermik, Steigflug oder kein Schalter aktiv), Höhe, Vario, Geschwindigkeit, Wind, Empfang, Akku und mehr. Ohne Zeitpunkt steht dort „Kein Zeitpunkt gewählt“.</p>
+
+<!-- 9 -->
+<h1 id="k9"><span class="n">9</span>Tab „Diagramme“</h1>
+<figure><img src="bilder/08-diagramme.png" alt="" style="width:88%;margin:0 auto"><figcaption>Tab Diagramme</figcaption></figure>
+<table>
+<tr><th></th><th>Element</th><th>Funktion</th></tr>
+<tr><td class="c"><span class="num">1</span></td><td>Kanäle</td><td>Ein Klick schaltet einen Sensor ein oder aus. Eingeschaltete Kanäle sind umrandet. <b>ƒ</b> markiert berechnete Werte. Die Auswahl bleibt pro Modell gespeichert.</td></tr>
+<tr><td class="c"><span class="num">2</span></td><td>Einzeln / Überlagert</td><td>Ein Diagramm pro Kanal oder alle Kanäle in einem Diagramm.</td></tr>
+<tr><td class="c"><span class="num">3</span></td><td>Sender-Kanäle …</td><td>Blendet zusätzlich Knüppel, Schalter (SA, SB …), logische Schalter (LS1 …) und Kanäle (K1 …) ein.</td></tr>
+<tr><td class="c"><span class="num">4</span></td><td>− + Alles</td><td>Herauszoomen, hineinzoomen, ganzes Log zeigen.</td></tr>
+<tr><td class="c"><span class="num">5</span></td><td>Ausschnitt</td><td>Sichtbarer Zeitraum und seine Länge.</td></tr>
+<tr><td class="c"><span class="num">6</span></td><td>Rot markieren</td><td>Färbt die Zeit rot, in der ein gewählter Schalter in einem gewählten Zustand stand (siehe unten).</td></tr>
+<tr><td class="c"><span class="num">7</span></td><td>Übersichtsleiste</td><td>Höhenprofil des ganzen Fluges. Das helle Fenster ist der sichtbare Ausschnitt: ziehen verschiebt, an den Rändern ziehen macht ihn grösser oder kleiner, Doppelklick zeigt alles.</td></tr>
+<tr><td class="c"><span class="num">8</span></td><td>Zeitpunkt</td><td>Zeitstrahl wie in <a href="#k7">Kapitel 7</a>.</td></tr>
+<tr><td class="c"><span class="num">9</span></td><td>Griff ⋮⋮ und ▲ ▼</td><td>Diagramm am Griff ziehen oder mit den Pfeilen verschieben, um die Reihenfolge zu ändern. Die Reihenfolge bleibt gespeichert.</td></tr>
+</table>
+<h2>Zoomen und Verschieben</h2>
+<ul>
+<li><b>Verschieben:</b> im Diagramm mit der Maus ziehen.</li>
+<li><b>Zoomen:</b> <span class="key">Strg</span> (Mac <span class="key">⌘</span>) + Mausrad, Trackpad-Pinch oder die Knöpfe − und +.</li>
+<li><b>Alles zeigen:</b> Doppelklick ins Diagramm oder <span class="btn">Alles</span>.</li>
+<li><b>Zeitpunkt setzen:</b> Klick ins Diagramm.</li>
+</ul>
+<p>Alle Diagramme teilen denselben Ausschnitt. Die Zeitachse zählt Minuten ab Logbeginn. Kopfzeile jedes Diagramms: Name, Wert am Zeitpunkt, Einheit, Minimum und Maximum.</p>
+<h2>Farbige Hintergründe</h2>
+<p><b>Blau</b> hinterlegt sind Steigflüge, <b>grün</b> Thermikphasen und <b>rot</b> die Zeiten des unter „Rot markieren“ gewählten Schalterzustands. Steigflüge und Thermik kommen aus dem Tab „Thermik &amp; Steigflüge“.</p>
+<h2>Rot markieren</h2>
+<p>Wähle einen Schalter (SA …) oder logischen Schalter (LS …) und den Zustand, zum Beispiel <b>SB</b> und <b>oben (−1)</b>. Ohne eigene Wahl stellt die App das automatisch ein: derselbe Schalter wie für die Thermik, aber in der Gegenstellung. Ist SB unten = Thermik, wird SB oben rot markiert. Dann steht „automatisch“ daneben. Deine Wahl merkt sich die App pro Modell; der Link „automatisch“ setzt sie zurück.</p>
+<h2>Überlagert</h2>
+<figure><img src="bilder/10-ueberlagert.png" alt=""><figcaption>Höhe, Vario und ESC-Strom überlagert</figcaption></figure>
+<p>Jeder Kanal hat seine eigene Skala und nutzt die ganze Höhe. Die ersten zwei Skalen stehen links und rechts in der Farbe des Kanals. Die Legende oben zeigt die Werte am Zeitpunkt. Am übersichtlichsten ist „Überlagert“ mit zwei bis vier Kanälen.</p>
+<h2>Berechnete Werte (ƒ)</h2>
+<ul>
+<li><b>Leistung</b> = Strom × Spannung für jedes Paar mit gleichem Präfix (ESC, BEC, SRV1 …), <b>Energie</b> = Leistung über die Zeit aufsummiert.</li>
+<li><b>GPS Kurs (ber.), Windgeschw., Windrichtung, TAS</b> rechnen wie die Lua-Widgets „GPS Course“ und „Wind Estimator“ mit deren Standardwerten (40 Werte alle 0,7 s, Fit jede Sekunde, Kurs ab 3 m Abstand). Vor dem ersten gültigen Fit zeigt der Wind 0 und die TAS die Geschwindigkeit über Grund, genau wie am Sender.</li>
+</ul>
+<p>Diese Erklärungen findest Du in der App auch hinter dem <span class="btn">ⓘ</span> neben „Kanäle“.</p>
+
+<!-- 10 -->
+<h1 id="k10"><span class="n">10</span>Tab „Thermik &amp; Steigflüge“</h1>
+<figure><img src="bilder/12-thermik.png" alt=""><figcaption>Thermik links, Steigflüge rechts</figcaption></figure>
+<p>Der Tab rechnet wie die Sender-Widgets „Thermik“ und „Steigfluege“: Eine Phase läuft, solange der gewählte Schalter EIN ist (Wert über 0).</p>
+<h2>Einstellungen</h2>
+<table>
+<tr><th>Feld</th><th>Bedeutung</th></tr>
+<tr><td>Thermik-Schalter</td><td>Schalter, mit dem Du im Flug die Thermik markierst. Vorschlag: SB.</td></tr>
+<tr><td>Steigflug-Schalter</td><td>Schalter für den Steigflug (Motor). Vorschlag: LS9. Gibt es keinen passenden Schalter, wählt die App <b>„ESC Strom (automatisch)“</b>: Motor an, solange der Strom über der Schwelle liegt. Die Schwelle stellst Du im Feld „ab … A“ ein (Standard 3 A); kurze Lücken bis 1 s zählen mit.</td></tr>
+<tr><td>Höhenquelle</td><td>Welcher Höhensensor gerechnet wird, zum Beispiel Altitude (Vario) oder GAlt (GPS).</td></tr>
+<tr><td>Balkenhöhe</td><td>Was die Balken der Thermik zeigen: Steiggeschwindigkeit, erreichte Höhe oder Steigdauer.</td></tr>
+</table>
+<p>Alle Einstellungen bleiben pro Modell gespeichert.</p>
+<h2>Kennzahlen, Balken und Tabelle</h2>
+<ul>
+<li><b>Ø Steigen</b> = gesamter Höhengewinn durch gesamte Dauer, dazu Anzahl, Gesamthöhe und Gesamtdauer.</li>
+<li>Jeder Balken ist eine Phase. Bei den Steigflügen zeigt die Zahl über dem Balken das Ø Steigen in m/s.</li>
+<li>Die Tabelle listet jede Phase mit Uhrzeit, Dauer, Start- und Höchsthöhe, Gewinn und Ø Steigen, bei den Steigflügen auch den Verbrauch in mAh.</li>
+<li>Die Phase, in der der Zeitpunkt liegt, ist in Balken und Tabelle hervorgehoben.</li>
+</ul>
+<h2>So wird gerechnet</h2>
+<p>Gewinn = höchste Höhe während der Phase minus Starthöhe. Thermik zählt ab 5 s Dauer, Steigflüge ab 1 s. Eine Phase, die beim Logende noch läuft, zählt wie im Widget nicht. Die Zeiten sind so genau wie das Log (etwa 0,5 s).</p>
+<div class="tip"><b>Tipp</b>Steht „Kein Steigflug. Prüfe, ob der richtige Schalter gewählt ist.“, stimmt meist der Schalter nicht. Probiere den logischen Schalter, den Du am Sender für „Motor an“ nutzt, oder „ESC Strom (automatisch)“.</div>
+
+<!-- 11 -->
+<h1 id="k11"><span class="n">11</span>Tab „Karte &amp; Wind“</h1>
+<figure><img src="bilder/13-karte.png" alt=""><figcaption>GPS-Spur und Wind nach Höhe</figcaption></figure>
+<h2>GPS-Spur</h2>
+<ul>
+<li>Die Spur ist von oben gesehen, Norden oben, ohne Kartenhintergrund. Das Gitter hat 100 m Abstand.</li>
+<li>Die Farbe zeigt die Höhe (Legende unten). <b>Weiss</b> sind Steigflüge, <b>grün</b> Thermik. Kräftig gezeichnet ist der Zeitraum, den der Tab Diagramme gerade zeigt.</li>
+<li>„Start“ markiert den Startpunkt, der orange Kreis den Zeitpunkt mit Uhrzeit und Höhe.</li>
+<li>Zoomen mit <span class="btn">−</span> <span class="btn">+</span>, <span class="key">Strg</span> + Mausrad oder Doppelklick; ziehen verschiebt; <span class="btn">Alles</span> zeigt die ganze Spur.</li>
+<li>Unten steht die grösste Entfernung vom Startpunkt.</li>
+</ul>
+<h2>Wind nach Höhe</h2>
+<p>Die Tabelle teilt die Höhe in Stufen (25, 50 oder 100 m, Feld „Stufe“) und zeigt pro Stufe den durchschnittlichen Wind, die Richtung, aus der er kommt, das Maximum und die Anzahl Wind-Fits. Der Pfeil zeigt, wohin der Wind weht. <b>„wechselnd“</b> heisst, die Richtungen in dieser Stufe streuen stark. Die Stufe des Zeitpunkts ist hervorgehoben, darunter steht der Wind genau am Zeitpunkt.</p>
+<p>Für den Wind braucht es GPS-Position, GPS-Geschwindigkeit und Kurven im Flug. Gerade Strecken liefern keinen Wind.</p>
+
+<!-- 12 -->
+<h1 id="k12"><span class="n">12</span>Tab „Alle Werte“</h1>
+<figure><img src="bilder/14-werte.png" alt=""><figcaption>Alle Sensoren mit Minimum, Durchschnitt und Maximum</figcaption></figure>
+<p>Die Tabelle listet jeden Sensor des Logs mit Einheit, Wert am Zeitpunkt, Minimum, Durchschnitt, Maximum und Anzahl Werte. Berechnete Werte tragen das Zeichen <b>berechnet</b>. Sender-Kanäle und Schalter sind hier nicht aufgeführt; sie siehst Du in den Rohdaten.</p>
+
+<!-- 13 -->
+<h1 id="k13"><span class="n">13</span>Tab „Rohdaten“</h1>
+<figure><img src="bilder/15-rohdaten.png" alt=""><figcaption>Rohdaten mit hervorgehobener Zeile des Zeitpunkts</figcaption></figure>
+<p>Alle Zeilen und Spalten so, wie sie im Log stehen, auch bei grossen Logs flüssig. Oben steht die Anzahl Zeilen und Spalten. Ein Klick auf eine Zeile setzt den Zeitpunkt; die Zeile des gewählten Zeitpunkts ist hervorgehoben und wird beim Öffnen des Tabs ins Bild geholt. Zum Lesen breiter Logs scrollst Du in der Tabelle seitwärts.</p>
+
+<!-- 14 -->
+<h1 id="k14"><span class="n">14</span>Darstellung, Sprache und Web-Version</h1>
+<h2>Hell und dunkel</h2>
+<p>Unter <span class="btn">⚙</span> → <b>Darstellung</b> wählst Du „Wie System“, „Hell“ oder „Dunkel“. „Wie System“ folgt der Einstellung von Windows bzw. macOS.</p>
+<figure><img src="bilder/16-hell.png" alt=""><figcaption>Helle Darstellung</figcaption></figure>
+<h2>Sprache</h2>
+<p>Die Oberfläche gibt es auf Deutsch und Englisch (<span class="btn">⚙</span> → <b>Sprache</b>). Die Sensornamen stammen aus dem Log und bleiben in der Sprache des Senders.</p>
+<figure><img src="bilder/19-englisch.png" alt=""><figcaption>Englische Oberfläche</figcaption></figure>
+<h2>Web-Version</h2>
+<p>Die Web-Version im Browser hat dieselben Tabs und Auswertungen. Es fehlen die Sync-Zeile, „Archiv öffnen“, „Auswerfen“ und die Archiv-Einstellungen. Logs öffnest Du über <span class="btn">Import …</span> oder per Ziehen ins Fenster; sie werden nur im Browser gelesen und nicht hochgeladen. Die Web-Version läuft auch auf Tablet und Handy; die Ansicht ordnet sich dann untereinander an.</p>
+<div class="two">
+<figure><img src="bilder/17-web.png" alt=""><figcaption>Web-Version mit Beispiel-Log</figcaption></figure>
+<figure class="third" style="flex:.45"><img src="bilder/20-handy.png" alt="" style="width:100%"><figcaption>Auf dem Handy</figcaption></figure>
+</div>
+
+<!-- 15 -->
+<h1 id="k15"><span class="n">15</span>Was die App speichert</h1>
+<table>
+<tr><th>Was</th><th>Wo</th></tr>
+<tr><td>Logs</td><td>Im Archiv-Ordner, ein Unterordner pro Modell. Die App löscht dort nie etwas.</td></tr>
+<tr><td>Sync-Einstellungen (Log-Ordner auf dem Sender, Archiv-Ordner, automatischer Sync, Importe ins Archiv)</td><td>Datei <code>settings.json</code> im App-Datenordner:<br>Windows <code>%APPDATA%\Ethos Log Viewer</code><br>Mac <code>~/Library/Application Support/Ethos Log Viewer</code></td></tr>
+<tr><td>Ansicht (Sprache, Darstellung, letzter Tab, gewählte Kanäle, Reihenfolge der Diagramme, Einzeln/Überlagert, Schalter und Höhenquellen, Schwelle, Stufe, Rot markieren pro Modell, zuletzt gewähltes Modell)</td><td>Im Speicher der App bzw. des Browsers (Web-Version). Bleibt bei Updates erhalten.</td></tr>
+<tr><td>Zwischenspeicher der Log-Details (Dauer, Sensoren)</td><td>Ebenfalls im Speicher der App, damit die Log-Liste schnell erscheint.</td></tr>
+</table>
+<h2>Einstellungen pro Modell</h2>
+<p>Die App merkt sich die Einstellungen der Auswertung <b>pro Modell</b>: gewählte Kanäle und Reihenfolge der Diagramme, „Einzeln/Überlagert“, „Sender-Kanäle anzeigen“, Thermik- und Steigflug-Schalter mit Höhenquelle, Schwelle und Balkenhöhe, „Rot markieren“ sowie Höhenquelle und Stufe von „Wind nach Höhe“. Öffnest Du ein Log, kommen die Einstellungen dieses Modells zurück. Ein Modell, das noch keine eigenen Einstellungen hat, startet mit den zuletzt benutzten.</p>
+<p>Sprache, Darstellung und der zuletzt offene Tab gelten für alle Modelle.</p>
+
+<!-- 16 -->
+<h1 id="k16"><span class="n">16</span>Troubleshooting und FAQ</h1>
+<div class="faq">
+<h2>Installation und Start</h2>
+<h3>Windows meldet „Der Computer wurde durch Windows geschützt“.</h3>
+<p>Die App ist nicht mit einem gekauften Zertifikat signiert. Klicke auf „Weitere Informationen“ und dann „Trotzdem ausführen“.</p>
+<h3>Der Mac sagt, die App kann nicht geöffnet werden.</h3>
+<p>Systemeinstellungen → Datenschutz &amp; Sicherheit → bei „Ethos Log Viewer wurde blockiert“ auf „Dennoch öffnen“ klicken. Das ist nur beim ersten Start nötig.</p>
+<h3>Es erscheint kein Hinweis auf neue Versionen.</h3>
+<p>Die App braucht dafür Internet. Öffne <span class="btn">⚙</span> und klicke unten auf <span class="btn">Nach Updates suchen</span>: Daneben steht, ob Du die neueste Version hast oder warum die Suche nicht geklappt hat (zum Beispiel keine Verbindung oder eine Firewall). Die aktuelle Version findest Du immer unter <a href="https://github.com/mrskynavi/ethos-log-viewer/releases/latest">Releases</a>.</p>
+
+<h2>Sender und Sync</h2>
+<h3>Die Sync-Zeile bleibt bei „Sender nicht angeschlossen“.</h3>
+<ul>
+<li>Ist der Sender eingeschaltet und im USB-Modus als Laufwerk verbunden? Er muss im Explorer bzw. Finder als Laufwerk erscheinen.</li>
+<li>Stimmt der Log-Ordner in den Einstellungen? Schau im Explorer/Finder nach, wo die CSV-Dateien liegen, und trage den Pfad ein, zum Beispiel <code>Radio/logs</code>, <code>logs</code> oder vollständig <code>E:\logs</code>.</li>
+<li>Steht „Automatischer Sync aus“, schalte ihn in den Einstellungen ein.</li>
+<li>Ein anderes USB-Kabel probieren: Reine Ladekabel übertragen keine Daten.</li>
+</ul>
+<h3>Mac: „Zugriff auf den Sender erlauben“ bleibt stehen.</h3>
+<p>macOS wartet auf Deine Antwort. Wähle „Erlauben“. Hast Du einmal „Nicht erlauben“ gewählt, gib den Zugriff unter Systemeinstellungen → Datenschutz &amp; Sicherheit → <b>Dateien und Ordner</b> → Ethos Log Viewer → <b>Wechselmedien</b> frei. Danach den Sender neu anschliessen.</p>
+<h3>„Sync unterbrochen, Sender getrennt“.</h3>
+<p>Der Sender wurde während dem Kopieren getrennt, zum Beispiel durch Abziehen oder einen Wackelkontakt. Einfach wieder anschliessen; die fehlenden Logs kommen dann. Angefangene Dateien bleiben nicht im Archiv liegen.</p>
+<h3>„Sync fehlgeschlagen“ oder Fehler bei einzelnen Dateien.</h3>
+<p>Klicke auf ⓘ in der Sync-Zeile, um die vollständige Meldung zu sehen. Häufige Ursachen:</p>
+<ul>
+<li>Archiv-Ordner nicht erreichbar, weil Google Drive oder OneDrive nicht läuft oder ein Laufwerk fehlt. Cloud-Programm starten oder Archiv-Ordner neu wählen.</li>
+<li>Kein Platz mehr auf dem Computer oder im Cloud-Speicher.</li>
+<li>Lesefehler auf der SD-Karte des Senders („i/o error“). Sender neu anschliessen; tritt der Fehler bei derselben Datei immer wieder auf, ist die Datei auf dem Sender beschädigt.</li>
+</ul>
+<h3>Ein Log ist nicht im Archiv, obwohl es auf dem Sender liegt.</h3>
+<p>Die App kopiert pro Anschluss einmal. Trenne den Sender und schliesse ihn neu an. Liegt im Archiv schon eine Datei mit gleichem Namen und gleicher Grösse, wird sie übersprungen; ist die Grösse anders, wird sie ersetzt.</p>
+<h3>„Auswerfen fehlgeschlagen“.</h3>
+<p>Eine Datei auf dem Sender ist noch offen, zum Beispiel im Explorer, Finder oder einem anderen Programm. Schliesse sie und versuche es nochmals. Während ein Sync läuft, kann der Sender nicht ausgeworfen werden.</p>
+<h3>Ein Modell erscheint unter „Ohne Modell“.</h3>
+<p>Der Dateiname folgt nicht dem Ethos-Muster <code>Modell-JJJJ-MM-TT-hh-mm-ss.csv</code>, zum Beispiel weil er umbenannt wurde. Benenne die Datei im Archiv zurück und verschiebe sie in den passenden Modellordner.</p>
+
+<h2>Logs öffnen</h2>
+<h3>„Keine CSV-Dateien gefunden“.</h3>
+<p>Im gewählten Ordner liegen keine .csv-Dateien. Ethos speichert Logs im Ordner LOGS als .csv.</p>
+<h3>„Keine Spalte "Time" gefunden. Ist das ein Ethos-Telemetrie-Log?“</h3>
+<p>Die Datei ist kein Ethos-Telemetrie-Log oder wurde zum Beispiel in Excel umgespeichert. Öffne die Originaldatei vom Sender.</p>
+<h3>Die Log-Liste zeigt „–“ bei Dauer oder Sensoren.</h3>
+<p>Die App liest die Details im Hintergrund. Bei Archiven in der Cloud kann das beim ersten Mal dauern, weil die Dateien erst heruntergeladen werden. Danach sind die Details gespeichert.</p>
+<h3>Ich sehe immer noch das Beispiel-Log.</h3>
+<p>Es sind noch keine Logs im Archiv und keine importiert. Schliesse den Sender an oder öffne Logs mit „Import …“.</p>
+
+<h2>Auswertung</h2>
+<h3>Es werden keine Steigflüge oder keine Thermik erkannt.</h3>
+<p>Prüfe im Tab „Thermik &amp; Steigflüge“ den Schalter. Er muss im Log vorkommen und in der Phase EIN sein. Für Steigflüge ohne Schalter „ESC Strom (automatisch)“ wählen und bei Bedarf die Schwelle anpassen. Thermik zählt erst ab 5 s.</p>
+<h3>Die Tabelle „Wind nach Höhe“ ist leer.</h3>
+<p>Für den Wind braucht es GPS-Position, GPS-Geschwindigkeit und Kurven im Flug. Logs ohne GPS oder mit nur geraden Strecken liefern keinen Wind.</p>
+<h3>Die GPS-Spur fehlt („Keine GPS-Daten im Log“).</h3>
+<p>Im Log ist keine GPS-Spalte oder das GPS hatte keinen Fix.</p>
+<h3>Wo sind meine Schalter und Kanäle?</h3>
+<p>Im Tab Diagramme „Sender-Kanäle, Schalter und logische Schalter anzeigen“ einschalten. In den Rohdaten sind sie immer da.</p>
+<h3>Die Diagramme sind zu eng oder es sind zu viele.</h3>
+<p>Schalte nicht benötigte Kanäle oben aus, oder nutze „Überlagert“ für einen schnellen Vergleich weniger Kanäle. Mit <span class="btn">Alles</span> oder Doppelklick kommst Du jederzeit zur ganzen Flugdauer zurück.</p>
+<h3>Werte am Zeitpunkt sind leer.</h3>
+<p>Es ist kein Zeitpunkt gesetzt. Zeitstrahl ziehen oder in ein Diagramm klicken.</p>
+<h3>Die Diagramme zeigen „Die Diagramm-Bibliothek konnte nicht geladen werden“.</h3>
+<p>Nur Web-Version: Die Seite braucht beim Laden Internet. Seite neu laden. Die Desktop-App läuft auch offline.</p>
+
+<h2>Allgemein</h2>
+<h3>Werden meine Logs irgendwohin hochgeladen?</h3>
+<p>Nein. Die App liest die Dateien nur auf Deinem Gerät. Ins Internet geht nur die Abfrage nach einer neuen Version auf GitHub. Liegt Dein Archiv in Google Drive oder OneDrive, synchronisiert natürlich dieses Programm die Dateien.</p>
+<h3>Kann ich die App auf mehreren Computern nutzen?</h3>
+<p>Ja. Installiere sie überall und wähle denselben Archiv-Ordner in Google Drive oder OneDrive.</p>
+<h3>Funktioniert die App mit anderen Sendern?</h3>
+<p>Sie ist für Ethos-Telemetrie-Logs gebaut. Andere CSV-Logs mit Spalten „Date“ und „Time“ lassen sich teilweise öffnen, die Auswertung ist dann aber nicht garantiert.</p>
+</div>
+
+<!-- 17 -->
+<h1 id="k17"><span class="n">17</span>Kurzreferenz Maus und Tastatur</h1>
+<table>
+<tr><th>Wo</th><th>Aktion</th><th>Wirkung</th></tr>
+<tr><td>Diagramm</td><td>Ziehen</td><td>Ausschnitt verschieben</td></tr>
+<tr><td>Diagramm</td><td><span class="key">Strg</span>/<span class="key">⌘</span> + Mausrad, Pinch</td><td>Zoomen</td></tr>
+<tr><td>Diagramm</td><td>Klick</td><td>Zeitpunkt setzen</td></tr>
+<tr><td>Diagramm, Übersichtsleiste</td><td>Doppelklick</td><td>Ganzes Log zeigen</td></tr>
+<tr><td>Übersichtsleiste</td><td>Fenster ziehen, Rand ziehen</td><td>Ausschnitt verschieben, vergrössern, verkleinern</td></tr>
+<tr><td>Diagramm-Kopf</td><td>⋮⋮ ziehen, ▲ ▼</td><td>Reihenfolge ändern</td></tr>
+<tr><td>Zeitstrahl</td><td>Ziehen, Klick</td><td>Zeitpunkt setzen</td></tr>
+<tr><td>Zeitstrahl (Fokus)</td><td><span class="key">←</span> <span class="key">→</span> / mit <span class="key">Shift</span> / <span class="key">Bild ↑</span> <span class="key">Bild ↓</span></td><td>1 / 10 / 100 Datensätze</td></tr>
+<tr><td>Rohdaten</td><td>Klick auf Zeile</td><td>Zeitpunkt setzen</td></tr>
+<tr><td>GPS-Spur</td><td>Ziehen, <span class="key">Strg</span> + Mausrad, Doppelklick</td><td>Verschieben, zoomen, hineinzoomen</td></tr>
+<tr><td>Tabs (Fokus)</td><td><span class="key">←</span> <span class="key">→</span> <span class="key">Pos1</span> <span class="key">Ende</span></td><td>Tab wechseln</td></tr>
+<tr><td>Log-Feld</td><td><span class="key">↓</span> <span class="key">↑</span> <span class="key">Enter</span> <span class="key">Esc</span></td><td>Liste öffnen, wählen, öffnen, schliessen</td></tr>
+<tr><td>Fenster</td><td>CSV-Dateien hineinziehen</td><td>Logs öffnen</td></tr>
+</table>
+<!-- 18 -->
+<h1 id="k18"><span class="n">18</span>Änderungen pro Version</h1>
+<p>Dieses Kapitel ist das Changelog der App, die neueste Version zuerst.</p>
+<div class="changelog">
+{{CHANGELOG}}
+</div>
+<p style="margin-top:10mm;color:var(--mut);font-size:8.5pt">Ethos Log Viewer {{VERSION}} · Christoph Mächler · Inoffizielles Werkzeug, nicht mit dem Hersteller von Ethos verbunden. Ethos ist eine Marke ihres Inhabers.</p>
+</body>
+</html>

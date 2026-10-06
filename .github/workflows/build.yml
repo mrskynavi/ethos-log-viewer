@@ -38,10 +38,31 @@ jobs:
             dist/*.dmg
           if-no-files-found: error
 
+  # Handbuch als PDF: Screenshots, Version und Changelog kommen jedes Mal frisch aus dem Repository
+  handbuch:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm install
+        env:
+          ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
+      - run: npm install --no-save playwright@1.56.1
+      - run: npx playwright install --with-deps chromium
+      - run: sudo apt-get install -y fonts-dejavu-core
+      - run: npm run handbuch
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Ethos-Log-Viewer-Handbuch
+          path: dist/Ethos-Log-Viewer-Bedienanleitung.pdf
+          if-no-files-found: error
+
   # Jeder Stand auf main wird als Release v<version> veröffentlicht (gleiche Version wird überschrieben)
   release:
     if: github.event_name != 'pull_request'
-    needs: build
+    needs: [build, handbuch]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -64,8 +85,6 @@ jobs:
           EOT
       - uses: actions/download-artifact@v4
         with: { path: out, merge-multiple: true }
-      # Handbuch liegt im Release neben Installer und Image
-      - run: cp docs/Ethos-Log-Viewer-Bedienanleitung.pdf out/
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.v.outputs.version }}

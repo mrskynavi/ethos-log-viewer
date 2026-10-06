@@ -11,7 +11,8 @@
     "prepare-app": "node scripts/prepare.js",
     "start": "npm run prepare-app && electron .",
     "test": "node --test test/sync.test.js test/update.test.js test/eject.test.js",
-    "dist": "npm run prepare-app && electron-builder --publish never"
+    "dist": "npm run prepare-app && electron-builder --publish never",
+    "handbuch": "node scripts/handbuch.js"
   },
   "dependencies": {},
   "devDependencies": {
