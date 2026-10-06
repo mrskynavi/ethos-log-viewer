@@ -126,7 +126,6 @@ dialog#settingsDlg::backdrop{background:color-mix(in srgb,#000 45%,transparent)}
 .olegend{display:flex;flex-wrap:wrap;gap:4px 14px;margin:4px 0 6px;font:400 .8rem var(--mono);color:var(--muted)}
 .olegend span{display:inline-flex;align-items:center;gap:5px}
 .olegend i{width:12px;height:3px;border-radius:2px;display:inline-block}
-.olegend b{color:var(--warn);font-weight:600}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
 .seg button{font:500 .85rem var(--body);border:0;background:var(--panel);color:var(--muted);padding:4px 12px;cursor:pointer}
 .seg button+button{border-left:1px solid var(--line)}
@@ -201,7 +200,6 @@ section{display:grid;gap:10px}
 .curkpis .kpi.on{background:color-mix(in srgb,var(--warn) 12%,var(--panel))}
 tr.cur td{background:color-mix(in srgb,var(--warn) 18%,var(--panel))!important;font-weight:600}
 td.cval{color:var(--warn);font-weight:600}
-.cbox .curv{font:600 .8rem var(--mono);color:var(--warn);margin-left:6px}
 .logpick{align-items:center}
 .logpick select{max-width:none;min-width:0}
 #selModel{min-width:10em}
@@ -1023,7 +1021,7 @@ function seriesPts(c){ return LOG.t.map((x,i)=>({x, y:c.vals[i]})).filter(p=>!is
 function drawOverlay(box, list, fg, grid){
   const el=document.createElement('div'); el.className='cbox overlay';
   el.innerHTML=`<div class="ct"><span class="nm">${T('Alle Kanäle überlagert')}</span><span class="meta">${list.length} ${T('Kanäle')}</span></div>`+
-    `<div class="olegend">${list.map(c=>`<span><i style="background:${c.color}"></i>${esc(c.name)}${c.unit?` (${esc(c.unit)})`:''}<b class="olv" data-k="${esc(c.raw)}"></b></span>`).join('')}</div><div class="cv"><canvas></canvas></div>`;
+    `<div class="olegend">${list.map(c=>`<span><i style="background:${c.color}"></i>${esc(c.name)}${c.unit?` (${esc(c.unit)})`:''}</span>`).join('')}</div><div class="cv"><canvas></canvas></div>`;
   box.appendChild(el);
   const scales={x:{type:'linear',min:VIEW.min,max:VIEW.max,ticks:{color:fg,callback:v=>fmtDur(v),maxTicksLimit:12},grid:{color:grid}}};
   list.forEach((c,j)=>{ scales['y'+j]={position:j%2?'right':'left', display:j<2, ticks:{color:c.color,maxTicksLimit:6}, grid:{color:grid, drawOnChartArea:j===0}}; });
@@ -1033,7 +1031,7 @@ function drawOverlay(box, list, fg, grid){
     options:{animation:false,maintainAspectRatio:false,parsing:false,normalized:true,
       interaction:{mode:'index',intersect:false},
       plugins:{legend:{display:false},decimation:{enabled:true,algorithm:'lttb',samples:800},
-        tooltip:{callbacks:{title:it=>LOG.clock[LOG.t.indexOf(it[0].parsed.x)]?.slice(0,8)||fmtDur(it[0].parsed.x),label:it=>`${it.dataset.label}: ${fmt(it.parsed.y,2)} ${it.dataset.unit}`}}},
+        tooltip:{enabled:false}},
       scales}});
   charts.push(chart); attachZoom(chart);
 }
@@ -1047,7 +1045,7 @@ function drawCharts(){
     const s=stats(c.vals)||{};
     const el=document.createElement('div'); el.className='cbox';
     el.dataset.k=c.raw;
-    el.innerHTML=`<div class="ct"><span class="nm"><button type="button" class="grip" title="${T('Ziehen zum Umsortieren')}" aria-label="${esc(T('{n} verschieben',{n:c.name}))}">⋮⋮</button>${esc(c.name)}${c.derived?`<span class="ctag">${T('berechnet')}</span>`:''}<span class="curv"></span></span><span class="meta">${esc(c.unit)} · min ${fmt(s.min,1)} · max ${fmt(s.max,1)}<button type="button" class="mv" data-d="-1" aria-label="${esc(T('{n} nach oben',{n:c.name}))}">▲</button><button type="button" class="mv" data-d="1" aria-label="${esc(T('{n} nach unten',{n:c.name}))}">▼</button></span></div><div class="cv"><canvas></canvas></div>`;
+    el.innerHTML=`<div class="ct"><span class="nm"><button type="button" class="grip" title="${T('Ziehen zum Umsortieren')}" aria-label="${esc(T('{n} verschieben',{n:c.name}))}">⋮⋮</button>${esc(c.name)}${c.derived?`<span class="ctag">${T('berechnet')}</span>`:''}</span><span class="meta">${esc(c.unit)} · min ${fmt(s.min,1)} · max ${fmt(s.max,1)}<button type="button" class="mv" data-d="-1" aria-label="${esc(T('{n} nach oben',{n:c.name}))}">▲</button><button type="button" class="mv" data-d="1" aria-label="${esc(T('{n} nach unten',{n:c.name}))}">▼</button></span></div><div class="cv"><canvas></canvas></div>`;
     box.appendChild(el);
     const pts = seriesPts(c);
     charts.push(new Chart(el.querySelector('canvas'),{
@@ -1056,7 +1054,7 @@ function drawCharts(){
       options:{animation:false,maintainAspectRatio:false,parsing:false,normalized:true,
         interaction:{mode:'index',intersect:false},
         plugins:{legend:{display:false},decimation:{enabled:true,algorithm:'lttb',samples:800},
-          tooltip:{callbacks:{title:it=>LOG.clock[LOG.t.indexOf(it[0].parsed.x)]?.slice(0,8)||fmtDur(it[0].parsed.x),label:it=>fmt(it.parsed.y,2)+' '+c.unit}}},
+          tooltip:{enabled:false}},
         scales:{x:{type:'linear',min:VIEW.min,max:VIEW.max,ticks:{color:fg,callback:v=>fmtDur(v),maxTicksLimit:12},grid:{color:grid}},
                 y:{ticks:{color:fg,maxTicksLimit:5},grid:{color:grid}}}}
     }));
@@ -1179,6 +1177,16 @@ const cursorLine = { id:'cursorLine', afterDatasetsDraw(ch){
   const dots = ch.data.datasets[0]?.k ? ch.data.datasets.map(ds=>[colBy(ds.k), ch.scales[ds.yAxisID], ds.borderColor]) : [[colBy(ch.canvas.closest('.cbox')?.dataset.k), y, css('--warn')]];
   for (const [c, ys, col] of dots){ const v=c?.vals[CURSOR];
     if (v!=null && !isNaN(v) && ys){ const py=ys.getPixelForValue(v); if (py>=a.top&&py<=a.bottom){ ctx.fillStyle=col; ctx.beginPath(); ctx.arc(px,py,4,0,7); ctx.fill(); } } }
+  // Schild mit Zeit und Wert(en) neben der Linie, gleich für Klick ins Diagramm und Zeitstrahl
+  const many=dots.length>1, lines=dots.filter(d=>d[0]).map(([c,,col])=>({t:(many?c.name+': ':'')+fv(c.vals[CURSOR])+(c.unit?' '+c.unit:''), col}));
+  const fam=getComputedStyle(ch.canvas).getPropertyValue('--mono')||'monospace', lh=16, pad=6, sw=many?12:0;
+  ctx.font='600 12px '+fam; const head=LOG.clock[CURSOR].slice(0,8);
+  const w=Math.max(ctx.measureText(head).width, ...lines.map(l=>ctx.measureText(l.t).width+sw))+2*pad, h=(lines.length+1)*lh+2*pad-4;
+  let bx=px+8; if (bx+w>a.right) bx=px-8-w; bx=Math.max(a.left,bx); const by=a.top+4;
+  ctx.fillStyle=css('--panel'); ctx.strokeStyle=css('--warn'); ctx.lineWidth=1; ctx.globalAlpha=.94;
+  ctx.beginPath(); ctx.roundRect ? ctx.roundRect(bx,by,w,h,5) : ctx.rect(bx,by,w,h); ctx.fill(); ctx.globalAlpha=1; ctx.stroke();
+  ctx.textBaseline='top'; ctx.fillStyle=css('--warn'); ctx.fillText(head,bx+pad,by+pad);
+  lines.forEach((l,j)=>{ const ty=by+pad+(j+1)*lh; if (many){ ctx.fillStyle=l.col; ctx.fillRect(bx+pad,ty+4,8,3); } ctx.fillStyle=css('--fg'); ctx.fillText(l.t,bx+pad+sw,ty); });
   ctx.restore(); } };
 function setCursor(i, follow){
   if (!LOG) return;
@@ -1198,7 +1206,7 @@ function renderCursor(){
   $('#curHdl').style.left=pc+'%'; $('#curFill').style.width=pc+'%';
   tr.setAttribute('aria-valuenow',on?i+1:0); tr.setAttribute('aria-valuetext',on?LOG.clock[i]:T('kein Zeitpunkt'));
   // Diagramme und Übersichtsleiste
-  charts.forEach(c=>{ c.draw(); const k=c.canvas.closest('.cbox')?.dataset.k, col=colBy(k), sp=c.canvas.closest('.cbox')?.querySelector('.curv'); if (sp) sp.textContent = on&&col ? '▸ '+fv(col.vals[i])+' '+col.unit : ''; });
+  charts.forEach(c=>c.draw());
   drawNav(); scheduleTrack();
   // Übersicht: Werte am Zeitpunkt
   const th=on?THERM.findIndex(r=>i>=r.s&&i<=r.e):-1, cl=on?CLIMB.findIndex(r=>i>=r.s&&i<=r.e):-1;
@@ -1207,7 +1215,6 @@ function renderCursor(){
     `<div class="kpi on"><span class="l">${T('Uhrzeit')}</span><span class="v">${esc(LOG.clock[i].slice(0,8))}</span><span class="d">${T('{t} ab Start',{t:fmtDur(LOG.t[i])})}</span></div>`+
     `<div class="kpi ${th>=0||cl>=0?'on':''}"><span class="l">${T('Phase')}</span><span class="v">${th>=0?T('Thermik|phase'):cl>=0?T('Steigflug'):'–'}</span><span class="d">${th>=0?T('{a} von {b}',{a:'#'+(th+1),b:THERM.length}):cl>=0?T('{a} von {b}',{a:'#'+(cl+1),b:CLIMB.length}):T('kein Schalter aktiv')}</span></div>`+
     keys.map(c=>`<div class="kpi"><span class="l">${esc(c.name)}</span><span class="v">${fv(c.vals[i])}<small>${esc(c.unit)}</small></span></div>`).join('');
-  document.querySelectorAll('.olegend .olv').forEach(b=>{ const c=colBy(b.dataset.k); b.textContent = on&&c ? ' '+fv(c.vals[i]) : ''; });
   // Rohdaten
   revealRawCursor(); renderRaw();
   // Alle Werte

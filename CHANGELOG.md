@@ -2,6 +2,7 @@
 
 ## Noch nicht veröffentlicht
 
+- Klick (oder Fingertipp) ins Diagramm und Zeitstrahl verhalten sich jetzt gleich: Beide setzen den Zeitpunkt, und Zeit und Wert stehen in einem Schild direkt neben der Linie, in jedem Diagramm. Im überlagerten Diagramm listet das Schild alle Kanäle. Das separate Hover-Fenster und die Werte im Diagrammtitel und in der Legende sind weg.
 - Neue berechnete Werte (ƒ, wie Sensoren wählbar): Steuerkurs (windkorr.), also wohin die Nase zeigt; Drift, also Kurs über Grund minus Steuerkurs; Gegenwind, also der Windanteil gegen die Flugrichtung (negativ = Rückenwind); Distanz zum Start, waagrecht zum ersten GPS-Fix; Effektive Distanz, schräg vom Startpunkt zum Modell mit der Höhe eingerechnet. Den GPS Kurs gibt es schon als „GPS Kurs (ber.)“.
 - Einstellungen pro Modell: Sensor-Auswahl und Reihenfolge der Diagramme, „Einzeln/Überlagert“, „Sender-Kanäle anzeigen“, Thermik- und Steigflug-Schalter samt Höhenkanal, Schwelle, Balkenart und die Einstellungen von „Wind nach Höhe“ werden automatisch beim jeweiligen Modell gespeichert. Wird ein Log geladen, kommen die Einstellungen dieses Modells zurück. Ein Modell ohne eigene Einstellungen startet mit den zuletzt benutzten.
 - Versionsnummer sichtbar: unter ⚙ Einstellungen (unten, mit Knopf „Nach Updates suchen“) und im ⓘ. Dort steht auch, ob die Version aktuell ist oder warum die Suche nicht geklappt hat.
