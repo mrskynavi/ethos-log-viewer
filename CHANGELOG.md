@@ -2,6 +2,7 @@
 
 ## Noch nicht veröffentlicht
 
+- Neue berechnete Werte (ƒ, wie Sensoren wählbar): Steuerkurs (windkorr.), also wohin die Nase zeigt; Drift, also Kurs über Grund minus Steuerkurs; Gegenwind, also der Windanteil gegen die Flugrichtung (negativ = Rückenwind); Distanz zum Start, waagrecht zum ersten GPS-Fix. Den GPS Kurs gibt es schon als „GPS Kurs (ber.)“.
 - Einstellungen pro Modell: Sensor-Auswahl und Reihenfolge der Diagramme, „Einzeln/Überlagert“, „Sender-Kanäle anzeigen“, Thermik- und Steigflug-Schalter samt Höhenkanal, Schwelle, Balkenart und die Einstellungen von „Wind nach Höhe“ werden automatisch beim jeweiligen Modell gespeichert. Wird ein Log geladen, kommen die Einstellungen dieses Modells zurück. Ein Modell ohne eigene Einstellungen startet mit den zuletzt benutzten.
 - Versionsnummer sichtbar: unter ⚙ Einstellungen (unten, mit Knopf „Nach Updates suchen“) und im ⓘ. Dort steht auch, ob die Version aktuell ist oder warum die Suche nicht geklappt hat.
 - Update-Hinweis zuverlässiger: Die Suche nutzt jetzt Proxy und Zertifikate des Systems (mit zweitem Versuch auf dem alten Weg) und läuft zusätzlich, wenn die App nach mehr als einer Stunde wieder in den Vordergrund kommt, nicht nur beim Start und alle 6 Stunden.
