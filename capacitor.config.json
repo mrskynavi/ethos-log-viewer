@@ -1,0 +1,14 @@
+{
+  "appId": "ch.maechler.ethoslogviewer",
+  "appName": "Ethos Log Viewer",
+  "webDir": "site",
+  "android": {
+    "path": "android",
+    "backgroundColor": "#0f141a"
+  },
+  "plugins": {
+    "SystemBars": {
+      "insetsHandling": "native"
+    }
+  }
+}

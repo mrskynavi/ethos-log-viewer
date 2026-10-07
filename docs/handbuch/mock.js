@@ -1,0 +1,32 @@
+(() => {
+  const P = window.__MOCK || {};
+  if (!P.desktop) return;
+  let syncCb = null, updCb = null;
+  const csv = () => window.__CSV;
+  const base = '/Users/christoph/Library/CloudStorage/OneDrive-Persönlich/Ethos Logs';
+  const logs = [
+    ['SB-10','2026-10-02-14-39-06',2780000],['SB-10','2026-09-28-16-05-12',2410000],['SB-10','2026-09-21-11-22-40',1980000],
+    ['SB-10','2026-09-14-15-48-03',2650000],['SB-10','2026-08-30-10-12-55',1520000],
+    ['PlusX','2026-10-01-17-20-31',1830000],['PlusX','2026-09-20-14-02-10',2210000],['Ventus','2026-09-07-12-44-18',2950000],
+  ].map(([m,d,s])=>({ name:`${m}-${d}.csv`, path:`${base}/${m}/${m}-${d}.csv`, size:s, model:m }));
+  window.__STATUS = P.status || { state:'done', connected:true, archive:base, sources:['/Volumes/RADIO/logs'], copied:[{name:'SB-10-2026-10-02-14-39-06.csv',model:'SB-10'},{name:'PlusX-2026-10-01-17-20-31.csv',model:'PlusX'}], errors:[], skipped:61, total:2, interrupted:false, left:0, at: Date.parse('2026-10-05T12:31:00+02:00') };
+  window.ethosDesktop = {
+    getSettings: async () => ({ senderPath:'Radio/logs', archiveDir:base, autoSync:true, archiveManual:false }),
+    setSettings: async s => s,
+    pickFolder: async () => null,
+    syncNow: async () => window.__STATUS,
+    ejectSender: async () => {},
+    syncStatus: async () => window.__STATUS,
+    onSync: cb => { syncCb = cb; },
+    listArchive: async () => logs,
+    saveToArchive: async () => ({ existed:false }),
+    openArchive: async () => '',
+    readFile: async () => { while(!csv()) await new Promise(r=>setTimeout(r,50)); return csv(); },
+    peekFile: async (p, n) => { while(!csv()) await new Promise(r=>setTimeout(r,50)); const t=csv(); const L=logs.find(l=>l.path===p); const u=t.slice(0, Math.round(t.length*Math.min(1,(L?L.size:t.length)/2780000))); return { head:t.slice(0,n), tail:u.slice(-n), size:L?L.size:t.length }; },
+    checkUpdate: async () => P.update || { current:P.version, latest:P.version, newer:false },
+    appVersion: async () => P.version,
+    onUpdate: cb => { updCb = cb; },
+    openUpdate: async () => {},
+  };
+  window.__setSync = s => { window.__STATUS = s; syncCb && syncCb(s); };
+})();

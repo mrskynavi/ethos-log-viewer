@@ -10,17 +10,18 @@
 :root{
   --bg:#eef1f4; --panel:#ffffff; --fg:#17202b; --muted:#5b6876; --line:#d5dbe2;
   --accent:#0b6bcb; --accent-soft:#dbe9f8; --warn:#b85c00; --bad:#c2312f; --good:#1f7a4d;
+  --off-line:#b4bcc6; --off-fill:rgba(140,150,162,.14); --off-wash:rgba(110,120,132,.16); --off-nav:rgba(110,120,132,.3);
   --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
   --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0f141a; --panel:#171e26; --fg:#e4e9ef; --muted:#93a1b0; --line:#2a3440;
-  --accent:#4ea3f5; --accent-soft:#16304a; --warn:#f0a040; --bad:#f06a66; --good:#4cc38a; color-scheme:dark}}
+  --accent:#4ea3f5; --accent-soft:#16304a; --warn:#f0a040; --bad:#f06a66; --good:#4cc38a; --off-line:#4a5663; --off-fill:rgba(120,135,150,.12); --off-wash:rgba(0,0,0,.28); --off-nav:rgba(0,0,0,.4); color-scheme:dark}}
 :root[data-theme="light"]{color-scheme:light}
 :root[data-theme="dark"]{
   --bg:#0f141a; --panel:#171e26; --fg:#e4e9ef; --muted:#93a1b0; --line:#2a3440;
-  --accent:#4ea3f5; --accent-soft:#16304a; --warn:#f0a040; --bad:#f06a66; --good:#4cc38a; color-scheme:dark}
+  --accent:#4ea3f5; --accent-soft:#16304a; --warn:#f0a040; --bad:#f06a66; --good:#4cc38a; --off-line:#4a5663; --off-fill:rgba(120,135,150,.12); --off-wash:rgba(0,0,0,.28); --off-nav:rgba(0,0,0,.4); color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--fg);font:15px/1.5 var(--body)}
 .wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:20px 48px;display:grid;gap:18px}
@@ -88,6 +89,8 @@ dialog#settingsDlg::backdrop{background:color-mix(in srgb,#000 45%,transparent)}
 .setform .row{display:flex;gap:8px;align-items:center}
 .setform .row.end{justify-content:flex-end}
 .setform .hint{font-weight:400}
+.setform .about{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;border-top:1px solid var(--line);padding-top:12px;font-size:.9rem}
+.setform .about .hint{flex:1 1 200px}
 .fileinfo .btn{padding:3px 10px;font-size:.85rem}
 .fileinfo{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font-size:.9rem;color:var(--muted)}
 .tag{font:500 .75rem var(--mono);text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;border-radius:99px;background:var(--accent-soft);color:var(--accent)}
@@ -124,13 +127,42 @@ dialog#settingsDlg::backdrop{background:color-mix(in srgb,#000 45%,transparent)}
 .olegend{display:flex;flex-wrap:wrap;gap:4px 14px;margin:4px 0 6px;font:400 .8rem var(--mono);color:var(--muted)}
 .olegend span{display:inline-flex;align-items:center;gap:5px}
 .olegend i{width:12px;height:3px;border-radius:2px;display:inline-block}
-.olegend b{color:var(--warn);font-weight:600}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
 .seg button{font:500 .85rem var(--body);border:0;background:var(--panel);color:var(--muted);padding:4px 12px;cursor:pointer}
 .seg button+button{border-left:1px solid var(--line)}
 .seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
 .seg button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
 .chipopts{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center}
+.filters{display:grid;gap:6px}
+.fhead{align-items:center;gap:6px 10px}
+.fhead .flt{font:600 .72rem var(--mono);text-transform:uppercase;letter-spacing:.06em}
+.fcount{font:.8rem var(--mono);font-variant-numeric:tabular-nums}
+.fcount.on{color:var(--accent);font-weight:600}
+.flist{display:grid;gap:6px}
+.flist:empty{display:none}
+.fitem{display:grid;grid-template-columns:minmax(7em,13em) minmax(120px,1fr) auto auto minmax(6.5em,auto) auto;grid-template-areas:"nm rg lo hi rs x";gap:4px 12px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:.85rem;color:var(--muted)}
+.fitem.on{border-color:var(--accent)}
+.fitem .fname{grid-area:nm;color:var(--fg);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fitem .fname small{color:var(--muted);font-weight:400;margin-left:4px}
+.fitem .freset{grid-area:rs;justify-self:start;white-space:nowrap} .fitem .freset[hidden]{display:inline;visibility:hidden} .fitem .frange{grid-area:rg} .fitem .flo{grid-area:lo} .fitem .fhi{grid-area:hi} .fitem .zb{grid-area:x;height:26px;min-width:26px;font-size:.8rem}
+.fitem label{display:inline-flex;gap:5px;align-items:center}
+.fitem input[type=number]{width:6.5em;font:500 .85rem var(--mono);padding:3px 6px;border:1px solid var(--line);border-radius:5px;background:var(--panel);color:var(--fg)}
+.frange{position:relative;height:40px;min-width:0}
+.frange canvas{position:absolute;left:7px;right:7px;top:0;width:calc(100% - 14px);height:28px;display:block}
+.frange input[type=range]{position:absolute;left:0;bottom:0;width:100%;height:14px;margin:0;padding:0;-webkit-appearance:none;appearance:none;background:none;pointer-events:none;outline:none}
+.frange .ftrack{position:absolute;left:7px;right:7px;bottom:6px;height:2px;background:var(--line);border-radius:1px}
+.frange .ffill{position:absolute;bottom:6px;height:2px;background:var(--accent)}
+.frange input[type=range]::-webkit-slider-runnable-track{background:none;border:0;height:14px}
+.frange input[type=range]::-moz-range-track{background:none;border:0}
+.frange input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;pointer-events:auto;width:14px;height:14px;border-radius:50%;background:var(--panel);border:2px solid var(--accent);cursor:grab}
+.frange input[type=range]::-moz-range-thumb{pointer-events:auto;width:10px;height:10px;border-radius:50%;background:var(--panel);border:2px solid var(--accent);cursor:grab}
+.frange input[type=range]:focus-visible::-webkit-slider-thumb{outline:2px solid var(--accent);outline-offset:1px}
+.frange input[type=range]:focus-visible::-moz-range-thumb{outline:2px solid var(--accent);outline-offset:1px}
+@media (max-width:640px){.fitem{grid-template-columns:auto auto minmax(0,1fr) auto;grid-template-areas:"nm nm nm x" "rg rg rg rg" "lo hi rs rs";}}
+.cbox .ct .vst{font-variant-numeric:tabular-nums}
+@media (max-width:640px){.cbox .ct{flex-wrap:wrap;row-gap:2px}.cbox .ct .meta{margin-left:auto}}
+.olegend .vst{opacity:.85}
+.rawwrap tbody tr.off td:not(:first-child){color:var(--muted);opacity:.55}
 .rawwrap{height:min(70vh,640px);overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:10px;overscroll-behavior:contain}
 .rawwrap table{width:auto;min-width:100%}
 .rawwrap th,.rawwrap td{height:26px;padding:0 10px;font-size:.8rem;line-height:26px}
@@ -199,7 +231,6 @@ section{display:grid;gap:10px}
 .curkpis .kpi.on{background:color-mix(in srgb,var(--warn) 12%,var(--panel))}
 tr.cur td{background:color-mix(in srgb,var(--warn) 18%,var(--panel))!important;font-weight:600}
 td.cval{color:var(--warn);font-weight:600}
-.cbox .curv{font:600 .8rem var(--mono);color:var(--warn);margin-left:6px}
 .logpick{align-items:center}
 .logpick select{max-width:none;min-width:0}
 #selModel{min-width:10em}
@@ -286,6 +317,7 @@ table.windh .wdv{display:inline-block;min-width:6.5ch;text-align:right}
   <div class="infopop" id="infoPop" hidden>
     <p id="infoText">Wertet Telemetrie-Logs (CSV) vom Ethos-Sender aus: Flugzeit, Motorläufe, Empfang, Akku, GPS-Spur, Thermik, Steigflüge, Wind und alle Sensoren. Logs lädst Du über „Import …“ oder ziehst die CSV-Dateien einfach ins Fenster. Die Dateien bleiben auf Deinem Gerät.</p>
     <p id="infoSync" hidden></p>
+    <p class="hint" id="infoVer" hidden></p>
     <p id="infoLegal">Inoffizielles Werkzeug, nicht mit dem Hersteller von Ethos verbunden. Ethos ist eine Marke ihres Inhabers.</p>
   </div>
 
@@ -331,6 +363,7 @@ table.windh .wdv{display:inline-block;min-width:6.5ch;text-align:right}
       <label class="deskonly">Archiv-Ordner<span class="row"><input type="text" id="setArchive" spellcheck="false"><button type="button" class="btn ghost" id="setPick">Wählen …</button></span><span class="hint">Am besten ein Ordner in Google Drive oder OneDrive, dann sind die Logs auf allen Geräten da. Pro Modell entsteht ein Unterordner.</span></label>
       <label class="check deskonly"><input type="checkbox" id="setAuto"> Automatisch synchronisieren, sobald der Sender angeschlossen ist</label>
       <label class="check deskonly"><input type="checkbox" id="setManual"> Importierte Logs immer ins Archiv kopieren</label>
+      <div class="about"><b>Ethos Log Viewer</b><span id="setVer">Web-Version</span><span class="hint" id="setUpd"></span><button type="button" class="btn ghost deskonly" id="setCheck">Nach Updates suchen</button></div>
       <div class="row end"><button type="button" class="btn ghost" id="setCancel">Abbrechen</button><button type="submit" class="btn" id="setSave">Speichern</button></div>
     </form>
   </dialog>
@@ -421,11 +454,22 @@ table.windh .wdv{display:inline-block;min-width:6.5ch;text-align:right}
   <div class="pane" role="tabpanel" id="pane-diagramme" data-tab="diagramme" aria-labelledby="tab-diagramme" hidden>
   <section>
     <h2 class="hi">Kanäle <button type="button" class="iconbtn sm" data-info="info-diag" aria-expanded="false" aria-controls="info-diag" aria-label="Bedienung und Berechnung">i</button></h2>
-    <div class="infopop" id="info-diag" hidden><p>Im Diagramm ziehen verschiebt. Zoomen mit Strg + Mausrad, Trackpad-Pinch oder den Knöpfen. Doppelklick zeigt alles. In der Leiste oben das Fenster ziehen oder an den Rändern grösser und kleiner machen.</p><p>Zeitachse in Minuten ab Logbeginn. Hinterlegt: Steigflüge blau, Thermik grün, rot der oben gewählte Schalterzustand. Reihenfolge ändern: Diagramm am Griff ⋮⋮ ziehen oder mit ▲ ▼ verschieben.</p><p>„Überlagert“ zeigt alle gewählten Kanäle in einem Diagramm. Jeder Kanal hat seine eigene Skala und füllt die ganze Höhe; die ersten zwei Skalen stehen links und rechts in der Farbe des Kanals.</p><p>ƒ = berechneter Wert. Leistung = Strom × Spannung, Energie = Leistung über die Zeit aufsummiert. GPS Kurs, Windgeschw., Windrichtung und TAS rechnen wie Deine Widgets „GPS Course“ und „Wind Estimator“ mit deren Standardwerten (40 Werte alle 0,7 s, Fit jede Sekunde, Kurs ab 3 m Abstand). Vor dem ersten gültigen Fit zeigt der Wind 0 und die TAS die Geschwindigkeit über Grund, genau wie am Sender.</p></div>
+    <div class="infopop" id="info-diag" hidden><p>Im Diagramm ziehen verschiebt. Zoomen mit Strg + Mausrad, Trackpad-Pinch oder den Knöpfen. Doppelklick zeigt alles. In der Leiste oben das Fenster ziehen oder an den Rändern grösser und kleiner machen.</p><p>Zeitachse in Minuten ab Logbeginn. Hinterlegt: Steigflüge blau, Thermik grün, rot der oben gewählte Schalterzustand. Reihenfolge ändern: Diagramm am Griff ⋮⋮ ziehen oder mit ▲ ▼ verschieben.</p><p>„Überlagert“ zeigt alle gewählten Kanäle in einem Diagramm. Jeder Kanal hat seine eigene Skala und füllt die ganze Höhe; die ersten zwei Skalen stehen links und rechts in der Farbe des Kanals.</p><p>ƒ = berechneter Wert. Leistung = Strom × Spannung, Energie = Leistung über die Zeit aufsummiert. GPS Kurs, Windgeschw., Windrichtung und TAS rechnen wie Deine Widgets „GPS Course“ und „Wind Estimator“ mit deren Standardwerten (40 Werte alle 0,7 s, Fit jede Sekunde, Kurs ab 3 m Abstand). Vor dem ersten gültigen Fit zeigt der Wind 0 und die TAS die Geschwindigkeit über Grund, genau wie am Sender.</p><p>Steuerkurs (windkorr.) = Richtung, in die die Nase zeigt, aus Bodenvektor minus Windvektor. Drift = Kurs über Grund minus Steuerkurs (positiv = nach rechts versetzt). Gegenwind = Windanteil gegen die Flugrichtung, negativ heisst Rückenwind. Distanz zum Start = waagrechte Distanz zum ersten GPS-Fix, Effektive Distanz = schräg vom Startpunkt zum Modell, mit der Höhe.</p><p>Gleitzahl = geflogene Strecke durch Höhenverlust, jeweils über 10 s gerechnet (5 s vor und nach dem Zeitpunkt). Die Strecke kommt aus der TAS, also durch die Luft; ohne Wind aus der GPS-Geschwindigkeit. Werte gibt es nur im Gleitflug: Motor aus und mindestens 0,2 m/s Sinken. Gleitzahl 20 heisst 20 m weit pro Meter Höhe.</p></div>
     <div class="chips" id="chips"></div>
     <div class="chipopts">
       <div class="seg" role="group" aria-label="Darstellung der Diagramme"><button type="button" data-ov="0" aria-pressed="true">Einzeln</button><button type="button" data-ov="1" aria-pressed="false">Überlagert</button></div>
       <label class="toggle"><input type="checkbox" id="showRc"> Sender-Kanäle, Schalter und logische Schalter anzeigen</label>
+    </div>
+    <div class="filters" id="filters">
+      <div class="fhead settings">
+        <span class="flt">Filter</span>
+        <select id="fAdd" aria-label="Parameter zum Filtern"></select>
+        <span class="fcount" id="fCount"></span>
+        <button type="button" class="linkbtn" id="fReset" hidden>Alle zurücksetzen</button>
+        <button type="button" class="iconbtn sm" data-info="info-filter" aria-expanded="false" aria-controls="info-filter" aria-label="So funktioniert der Filter">i</button>
+      </div>
+      <div class="infopop" id="info-filter" hidden><p>Parameter wählen und mit den beiden Griffen oder den Feldern Min und Max den Bereich einstellen. Die Balken zeigen, wie oft welcher Wert im Log vorkommt. Ein Logeintrag ist aktiv, wenn er bei allen Filtern im Bereich liegt. Inaktive Einträge bleiben in den Diagrammen sichtbar, auf grauem Hintergrund, auch in der Übersichtsleiste. Min, Ø und Max in den Diagrammen und unter „Alle Werte“ zählen nur aktive Einträge. „Zurücksetzen“ stellt einen Filter auf den ganzen Bereich, ✕ entfernt ihn.</p></div>
+      <div class="flist" id="flist"></div>
     </div>
     <div class="zoombar" id="zoombar">
       <div class="zrow">
@@ -441,7 +485,7 @@ table.windh .wdv{display:inline-block;min-width:6.5ch;text-align:right}
   </div>
   <div class="pane" role="tabpanel" id="pane-werte" data-tab="werte" aria-labelledby="tab-werte" hidden>
   <section>
-    <h2>Alle Werte</h2>
+    <h2 class="hi">Alle Werte <span class="hint" id="statsNote"></span></h2>
     <div class="tablewrap"><table id="stats"></table></div>
   </section>
   </div>
@@ -456,7 +500,7 @@ table.windh .wdv{display:inline-block;min-width:6.5ch;text-align:right}
 
 <script>
 // ---------- Sprache: Deutsch ist der Quelltext, Englisch kommt aus EN; Standard = Sprache des Systems ----------
-const EN = {"Info zur App": "About the app","Modell": "Model","Älteres Log": "Older log","Neueres Log": "Newer log","Einstellungen": "Settings","Wertet Telemetrie-Logs (CSV) vom Ethos-Sender aus: Flugzeit, Motorläufe, Empfang, Akku, GPS-Spur, Thermik, Steigflüge, Wind und alle Sensoren. Logs lädst Du über „Import …“ oder ziehst die CSV-Dateien einfach ins Fenster. Die Dateien bleiben auf Deinem Gerät.": "Analyses telemetry logs (CSV) from Ethos radios: flight time, motor runs, link quality, batteries, GPS track, thermals, climbs, wind and all sensors. Load logs with “Import …” or simply drop the CSV files onto the window. The files stay on your device.","Sender wird gesucht …": "Looking for the radio …","Details zum Sync": "Sync details","Jetzt vom Sender synchronisieren": "Sync from the radio now","Archiv öffnen": "Open archive","Letzter Sync": "Last sync","Schliessen": "Close","Logs importieren": "Import logs","Dateien auswählen": "Choose files","Ein oder mehrere Logs (.csv)": "One or more logs (.csv)","Ordner öffnen": "Open folder","Alle Logs eines Ordners, z.B. LOGS vom Sender": "All logs in a folder, e.g. LOGS from the radio","Du kannst CSV-Dateien auch einfach irgendwo ins Fenster ziehen.": "You can also simply drop CSV files anywhere on the window.","Importierte Logs ins Archiv kopieren": "Copy imported logs to the archive","Logs hier ablegen": "Drop logs here","Sprache": "Language","Systemsprache": "System language","Log-Ordner auf dem Sender": "Log folder on the radio","Wird auf jedem angeschlossenen Laufwerk gesucht. Ein vollständiger Pfad wie E:\\logs geht auch.": "Searched on every connected drive. A full path such as E:\\logs works too.","Archiv-Ordner": "Archive folder","Wählen …": "Choose …","Am besten ein Ordner in Google Drive oder OneDrive, dann sind die Logs auf allen Geräten da. Pro Modell entsteht ein Unterordner.": "Ideally a folder in Google Drive or OneDrive, so the logs are available on all your devices. Each model gets its own subfolder.","Automatisch synchronisieren, sobald der Sender angeschlossen ist": "Sync automatically as soon as the radio is connected","Importierte Logs immer ins Archiv kopieren": "Always copy imported logs to the archive","Abbrechen": "Cancel","Speichern": "Save","Zeitpunkt im Log": "Point in time in the log","Zeitpunkt": "Time","Einen Datensatz zurück": "One record back","Einen Datensatz vor": "One record forward","Ziehen oder ins Diagramm klicken": "Drag or click into a chart","Aus": "Off","Ansichten": "Views","Übersicht": "Overview","Diagramme": "Charts","Thermik & Steigflüge": "Thermals & climbs","Karte & Wind": "Map & wind","Alle Werte": "All values","Lade Beispiel-Log …": "Loading example log …","Kennzahlen": "Key figures","Werte am Zeitpunkt": "Values at the selected time","Gerechnet wie Deine Widgets „Thermik“ und „Steigfluege“: Ein Steigflug läuft, solange der Schalter EIN ist. Gibt es keinen Steigflug-Schalter, erkennt die App Steigflüge am ESC-Strom: Motor an, solange der Strom über der Schwelle liegt (Standard 3 A, kurze Lücken bis 1 s zählen mit). Gewinn = höchste Höhe während der Phase minus Starthöhe, Ø Steigen = Gewinn durch Dauer. Thermik zählt ab 5 s, Steigflüge ab 1 s. Eine Phase, die beim Logende noch läuft, zählt wie im Widget nicht. Die Zeiten sind so genau wie das Log (etwa 0,5 s).": "Calculated like your widgets “Thermik” and “Steigfluege”: a climb lasts as long as the switch is ON. Without a climb switch the app detects climbs from the ESC current: motor on while the current is above the threshold (default 3 A, short gaps up to 1 s count). Gain = highest altitude during the phase minus start altitude, avg climb = gain divided by duration. Thermals count from 5 s, climbs from 1 s. A phase still running at the end of the log does not count, as in the widget. Times are as precise as the log (about 0.5 s).","Thermik": "Thermals","So wird gerechnet": "How it is calculated","Thermik-Schalter": "Thermal switch","Höhenquelle": "Altitude source","Balkenhöhe": "Bar height","Steiggeschwindigkeit": "Climb rate","Erreichte Höhe": "Height gained","Steigdauer": "Climb time","Steigflüge": "Climbs","Steigflug-Schalter": "Climb switch","ab": "above","Höhengewinn (m) · Zahl = Ø Steigen (m/s)": "Height gain (m) · number = avg climb (m/s)","GPS-Spur": "GPS track","Spur herauszoomen": "Zoom track out","Spur hineinzoomen": "Zoom track in","Alles": "All","Wind nach Höhe": "Wind by altitude","Stufe": "Band","Für die Tabelle braucht es GPS-Position, GPS-Geschwindigkeit und Kurven im Flug.": "The table needs GPS position, GPS speed and turns during the flight.","Kanäle": "Channels","Bedienung und Berechnung": "Controls and calculations","Im Diagramm ziehen verschiebt. Zoomen mit Strg + Mausrad, Trackpad-Pinch oder den Knöpfen. Doppelklick zeigt alles. In der Leiste oben das Fenster ziehen oder an den Rändern grösser und kleiner machen.": "Drag in a chart to pan. Zoom with Ctrl + mouse wheel, trackpad pinch or the buttons. Double-click shows everything. In the bar above, drag the window or resize it at its edges.","Zeitachse in Minuten ab Logbeginn. Hinterlegt: Steigflüge blau, Thermik grün, rot der oben gewählte Schalterzustand. Reihenfolge ändern: Diagramm am Griff ⋮⋮ ziehen oder mit ▲ ▼ verschieben.": "Time axis in minutes from the start of the log. Background: climbs blue, thermals green, red the switch state chosen above. Reorder: drag a chart by its handle ⋮⋮ or move it with ▲ ▼.","ƒ = berechneter Wert. Leistung = Strom × Spannung, Energie = Leistung über die Zeit aufsummiert. GPS Kurs, Windgeschw., Windrichtung und TAS rechnen wie Deine Widgets „GPS Course“ und „Wind Estimator“ mit deren Standardwerten (40 Werte alle 0,7 s, Fit jede Sekunde, Kurs ab 3 m Abstand). Vor dem ersten gültigen Fit zeigt der Wind 0 und die TAS die Geschwindigkeit über Grund, genau wie am Sender.": "ƒ = calculated value. Power = current × voltage, energy = power summed over time. GPS course, wind speed, wind direction and TAS are calculated like your widgets “GPS Course” and “Wind Estimator” with their default settings (40 samples every 0.7 s, fit every second, course from 3 m distance). Before the first valid fit the wind shows 0 and the TAS shows ground speed, exactly as on the radio.","Sender-Kanäle, Schalter und logische Schalter anzeigen": "Show radio channels, switches and logical switches","Herauszoomen": "Zoom out","Hineinzoomen": "Zoom in","Rot markieren": "Mark red","Schalter": "Switch","Zustand": "State","automatisch": "automatic","Die Datei enthält keine Datenzeilen.": "The file contains no data rows.","Keine Spalte \"Time\" gefunden. Ist das ein Ethos-Telemetrie-Log?": "No \"Time\" column found. Is this an Ethos telemetry log?","Leistung": "Power","Energie": "Energy","Integral von {p} Leistung": "Integral of {p} power","GPS Kurs (ber.)": "GPS course (calc.)","Azimut zwischen zwei GPS-Fixes, ab 3 m Abstand (Widget GPS Course)": "Bearing between two GPS fixes, from 3 m distance (GPS Course widget)","Windgeschw.": "Wind speed","Kasa-Kreisfit über GPS-Geschwindigkeit und GPS Kurs (ber.), Widget Wind Estimator": "Kasa circle fit over GPS speed and GPS course (calc.), Wind Estimator widget","Windrichtung": "Wind direction","Richtung, aus der der Wind kommt (Widget Wind Estimator)": "Direction the wind comes from (Wind Estimator widget)","Bodenvektor minus Windvektor (Widget Wind Estimator)": "Ground vector minus wind vector (Wind Estimator widget)","Logdauer": "Log duration","{n} Zeilen": "{n} rows","Flugzeit": "Flight time","Höhe über 5 m": "Altitude above 5 m","Motorläufe": "Motor runs","{t} Motorzeit": "{t} motor time","Max. Höhe": "Max. altitude","Max. Tempo": "Max. speed","Sinken max {v}": "Sink max {v}","Start {a} · Ende {b}": "Start {a} · end {b}","Verbraucht": "Consumed","aus {d}": "from {d}","{v} Wh gesamt": "{v} Wh total","Senderakku min": "Radio battery min","Start {v}": "Start {v}","N,NO,O,SO,S,SW,W,NW": "N,NE,E,SE,S,SW,W,NW","Keine GPS-Daten im Log.": "No GPS data in the log.","Gitter {s} m · Norden oben": "Grid {s} m · north up","Höhe": "Altitude","Steigflug": "Climb","max. Entfernung vom Start {d} m": "max. distance from start {d} m","Kräftig: sichtbarer Zeitausschnitt": "Bold: visible time range","Beispiel: Dein Log": "Example: your log","Geladen": "Loaded","{n} Sensoren": "{n} sensors","Kanal": "Channel","Einheit": "Unit","Am Zeitpunkt": "At selected time","Werte": "Values","berechnet": "calculated","– wählen –": "– choose –","{n} (automatisch)": "{n} (automatic)","Ø Steigen": "Avg climb","Gesamthöhe": "Total height","Gesamtdauer": "Total time","Kein Steigflug. Prüfe, ob der richtige Schalter gewählt ist.": "No climbs. Check that the right switch is selected.","Uhrzeit": "Time of day","Dauer": "Duration","Höchste": "Highest","Gewinn": "Gain","Verbrauch": "Consumption","Steigflug {n}": "Climb {n}","Gewinn {v}": "Gain {v}","Dauer {v}": "Duration {v}","Ø Steigen {v}": "Avg climb {v}","Steiggeschwindigkeit (m/s)": "Climb rate (m/s)","Erreichte Höhe (m)": "Height gained (m)","Steigdauer (s)": "Climb time (s)","an": "on","aus": "off","oben": "up","Mitte": "middle","unten": "down","Kein Wind berechnet. Dafür braucht es GPS-Position, GPS-Geschwindigkeit und Kurven im Flug.": "No wind calculated. This needs GPS position, GPS speed and turns during the flight.","Wind Ø": "Wind avg","aus|wind": "from","wechselnd": "variable","Gezählt werden die {n} akzeptierten Wind-Fits, jeweils in der Höhe ({a}), in der sie gerechnet wurden. Richtung = Vektormittel; „wechselnd“ heisst, die Richtungen in dieser Stufe streuen stark. Der Pfeil zeigt, wohin der Wind weht.": "Counts the {n} accepted wind fits, each at the altitude ({a}) where it was calculated. Direction = vector mean; “variable” means the directions in this band scatter widely. The arrow shows where the wind blows to.","Berechnet: {n}": "Calculated: {n}","Ziehen zum Umsortieren": "Drag to reorder","{n} verschieben": "Move {n}","{n} nach oben": "Move {n} up","{n} nach unten": "Move {n} down","Wähle oben einen oder mehrere Kanäle aus.": "Choose one or more channels above.","{a} von {b}": "{a} of {b}","{t} ab Start": "{t} from start","kein Zeitpunkt": "no point in time","Kein Zeitpunkt gewählt": "No point in time selected","Oben den Zeitstrahl ziehen oder in ein Diagramm klicken.": "Drag the time bar or click into a chart.","Phase": "Phase","Thermik|phase": "Thermal","kein Schalter aktiv": "no switch active","Am Zeitpunkt {t}: {w} {u} aus {d}° in {h} m.": "At {t}: {w} {u} from {d}° at {h} m.","Keine CSV-Dateien gefunden. Ethos speichert Logs im Ordner LOGS als .csv.": "No CSV files found. Ethos saves logs as .csv in the LOGS folder.","Log wählen": "Choose log","Datum": "Date","Sensoren": "Sensors","Zeilen": "Rows","Grösse": "Size","Datei": "File","ja": "yes","nein": "no","Modelle": "Models","Lade {n} …": "Loading {n} …","Datei konnte nicht gelesen werden.": "The file could not be read.","{n} ins Archiv kopiert.": "{n} copied to the archive.","Archiv": "Archive","Im Archiv sichern": "Save to archive","Im Archiv gesichert": "Saved to archive","Sync: Sobald der Sender angeschlossen ist, kopiert die App neue Logs aus „{p}“ ins Archiv, ein Ordner pro Modell. Archiv: {a}": "Sync: as soon as the radio is connected, the app copies new logs from “{p}” to the archive, one folder per model. Archive: {a}","Sync läuft: {d} von {n}": "Syncing: {d} of {n}","Sender gefunden, suche neue Logs …": "Radio found, looking for new logs …","Sync unterbrochen, Sender getrennt": "Sync interrupted, radio disconnected","{n} kopiert, {m} fehlen noch · {t} · geht beim nächsten Anschliessen weiter": "{n} copied, {m} still missing · {t} · continues next time you connect","{n} neu im Archiv": "{n} new in the archive","Keine neuen Logs": "No new logs","{n} Fehler": "{n} errors","Sender angeschlossen": "Radio connected","Sender getrennt": "Radio disconnected","Sync fehlgeschlagen": "Sync failed","Zugriff auf den Sender erlauben": "Allow access to the radio","macOS fragt nach dem Zugriff auf das Wechselmedium. Nach „Erlauben“ startet der Sync von selbst.": "macOS is asking for access to the removable volume. After “Allow” the sync starts by itself.","Automatischer Sync aus": "Automatic sync off","Sender nicht angeschlossen": "Radio not connected","Fehler": "Error","Zeit": "Time","Kopiert": "Copied","Nicht kopiert": "Not copied","{n}, der Sender wurde während dem Sync getrennt. Beim nächsten Anschliessen werden sie geholt.": "{n}, the radio was disconnected during the sync. They will be fetched the next time you connect.","Sender": "Radio","Version {v} ist verfügbar": "Version {v} is available","Herunterladen": "Download","Die Diagramm-Bibliothek konnte nicht geladen werden. Lade die Seite neu.": "The chart library could not be loaded. Reload the page.","Öffne ein Ethos-Log (CSV), um es auszuwerten.": "Open an Ethos log (CSV) to analyse it.","Sender auswerfen, damit er abgezogen werden kann": "Eject the radio so you can unplug it","⏏ Auswerfen": "⏏ Eject","Sender ausgeworfen, Du kannst ihn abziehen": "Radio ejected, you can unplug it","Wird ausgeworfen …": "Ejecting …","Auswerfen fehlgeschlagen: {e}": "Eject failed: {e}","Der Sync läuft noch.": "The sync is still running.","Kein Sender angeschlossen.": "No radio connected.","Das Laufwerk wird noch verwendet.": "The drive is still in use.","Inoffizielles Werkzeug, nicht mit dem Hersteller von Ethos verbunden. Ethos ist eine Marke ihres Inhabers.": "Unofficial tool, not affiliated with the maker of Ethos. Ethos is a trademark of its owner.","Darstellung": "Appearance","Wie System": "Same as system","Hell": "Light","Dunkel": "Dark","Rohdaten": "Raw data","So funktioniert es": "How it works","Alle Zeilen und Spalten so, wie sie im Log stehen. Ein Klick auf eine Zeile setzt den Zeitpunkt; die Zeile des gewählten Zeitpunkts ist hervorgehoben.": "All rows and columns exactly as they are in the log. Clicking a row sets the point in time; the row of the selected time is highlighted.","{n} Zeilen · {m} Spalten": "{n} rows · {m} columns","Darstellung der Diagramme": "Chart layout","Einzeln": "Separate","Überlagert": "Overlaid","Alle Kanäle überlagert": "All channels overlaid","„Überlagert“ zeigt alle gewählten Kanäle in einem Diagramm. Jeder Kanal hat seine eigene Skala und füllt die ganze Höhe; die ersten zwei Skalen stehen links und rechts in der Farbe des Kanals.": "“Overlaid” shows all selected channels in one chart. Each channel has its own scale and uses the full height; the first two scales are shown left and right in the channel colour."};
+const EN = {"Gleitzahl": "Glide ratio", "Strecke durch Höhenverlust über 10 s, aus {s} und {a}; nur im Gleitflug mit Motor aus": "Distance divided by height lost over 10 s, from {s} and {a}; gliding with the motor off only", "Gleitzahl = geflogene Strecke durch Höhenverlust, jeweils über 10 s gerechnet (5 s vor und nach dem Zeitpunkt). Die Strecke kommt aus der TAS, also durch die Luft; ohne Wind aus der GPS-Geschwindigkeit. Werte gibt es nur im Gleitflug: Motor aus und mindestens 0,2 m/s Sinken. Gleitzahl 20 heisst 20 m weit pro Meter Höhe.": "Glide ratio = distance flown divided by height lost, calculated over 10 s (5 s before and after the point in time). The distance comes from the TAS, i.e. through the air; without wind from the GPS speed. Values only exist while gliding: motor off and at least 0.2 m/s sink. A glide ratio of 20 means 20 m forward per metre of height.", "Filter": "Filter", "Parameter zum Filtern": "Parameter to filter", "Alle zurücksetzen": "Reset all", "So funktioniert der Filter": "How the filter works", "Parameter wählen und mit den beiden Griffen oder den Feldern Min und Max den Bereich einstellen. Die Balken zeigen, wie oft welcher Wert im Log vorkommt. Ein Logeintrag ist aktiv, wenn er bei allen Filtern im Bereich liegt. Inaktive Einträge bleiben in den Diagrammen sichtbar, auf grauem Hintergrund, auch in der Übersichtsleiste. Min, Ø und Max in den Diagrammen und unter „Alle Werte“ zählen nur aktive Einträge. „Zurücksetzen“ stellt einen Filter auf den ganzen Bereich, ✕ entfernt ihn.": "Pick a parameter and set the range with the two handles or the Min and Max fields. The bars show how often each value occurs in the log. A log entry is active when it lies inside the range of every filter. Inactive entries stay visible in the charts, on a grey background, also in the overview bar. Min, Ø and Max in the charts and under “All values” only count active entries. “Reset” sets a filter back to the full range, ✕ removes it.", "+ Parameter wählen …": "+ Choose parameter …", "{n} Min": "{n} min", "{n} Max": "{n} max", "Zurücksetzen": "Reset", "Filter {n} entfernen": "Remove filter {n}", "Filter entfernen": "Remove filter", "{a} von {b} Einträgen aktiv": "{a} of {b} entries active", "Gefiltert: {t}": "Filtered: {t}", "{a} aktiv": "{a} active", "keine aktiven Werte": "no active values", "Im sichtbaren Ausschnitt, nur aktive Einträge": "In the visible range, active entries only", "Info zur App": "About the app", "Modell": "Model", "Älteres Log": "Older log", "Neueres Log": "Newer log", "Einstellungen": "Settings", "Wertet Telemetrie-Logs (CSV) vom Ethos-Sender aus: Flugzeit, Motorläufe, Empfang, Akku, GPS-Spur, Thermik, Steigflüge, Wind und alle Sensoren. Logs lädst Du über „Import …“ oder ziehst die CSV-Dateien einfach ins Fenster. Die Dateien bleiben auf Deinem Gerät.": "Analyses telemetry logs (CSV) from Ethos radios: flight time, motor runs, link quality, batteries, GPS track, thermals, climbs, wind and all sensors. Load logs with “Import …” or simply drop the CSV files onto the window. The files stay on your device.", "Sender wird gesucht …": "Looking for the radio …", "Details zum Sync": "Sync details", "Jetzt vom Sender synchronisieren": "Sync from the radio now", "Archiv öffnen": "Open archive", "Letzter Sync": "Last sync", "Schliessen": "Close", "Logs importieren": "Import logs", "Dateien auswählen": "Choose files", "Ein oder mehrere Logs (.csv)": "One or more logs (.csv)", "Ordner öffnen": "Open folder", "Alle Logs eines Ordners, z.B. LOGS vom Sender": "All logs in a folder, e.g. LOGS from the radio", "Du kannst CSV-Dateien auch einfach irgendwo ins Fenster ziehen.": "You can also simply drop CSV files anywhere on the window.", "Importierte Logs ins Archiv kopieren": "Copy imported logs to the archive", "Logs hier ablegen": "Drop logs here", "Sprache": "Language", "Systemsprache": "System language", "Log-Ordner auf dem Sender": "Log folder on the radio", "Wird auf jedem angeschlossenen Laufwerk gesucht. Ein vollständiger Pfad wie E:\\logs geht auch.": "Searched on every connected drive. A full path such as E:\\logs works too.", "Archiv-Ordner": "Archive folder", "Wählen …": "Choose …", "Am besten ein Ordner in Google Drive oder OneDrive, dann sind die Logs auf allen Geräten da. Pro Modell entsteht ein Unterordner.": "Ideally a folder in Google Drive or OneDrive, so the logs are available on all your devices. Each model gets its own subfolder.", "Automatisch synchronisieren, sobald der Sender angeschlossen ist": "Sync automatically as soon as the radio is connected", "Importierte Logs immer ins Archiv kopieren": "Always copy imported logs to the archive", "Abbrechen": "Cancel", "Speichern": "Save", "Zeitpunkt im Log": "Point in time in the log", "Zeitpunkt": "Time", "Einen Datensatz zurück": "One record back", "Einen Datensatz vor": "One record forward", "Ziehen oder ins Diagramm klicken": "Drag or click into a chart", "Aus": "Off", "Ansichten": "Views", "Übersicht": "Overview", "Diagramme": "Charts", "Thermik & Steigflüge": "Thermals & climbs", "Karte & Wind": "Map & wind", "Alle Werte": "All values", "Lade Beispiel-Log …": "Loading example log …", "Kennzahlen": "Key figures", "Werte am Zeitpunkt": "Values at the selected time", "Gerechnet wie Deine Widgets „Thermik“ und „Steigfluege“: Ein Steigflug läuft, solange der Schalter EIN ist. Gibt es keinen Steigflug-Schalter, erkennt die App Steigflüge am ESC-Strom: Motor an, solange der Strom über der Schwelle liegt (Standard 3 A, kurze Lücken bis 1 s zählen mit). Gewinn = höchste Höhe während der Phase minus Starthöhe, Ø Steigen = Gewinn durch Dauer. Thermik zählt ab 5 s, Steigflüge ab 1 s. Eine Phase, die beim Logende noch läuft, zählt wie im Widget nicht. Die Zeiten sind so genau wie das Log (etwa 0,5 s).": "Calculated like your widgets “Thermik” and “Steigfluege”: a climb lasts as long as the switch is ON. Without a climb switch the app detects climbs from the ESC current: motor on while the current is above the threshold (default 3 A, short gaps up to 1 s count). Gain = highest altitude during the phase minus start altitude, avg climb = gain divided by duration. Thermals count from 5 s, climbs from 1 s. A phase still running at the end of the log does not count, as in the widget. Times are as precise as the log (about 0.5 s).", "Thermik": "Thermals", "So wird gerechnet": "How it is calculated", "Thermik-Schalter": "Thermal switch", "Höhenquelle": "Altitude source", "Balkenhöhe": "Bar height", "Steiggeschwindigkeit": "Climb rate", "Erreichte Höhe": "Height gained", "Steigdauer": "Climb time", "Steigflüge": "Climbs", "Steigflug-Schalter": "Climb switch", "ab": "above", "Höhengewinn (m) · Zahl = Ø Steigen (m/s)": "Height gain (m) · number = avg climb (m/s)", "GPS-Spur": "GPS track", "Spur herauszoomen": "Zoom track out", "Spur hineinzoomen": "Zoom track in", "Alles": "All", "Wind nach Höhe": "Wind by altitude", "Stufe": "Band", "Für die Tabelle braucht es GPS-Position, GPS-Geschwindigkeit und Kurven im Flug.": "The table needs GPS position, GPS speed and turns during the flight.", "Kanäle": "Channels", "Bedienung und Berechnung": "Controls and calculations", "Im Diagramm ziehen verschiebt. Zoomen mit Strg + Mausrad, Trackpad-Pinch oder den Knöpfen. Doppelklick zeigt alles. In der Leiste oben das Fenster ziehen oder an den Rändern grösser und kleiner machen.": "Drag in a chart to pan. Zoom with Ctrl + mouse wheel, trackpad pinch or the buttons. Double-click shows everything. In the bar above, drag the window or resize it at its edges.", "Zeitachse in Minuten ab Logbeginn. Hinterlegt: Steigflüge blau, Thermik grün, rot der oben gewählte Schalterzustand. Reihenfolge ändern: Diagramm am Griff ⋮⋮ ziehen oder mit ▲ ▼ verschieben.": "Time axis in minutes from the start of the log. Background: climbs blue, thermals green, red the switch state chosen above. Reorder: drag a chart by its handle ⋮⋮ or move it with ▲ ▼.", "ƒ = berechneter Wert. Leistung = Strom × Spannung, Energie = Leistung über die Zeit aufsummiert. GPS Kurs, Windgeschw., Windrichtung und TAS rechnen wie Deine Widgets „GPS Course“ und „Wind Estimator“ mit deren Standardwerten (40 Werte alle 0,7 s, Fit jede Sekunde, Kurs ab 3 m Abstand). Vor dem ersten gültigen Fit zeigt der Wind 0 und die TAS die Geschwindigkeit über Grund, genau wie am Sender.": "ƒ = calculated value. Power = current × voltage, energy = power summed over time. GPS course, wind speed, wind direction and TAS are calculated like your widgets “GPS Course” and “Wind Estimator” with their default settings (40 samples every 0.7 s, fit every second, course from 3 m distance). Before the first valid fit the wind shows 0 and the TAS shows ground speed, exactly as on the radio.", "Sender-Kanäle, Schalter und logische Schalter anzeigen": "Show radio channels, switches and logical switches", "Herauszoomen": "Zoom out", "Hineinzoomen": "Zoom in", "Rot markieren": "Mark red", "Schalter": "Switch", "Zustand": "State", "automatisch": "automatic", "Die Datei enthält keine Datenzeilen.": "The file contains no data rows.", "Keine Spalte \"Time\" gefunden. Ist das ein Ethos-Telemetrie-Log?": "No \"Time\" column found. Is this an Ethos telemetry log?", "Leistung": "Power", "Energie": "Energy", "Integral von {p} Leistung": "Integral of {p} power", "GPS Kurs (ber.)": "GPS course (calc.)", "Azimut zwischen zwei GPS-Fixes, ab 3 m Abstand (Widget GPS Course)": "Bearing between two GPS fixes, from 3 m distance (GPS Course widget)", "Windgeschw.": "Wind speed", "Kasa-Kreisfit über GPS-Geschwindigkeit und GPS Kurs (ber.), Widget Wind Estimator": "Kasa circle fit over GPS speed and GPS course (calc.), Wind Estimator widget", "Windrichtung": "Wind direction", "Richtung, aus der der Wind kommt (Widget Wind Estimator)": "Direction the wind comes from (Wind Estimator widget)", "Bodenvektor minus Windvektor (Widget Wind Estimator)": "Ground vector minus wind vector (Wind Estimator widget)", "Logdauer": "Log duration", "{n} Zeilen": "{n} rows", "Flugzeit": "Flight time", "Höhe über 5 m": "Altitude above 5 m", "Motorläufe": "Motor runs", "{t} Motorzeit": "{t} motor time", "Max. Höhe": "Max. altitude", "Max. Tempo": "Max. speed", "Sinken max {v}": "Sink max {v}", "Start {a} · Ende {b}": "Start {a} · end {b}", "Verbraucht": "Consumed", "aus {d}": "from {d}", "{v} Wh gesamt": "{v} Wh total", "Senderakku min": "Radio battery min", "Start {v}": "Start {v}", "N,NO,O,SO,S,SW,W,NW": "N,NE,E,SE,S,SW,W,NW", "Keine GPS-Daten im Log.": "No GPS data in the log.", "Gitter {s} m · Norden oben": "Grid {s} m · north up", "Höhe": "Altitude", "Steigflug": "Climb", "max. Entfernung vom Start {d} m": "max. distance from start {d} m", "Kräftig: sichtbarer Zeitausschnitt": "Bold: visible time range", "Beispiel: Dein Log": "Example: your log", "Geladen": "Loaded", "{n} Sensoren": "{n} sensors", "Kanal": "Channel", "Einheit": "Unit", "Am Zeitpunkt": "At selected time", "Werte": "Values", "berechnet": "calculated", "– wählen –": "– choose –", "{n} (automatisch)": "{n} (automatic)", "Ø Steigen": "Avg climb", "Gesamthöhe": "Total height", "Gesamtdauer": "Total time", "Kein Steigflug. Prüfe, ob der richtige Schalter gewählt ist.": "No climbs. Check that the right switch is selected.", "Uhrzeit": "Time of day", "Dauer": "Duration", "Höchste": "Highest", "Gewinn": "Gain", "Verbrauch": "Consumption", "Steigflug {n}": "Climb {n}", "Gewinn {v}": "Gain {v}", "Dauer {v}": "Duration {v}", "Ø Steigen {v}": "Avg climb {v}", "Steiggeschwindigkeit (m/s)": "Climb rate (m/s)", "Erreichte Höhe (m)": "Height gained (m)", "Steigdauer (s)": "Climb time (s)", "an": "on", "aus": "off", "oben": "up", "Mitte": "middle", "unten": "down", "Kein Wind berechnet. Dafür braucht es GPS-Position, GPS-Geschwindigkeit und Kurven im Flug.": "No wind calculated. This needs GPS position, GPS speed and turns during the flight.", "Wind Ø": "Wind avg", "aus|wind": "from", "wechselnd": "variable", "Gezählt werden die {n} akzeptierten Wind-Fits, jeweils in der Höhe ({a}), in der sie gerechnet wurden. Richtung = Vektormittel; „wechselnd“ heisst, die Richtungen in dieser Stufe streuen stark. Der Pfeil zeigt, wohin der Wind weht.": "Counts the {n} accepted wind fits, each at the altitude ({a}) where it was calculated. Direction = vector mean; “variable” means the directions in this band scatter widely. The arrow shows where the wind blows to.", "Berechnet: {n}": "Calculated: {n}", "Ziehen zum Umsortieren": "Drag to reorder", "{n} verschieben": "Move {n}", "{n} nach oben": "Move {n} up", "{n} nach unten": "Move {n} down", "Wähle oben einen oder mehrere Kanäle aus.": "Choose one or more channels above.", "{a} von {b}": "{a} of {b}", "{t} ab Start": "{t} from start", "kein Zeitpunkt": "no point in time", "Kein Zeitpunkt gewählt": "No point in time selected", "Oben den Zeitstrahl ziehen oder in ein Diagramm klicken.": "Drag the time bar or click into a chart.", "Phase": "Phase", "Thermik|phase": "Thermal", "kein Schalter aktiv": "no switch active", "Am Zeitpunkt {t}: {w} {u} aus {d}° in {h} m.": "At {t}: {w} {u} from {d}° at {h} m.", "Keine CSV-Dateien gefunden. Ethos speichert Logs im Ordner LOGS als .csv.": "No CSV files found. Ethos saves logs as .csv in the LOGS folder.", "Log wählen": "Choose log", "Datum": "Date", "Sensoren": "Sensors", "Zeilen": "Rows", "Grösse": "Size", "Datei": "File", "ja": "yes", "nein": "no", "Modelle": "Models", "Lade {n} …": "Loading {n} …", "Datei konnte nicht gelesen werden.": "The file could not be read.", "{n} ins Archiv kopiert.": "{n} copied to the archive.", "Archiv": "Archive", "Im Archiv sichern": "Save to archive", "Im Archiv gesichert": "Saved to archive", "Sync: Sobald der Sender angeschlossen ist, kopiert die App neue Logs aus „{p}“ ins Archiv, ein Ordner pro Modell. Archiv: {a}": "Sync: as soon as the radio is connected, the app copies new logs from “{p}” to the archive, one folder per model. Archive: {a}", "Sync läuft: {d} von {n}": "Syncing: {d} of {n}", "Sender gefunden, suche neue Logs …": "Radio found, looking for new logs …", "Sync unterbrochen, Sender getrennt": "Sync interrupted, radio disconnected", "{n} kopiert, {m} fehlen noch · {t} · geht beim nächsten Anschliessen weiter": "{n} copied, {m} still missing · {t} · continues next time you connect", "{n} neu im Archiv": "{n} new in the archive", "Keine neuen Logs": "No new logs", "{n} Fehler": "{n} errors", "Sender angeschlossen": "Radio connected", "Sender getrennt": "Radio disconnected", "Sync fehlgeschlagen": "Sync failed", "Zugriff auf den Sender erlauben": "Allow access to the radio", "macOS fragt nach dem Zugriff auf das Wechselmedium. Nach „Erlauben“ startet der Sync von selbst.": "macOS is asking for access to the removable volume. After “Allow” the sync starts by itself.", "Automatischer Sync aus": "Automatic sync off", "Sender nicht angeschlossen": "Radio not connected", "Fehler": "Error", "Zeit": "Time", "Kopiert": "Copied", "Nicht kopiert": "Not copied", "{n}, der Sender wurde während dem Sync getrennt. Beim nächsten Anschliessen werden sie geholt.": "{n}, the radio was disconnected during the sync. They will be fetched the next time you connect.", "Sender": "Radio", "Version {v} ist verfügbar": "Version {v} is available", "Herunterladen": "Download", "Die Diagramm-Bibliothek konnte nicht geladen werden. Lade die Seite neu.": "The chart library could not be loaded. Reload the page.", "Öffne ein Ethos-Log (CSV), um es auszuwerten.": "Open an Ethos log (CSV) to analyse it.", "Sender auswerfen, damit er abgezogen werden kann": "Eject the radio so you can unplug it", "⏏ Auswerfen": "⏏ Eject", "Sender ausgeworfen, Du kannst ihn abziehen": "Radio ejected, you can unplug it", "Wird ausgeworfen …": "Ejecting …", "Auswerfen fehlgeschlagen: {e}": "Eject failed: {e}", "Der Sync läuft noch.": "The sync is still running.", "Kein Sender angeschlossen.": "No radio connected.", "Das Laufwerk wird noch verwendet.": "The drive is still in use.", "Inoffizielles Werkzeug, nicht mit dem Hersteller von Ethos verbunden. Ethos ist eine Marke ihres Inhabers.": "Unofficial tool, not affiliated with the maker of Ethos. Ethos is a trademark of its owner.", "Darstellung": "Appearance", "Wie System": "Same as system", "Hell": "Light", "Dunkel": "Dark", "Rohdaten": "Raw data", "So funktioniert es": "How it works", "Alle Zeilen und Spalten so, wie sie im Log stehen. Ein Klick auf eine Zeile setzt den Zeitpunkt; die Zeile des gewählten Zeitpunkts ist hervorgehoben.": "All rows and columns exactly as they are in the log. Clicking a row sets the point in time; the row of the selected time is highlighted.", "{n} Zeilen · {m} Spalten": "{n} rows · {m} columns", "Darstellung der Diagramme": "Chart layout", "Einzeln": "Separate", "Überlagert": "Overlaid", "Alle Kanäle überlagert": "All channels overlaid", "„Überlagert“ zeigt alle gewählten Kanäle in einem Diagramm. Jeder Kanal hat seine eigene Skala und füllt die ganze Höhe; die ersten zwei Skalen stehen links und rechts in der Farbe des Kanals.": "“Overlaid” shows all selected channels in one chart. Each channel has its own scale and uses the full height; the first two scales are shown left and right in the channel colour.", "Web-Version": "Web version", "Nach Updates suchen": "Check for updates", "Version {v}": "Version {v}", "Ethos Log Viewer, Version {v}": "Ethos Log Viewer, version {v}", "Suche nach Updates fehlgeschlagen ({e})": "Update check failed ({e})", "Das ist die neueste Version.": "You have the latest version.", "Suche …": "Checking …", "Steuerkurs (windkorr.)": "Heading (wind-corr.)", "Richtung, in die die Nase zeigt: GPS Kurs (ber.) korrigiert um den Wind": "Direction the nose points: GPS course (calc.) corrected for the wind", "Drift": "Drift", "Kurs über Grund minus Steuerkurs; positiv = Wind von links, das Modell wird nach rechts versetzt": "Course over ground minus heading; positive = wind from the left, the model drifts to the right", "Gegenwind": "Headwind", "Windanteil gegen die Flugrichtung; negativ = Rückenwind": "Wind component against the direction of flight; negative = tailwind", "Distanz zum Start": "Distance to start", "Waagrechte Distanz zum ersten gültigen GPS-Fix": "Horizontal distance to the first valid GPS fix", "Steuerkurs (windkorr.) = Richtung, in die die Nase zeigt, aus Bodenvektor minus Windvektor. Drift = Kurs über Grund minus Steuerkurs (positiv = nach rechts versetzt). Gegenwind = Windanteil gegen die Flugrichtung, negativ heisst Rückenwind. Distanz zum Start = waagrechte Distanz zum ersten GPS-Fix, Effektive Distanz = schräg vom Startpunkt zum Modell, mit der Höhe.": "Heading (wind-corr.) = direction the nose points, from ground vector minus wind vector. Drift = course over ground minus heading (positive = pushed to the right). Headwind = wind component against the direction of flight, negative means tailwind. Distance to start = horizontal distance to the first GPS fix, effective distance = straight line from the start point to the model, including altitude.", "Effektive Distanz": "Effective distance", "Schräge Distanz vom Startpunkt zum Modell: waagrechte Distanz und Höhe über dem Start ({a})": "Straight-line distance from the start point to the model: horizontal distance and height above the start ({a})"};
 const LANGS = ['de','en'];
 let LANG_PREF = ''; try{ LANG_PREF = localStorage.getItem('ethoslv.lang')||''; }catch(e){}
 const LANG = LANGS.includes(LANG_PREF) ? LANG_PREF : ((navigator.languages||[navigator.language]).map(l=>String(l).slice(0,2).toLowerCase()).find(l=>LANGS.includes(l)) || 'en');
@@ -701,6 +745,7 @@ function windEstimator(log, speed, course){
 }
 function addWind(log, ch){
   if (!log.gps) return;
+  addHome(log, ch);
   const crs=gpsCourse(log);
   addCol(log,'gpscrs',T('GPS Kurs (ber.)'),'°',crs,T('Azimut zwischen zwei GPS-Fixes, ab 3 m Abstand (Widget GPS Course)'));
   if (!ch.spd) return;
@@ -709,8 +754,62 @@ function addWind(log, ch){
   addCol(log,'winddir',T('Windrichtung'),'°',r.D,T('Richtung, aus der der Wind kommt (Widget Wind Estimator)'));
   addCol(log,'tas','TAS',ch.spd.unit||'km/h',r.TAS,T('Bodenvektor minus Windvektor (Widget Wind Estimator)'));
   log.windEst=r.fits; log.windFits=r.fitList;
+  addNav(log, ch.spd.vals, crs, r);
 }
-function addDerived(log, ch){ log.cols=log.cols.filter(c=>!c.derived); addPower(log); addWind(log, ch); }
+// Steuerkurs = Richtung des Luftvektors (Bodenvektor minus Windvektor); Drift = Kurs über Grund minus Steuerkurs;
+// Gegenwind = Windanteil gegen die Flugrichtung (negativ = Rückenwind). Unter 2 km/h ist der Kurs zufällig, dort keine Werte.
+function addNav(log, speed, crs, r){
+  const n=log.t.length, H=new Array(n).fill(NaN), DR=new Array(n).fill(NaN), HW=new Array(n).fill(NaN);
+  for (let i=0;i<n;i++){
+    const sp=speed[i], cs=crs[i], w=r.W[i], d=r.D[i];
+    if (isNaN(sp)||isNaN(cs)||isNaN(w)||sp<WIND.minSpeed) continue;
+    const wr=(d+180)*D2R, ax=sp*Math.sin(cs*D2R)-w*Math.sin(wr), ay=sp*Math.cos(cs*D2R)-w*Math.cos(wr);
+    if (Math.hypot(ax,ay)<1e-3) continue;
+    const h=(Math.atan2(ax,ay)*R2D+360)%360;
+    H[i]=h; DR[i]=((cs-h+540)%360)-180; HW[i]=w*Math.cos((d-h)*D2R);
+  }
+  const u=log.cols.find(c=>c.key==='wind')?.unit||'km/h';
+  addCol(log,'heading',T('Steuerkurs (windkorr.)'),'°',H,T('Richtung, in die die Nase zeigt: GPS Kurs (ber.) korrigiert um den Wind'));
+  addCol(log,'drift',T('Drift'),'°',DR,T('Kurs über Grund minus Steuerkurs; positiv = Wind von links, das Modell wird nach rechts versetzt'));
+  addCol(log,'headwind',T('Gegenwind'),u,HW,T('Windanteil gegen die Flugrichtung; negativ = Rückenwind'));
+}
+// Distanz zum Startpunkt = erster gültiger GPS-Fix, waagrecht; effektive Distanz = schräg, mit der Höhe über dem Start
+function addHome(log, ch){
+  const g=log.gps, n=log.t.length; let s=null; const out=new Array(n).fill(NaN);
+  for (let i=0;i<n;i++){ const p=g[i]; if (!p||Math.abs(p[0])<=0.01) continue; if (!s) s=p; out[i]=distanceM(s[0],s[1],p[0],p[1]); }
+  if (!s) return;
+  addCol(log,'home',T('Distanz zum Start'),'m',out,T('Waagrechte Distanz zum ersten gültigen GPS-Fix'));
+  if (!ch.alt) return;
+  const a=ch.alt.vals, a0=a.find(v=>!isNaN(v));
+  addCol(log,'home3d',T('Effektive Distanz'),'m',out.map((d,i)=>isNaN(d)||isNaN(a[i])?NaN:Math.hypot(d,a[i]-a0)),T('Schräge Distanz vom Startpunkt zum Modell: waagrechte Distanz und Höhe über dem Start ({a})',{a:ch.alt.name}));
+}
+// Gleitzahl = waagrecht geflogene Strecke durch Höhenverlust, über ein Fenster von 10 s (±5 s) gerechnet.
+// Strecke aus TAS (durch die Luft), ohne Wind aus der GPS-Geschwindigkeit. Nur im Gleitflug: Motor aus im ganzen Fenster,
+// mindestens 0,2 m/s Sinken und 2 m/s Fahrt; sonst keine Werte (beim Steigen gibt es keine Gleitzahl).
+const GLIDE={half:5, minSink:0.2, minSpeed:2, max:100};
+function addGlide(log, ch){
+  if (!ch.alt) return;
+  const src=log.cols.find(c=>c.key==='tas') || ch.spd; if (!src) return;
+  const u=(src.unit||'km/h').toLowerCase(), f=u==='m/s'?1:u==='kn'||u==='kt'?0.514444:u==='mph'?0.44704:1/3.6;
+  const t=log.t, a=ch.alt.vals, v=src.vals, n=t.length, out=new Array(n).fill(NaN);
+  const motor=t.map((_,i)=> ch.rpm ? ch.rpm.vals[i]>300 : ch.cur ? ch.cur.vals[i]>3 : false);
+  const S=new Array(n).fill(0), M=new Array(n).fill(0);            // aufsummierte Strecke (m) und Motor-Zeilen
+  for (let i=1;i<n;i++){ const dt=t[i]-t[i-1], sp=(v[i]+v[i-1])/2*f;
+    S[i]=S[i-1]+(isNaN(dt)||isNaN(sp)||dt<=0||dt>5?0:sp*dt); M[i]=M[i-1]+(motor[i]?1:0); }
+  let j=0, k=0;
+  for (let i=0;i<n;i++){
+    if (isNaN(t[i])) continue;
+    while (j<i && !(t[j]>=t[i]-GLIDE.half)) j++;
+    if (k<i) k=i; while (k<n-1 && t[k+1]<=t[i]+GLIDE.half) k++;
+    const dt=t[k]-t[j], loss=a[j]-a[k];
+    if (!(dt>=GLIDE.half) || isNaN(loss) || M[k]-M[j]+(motor[j]?1:0)>0) continue;
+    const dist=S[k]-S[j];
+    if (loss/dt<GLIDE.minSink || dist/dt<GLIDE.minSpeed) continue;
+    const gz=dist/loss; if (gz<=GLIDE.max) out[i]=gz;
+  }
+  addCol(log,'glide',T('Gleitzahl'),'',out,T('Strecke durch Höhenverlust über 10 s, aus {s} und {a}; nur im Gleitflug mit Motor aus',{s:src.name,a:ch.alt.name})).gaps=true;
+}
+function addDerived(log, ch){ log.cols=log.cols.filter(c=>!c.derived); addPower(log); addWind(log, ch); addGlide(log, ch); }
 const calc = key => LOG?.cols.find(c=>c.key===key);
 function flightTime(log, ch){
   if (!ch.alt) return null;
@@ -805,16 +904,17 @@ function render(log, name, example){
   VIEW={min:0,max:tEnd()}; TZ={z:1,px:0,py:0}; CURSOR=null; $('#curTrack').setAttribute('aria-valuemax',log.t.length);
   const pref=[CH.alt,CH.vario,CH.spd,CH.lq[0],CH.cur,CH.volt].filter(Boolean);
   selected = new Set(pref.map(c=>c.raw));
-  try{ ORDER=JSON.parse(store.get('order')||'[]'); }catch(e){ ORDER=[]; }
-  try{ const sv=JSON.parse(store.get('sel')||'null'); if (Array.isArray(sv)){ const ok=sv.filter(k=>log.cols.some(c=>c.raw===k)); if (ok.length) selected=new Set(ok); } }catch(e){}
+  try{ ORDER=JSON.parse(mstore.get('order')||'[]'); }catch(e){ ORDER=[]; }
+  try{ const sv=JSON.parse(mstore.get('sel')||'null'); if (Array.isArray(sv)){ const ok=sv.filter(k=>log.cols.some(c=>c.raw===k)); if (ok.length) selected=new Set(ok); } }catch(e){}
   for (const k of selected) if (!ORDER.includes(k)) ORDER.push(k);
   log.cols.forEach((c,i)=>c.color=PALETTE[i%PALETTE.length]);
+  OVERLAY = mstore.get('overlay')==='1'; $('#showRc').checked = mstore.get('showRc')==='1';
   renderChips();
-  $('#stats').innerHTML = `<tr><th>${T('Kanal')}</th><th>${T('Einheit')}</th><th>${T('Am Zeitpunkt')}</th><th>Min</th><th>Ø</th><th>Max</th><th>${T('Werte')}</th></tr>` +
-    log.cols.filter(c=>!c.rc).map(c=>{const s=stats(c.vals)||{}; return `<tr><td>${esc(c.name)}${c.derived?`<span class="ctag">${T('berechnet')}</span>`:''}</td><td class="u">${esc(c.unit)}</td><td class="cval" data-k="${esc(c.raw)}">–</td><td>${fmt(s.min,2)}</td><td>${fmt(s.avg,2)}</td><td>${fmt(s.max,2)}</td><td>${(s.n||0).toLocaleString(LOC)}</td></tr>`}).join('');
+  FILTERS=[]; computeActive(); renderFilters();
+  renderStatsTable();
   fillWindAlt(); renderWindHeight();
   $('#rawtable thead').innerHTML = `<tr><th>#</th>${log.header.map(h=>`<th>${esc(h)}</th>`).join('')}</tr>`;
-  $('#rawcount').textContent = T('{n} Zeilen · {m} Spalten',{n:log.raw.length.toLocaleString(LOC), m:log.header.length});
+  rawCount();
   $('#rawwrap').scrollTop=0; rawFirst=-1; renderRaw();
   drawCharts(); drawTrack(log,CH,CLIMB,THERM); drawBars(); renderCursor();
 }
@@ -824,13 +924,16 @@ const W = {
   climb:{ sw:'#climbSw', h:'#climbH', min:1, def:['LS9'] },
 };
 const store = { get(k){ try{return localStorage.getItem('ethoslv.'+k);}catch(e){return null;} }, set(k,v){ try{localStorage.setItem('ethoslv.'+k,v);}catch(e){} } };
+// Einstellungen pro Modell; ein Modell ohne eigene Werte übernimmt die zuletzt benutzten
+const mkey = k => 'm.'+(FILES[CUR]?.model||'_')+'.'+k;
+const mstore = { get(k){ const v=store.get(mkey(k)); return v!=null ? v : store.get(k); }, set(k,v){ store.set(mkey(k),v); store.set(k,v); } };
 function colBy(raw){ return LOG.cols.find(c=>c.raw===raw); }
 function fillSelects(){
   const swOpts = `<option value="">${T('– wählen –')}</option>` + LOG.cols.filter(c=>c.rc).concat(LOG.cols.filter(c=>!c.rc)).map(c=>`<option>${esc(c.raw)}</option>`).join('');
   const hOpts  = LOG.cols.filter(c=>!c.rc).map(c=>`<option>${esc(c.raw)}</option>`).join('');
   for (const [k,w] of Object.entries(W)){
     $(w.sw).innerHTML=swOpts; $(w.h).innerHTML=hOpts;
-    const savedSw=store.get(k+'.sw'), savedH=store.get(k+'.h');
+    const savedSw=mstore.get(k+'.sw'), savedH=mstore.get(k+'.h');
     if (k==='climb' && CH.cur) $(w.sw).querySelector('option').insertAdjacentHTML('afterend',`<option value="${CUR_SW}">${esc(T('{n} (automatisch)',{n:CH.cur.name}))}</option>`);
     let sw = savedSw===CUR_SW && CH.cur ? CUR_SW : (savedSw && colBy(savedSw)) ? savedSw : null;
     if (!sw){ const d=w.def.map(n=>LOG.cols.find(c=>c.name===n)).find(c=>c && c.vals.some(v=>v>0));
@@ -839,8 +942,8 @@ function fillSelects(){
     $(w.sw).value = sw;
     $(w.h).value = (savedH && colBy(savedH)) ? savedH : (CH.alt?.raw || '');
   }
-  const m=store.get('therm.mode'); if (m) $('#thermMode').value=m;
-  const th=store.get('climb.thr'); if (th) $('#climbThr').value=th;
+  const m=mstore.get('therm.mode'); if (m) $('#thermMode').value=m;
+  const th=mstore.get('climb.thr'); if (th) $('#climbThr').value=th;
 }
 // Steigflug ohne Schalter: Motor an, solange der ESC-Strom über der Schwelle liegt; Lücken bis 1 s werden überbrückt
 const CUR_SW='@cur';
@@ -942,8 +1045,8 @@ function refreshWidgets(){ computeWidgets(); fillMark(); drawBars(); drawCharts(
 function fillWindAlt(){
   const opts=LOG.cols.filter(c=>!c.rc && /^(Altitude|Alt|Höhe|GAlt|GPS Alt)/i.test(c.name));
   $('#whAlt').innerHTML=opts.map(c=>`<option>${esc(c.raw)}</option>`).join('');
-  const sv=store.get('wh.alt'); $('#whAlt').value = sv && opts.some(c=>c.raw===sv) ? sv : (CH.alt?.raw||opts[0]?.raw||'');
-  const st=store.get('wh.step'); if (st) $('#whStep').value=st;
+  const sv=mstore.get('wh.alt'); $('#whAlt').value = sv && opts.some(c=>c.raw===sv) ? sv : (CH.alt?.raw||opts[0]?.raw||'');
+  const st=mstore.get('wh.step'); if (st) $('#whStep').value=st;
 }
 function renderWindHeight(){
   const fits=LOG.windFits||[], alt=colBy($('#whAlt').value), step=+$('#whStep').value||50;
@@ -962,8 +1065,8 @@ function renderWindHeight(){
   }).join('');
   $('#windhhint').textContent=T('Gezählt werden die {n} akzeptierten Wind-Fits, jeweils in der Höhe ({a}), in der sie gerechnet wurden. Richtung = Vektormittel; „wechselnd“ heisst, die Richtungen in dieser Stufe streuen stark. Der Pfeil zeigt, wohin der Wind weht.',{n:fits.length,a:alt.name});
 }
-$('#whAlt').addEventListener('change',e=>{ store.set('wh.alt',e.target.value); LOG&&renderWindHeight(); });
-$('#whStep').addEventListener('change',e=>{ store.set('wh.step',e.target.value); LOG&&renderWindHeight(); });
+$('#whAlt').addEventListener('change',e=>{ mstore.set('wh.alt',e.target.value); LOG&&renderWindHeight(); });
+$('#whStep').addEventListener('change',e=>{ mstore.set('wh.step',e.target.value); LOG&&renderWindHeight(); });
 function renderChips(){
   const rc=$('#showRc').checked;
   const list=LOG.cols.filter(c=>c.derived).concat(LOG.cols.filter(c=>!c.derived&&(rc||!c.rc)));
@@ -979,24 +1082,29 @@ const motorBands = { id:'motorBands', beforeDatasetsDraw(ch){
   CLIMB.forEach(r=>{ const x0=x.getPixelForValue(LOG.t[r.s]), x1=x.getPixelForValue(LOG.t[r.e]); ctx.fillRect(x0,a.top,Math.max(2,x1-x0),a.bottom-a.top); });
   ctx.globalAlpha=.16; ctx.fillStyle=css('--good');
   THERM.forEach(r=>{ const x0=x.getPixelForValue(LOG.t[r.s]), x1=x.getPixelForValue(LOG.t[r.e]); ctx.fillRect(x0,a.top,Math.max(2,x1-x0),a.bottom-a.top); });
+  // inaktive Logeinträge (Filter): dezent grau über allen Bändern, unter den Linien
+  if (OFFSPANS.length){ ctx.globalAlpha=1; ctx.fillStyle=css('--off-wash');
+    OFFSPANS.forEach(r=>{ const x0=x.getPixelForValue(LOG.t[r.s]), x1=x.getPixelForValue(LOG.t[Math.min(r.e+1,LOG.t.length-1)]); if (x1<a.left||x0>a.right) return;
+      ctx.fillRect(x0,a.top,Math.max(1,x1-x0),a.bottom-a.top); }); }
   ctx.restore(); } };
-let OVERLAY = store.get('overlay')==='1';
-function seriesPts(c){ return LOG.t.map((x,i)=>({x, y:c.vals[i]})).filter(p=>!isNaN(p.x)&&!isNaN(p.y)); }   // LTTB verträgt keine Lücken
+let OVERLAY = false;
+function gapIdx(c){ if (!c.gaps) return null; let g=0; return c.vals.map(v=>isNaN(v)?++g:g); }
+function seriesPts(c){ return LOG.t.map((x,i)=>({x, y:c.vals[i], i})).filter(p=>!isNaN(p.x)&&!isNaN(p.y)); }   // LTTB verträgt keine Lücken
 // alle gewählten Kanäle in einem Diagramm, jeder mit eigener Skala über die ganze Höhe
-function drawOverlay(box, list, fg, grid){
+function drawOverlay(box, list, fg, grid, offLine){
   const el=document.createElement('div'); el.className='cbox overlay';
   el.innerHTML=`<div class="ct"><span class="nm">${T('Alle Kanäle überlagert')}</span><span class="meta">${list.length} ${T('Kanäle')}</span></div>`+
-    `<div class="olegend">${list.map(c=>`<span><i style="background:${c.color}"></i>${esc(c.name)}${c.unit?` (${esc(c.unit)})`:''}<b class="olv" data-k="${esc(c.raw)}"></b></span>`).join('')}</div><div class="cv"><canvas></canvas></div>`;
+    `<div class="olegend">${list.map(c=>`<span><i style="background:${c.color}"></i>${esc(c.name)}${c.unit?` (${esc(c.unit)})`:''}<span class="vst" data-k="${esc(c.raw)}" title="${esc(T('Im sichtbaren Ausschnitt, nur aktive Einträge'))}"></span></span>`).join('')}</div><div class="cv"><canvas></canvas></div>`;
   box.appendChild(el);
   const scales={x:{type:'linear',min:VIEW.min,max:VIEW.max,ticks:{color:fg,callback:v=>fmtDur(v),maxTicksLimit:12},grid:{color:grid}}};
   list.forEach((c,j)=>{ scales['y'+j]={position:j%2?'right':'left', display:j<2, ticks:{color:c.color,maxTicksLimit:6}, grid:{color:grid, drawOnChartArea:j===0}}; });
   const chart=new Chart(el.querySelector('canvas'),{
     type:'line', plugins:[motorBands, cursorLine],
-    data:{datasets:list.map((c,j)=>({label:c.name, unit:c.unit, k:c.raw, data:seriesPts(c), borderColor:c.color, backgroundColor:c.color, fill:false, borderWidth:1.5, pointRadius:0, spanGaps:true, yAxisID:'y'+j}))},
+    data:{datasets:list.map((c,j)=>({label:c.name, unit:c.unit, k:c.raw, data:seriesPts(c), gp:gapIdx(c), borderColor:c.color, backgroundColor:c.color, fill:false, borderWidth:1.5, pointRadius:0, spanGaps:true, yAxisID:'y'+j, segment:offSegment(offLine, offLine)}))},
     options:{animation:false,maintainAspectRatio:false,parsing:false,normalized:true,
       interaction:{mode:'index',intersect:false},
       plugins:{legend:{display:false},decimation:{enabled:true,algorithm:'lttb',samples:800},
-        tooltip:{callbacks:{title:it=>LOG.clock[LOG.t.indexOf(it[0].parsed.x)]?.slice(0,8)||fmtDur(it[0].parsed.x),label:it=>`${it.dataset.label}: ${fmt(it.parsed.y,2)} ${it.dataset.unit}`}}},
+        tooltip:{enabled:false}},
       scales}});
   charts.push(chart); attachZoom(chart);
 }
@@ -1005,29 +1113,151 @@ function drawCharts(){
   const box=$('#charts'); box.innerHTML='';
   const fg=css('--muted'), grid=css('--line');
   document.querySelectorAll('.seg [data-ov]').forEach(b=>b.setAttribute('aria-pressed', String((b.dataset.ov==='1')===OVERLAY)));
-  if (OVERLAY && selected.size){ drawOverlay(box, orderedSelected(), fg, grid); drawNav(); return; }
+  const offLine=css('--off-line'), offFill=css('--off-fill');
+  if (OVERLAY && selected.size){ drawOverlay(box, orderedSelected(), fg, grid, offLine); drawNav(); visStats(); return; }
   for (const c of orderedSelected()){
-    const s=stats(c.vals)||{};
     const el=document.createElement('div'); el.className='cbox';
     el.dataset.k=c.raw;
-    el.innerHTML=`<div class="ct"><span class="nm"><button type="button" class="grip" title="${T('Ziehen zum Umsortieren')}" aria-label="${esc(T('{n} verschieben',{n:c.name}))}">⋮⋮</button>${esc(c.name)}${c.derived?`<span class="ctag">${T('berechnet')}</span>`:''}<span class="curv"></span></span><span class="meta">${esc(c.unit)} · min ${fmt(s.min,1)} · max ${fmt(s.max,1)}<button type="button" class="mv" data-d="-1" aria-label="${esc(T('{n} nach oben',{n:c.name}))}">▲</button><button type="button" class="mv" data-d="1" aria-label="${esc(T('{n} nach unten',{n:c.name}))}">▼</button></span></div><div class="cv"><canvas></canvas></div>`;
+    el.innerHTML=`<div class="ct"><span class="nm"><button type="button" class="grip" title="${T('Ziehen zum Umsortieren')}" aria-label="${esc(T('{n} verschieben',{n:c.name}))}">⋮⋮</button>${esc(c.name)}${c.derived?`<span class="ctag">${T('berechnet')}</span>`:''}</span><span class="meta">${c.unit?esc(c.unit)+' · ':''}<span class="vst" data-k="${esc(c.raw)}" title="${esc(T('Im sichtbaren Ausschnitt, nur aktive Einträge'))}"></span><button type="button" class="mv" data-d="-1" aria-label="${esc(T('{n} nach oben',{n:c.name}))}">▲</button><button type="button" class="mv" data-d="1" aria-label="${esc(T('{n} nach unten',{n:c.name}))}">▼</button></span></div><div class="cv"><canvas></canvas></div>`;
     box.appendChild(el);
     const pts = seriesPts(c);
     charts.push(new Chart(el.querySelector('canvas'),{
       type:'line', plugins:[motorBands, cursorLine],
-      data:{datasets:[{data:pts,borderColor:c.color,backgroundColor:c.color+'22',fill:true,borderWidth:1.5,pointRadius:0,spanGaps:true}]},
+      data:{datasets:[{data:pts,gp:gapIdx(c),borderColor:c.color,backgroundColor:c.color+'22',fill:true,borderWidth:1.5,pointRadius:0,spanGaps:true,segment:offSegment(offLine, offFill)}]},
       options:{animation:false,maintainAspectRatio:false,parsing:false,normalized:true,
         interaction:{mode:'index',intersect:false},
         plugins:{legend:{display:false},decimation:{enabled:true,algorithm:'lttb',samples:800},
-          tooltip:{callbacks:{title:it=>LOG.clock[LOG.t.indexOf(it[0].parsed.x)]?.slice(0,8)||fmtDur(it[0].parsed.x),label:it=>fmt(it.parsed.y,2)+' '+c.unit}}},
+          tooltip:{enabled:false}},
         scales:{x:{type:'linear',min:VIEW.min,max:VIEW.max,ticks:{color:fg,callback:v=>fmtDur(v),maxTicksLimit:12},grid:{color:grid}},
                 y:{ticks:{color:fg,maxTicksLimit:5},grid:{color:grid}}}}
     }));
     attachZoom(charts[charts.length-1]);
   }
-  drawNav();
+  drawNav(); visStats();
   if (!charts.length) box.innerHTML=`<p class="hint">${T('Wähle oben einen oder mehrere Kanäle aus.')}</p>`;
 }
+// ---------- Filter: Logeinträge ausserhalb der gewählten Bereiche sind inaktiv (grau), zählen aber nicht für Min/Ø/Max ----------
+let FILTERS=[], ACTIVE=null, NACT=0, OFFSPANS=[];
+const FSTEPS=1000, FBINS=48;
+const isOn = i => !ACTIVE || ACTIVE[i]===1;
+// Linienstück grau, sobald einer der beiden Endpunkte inaktiv ist
+function offSegment(line, fill){
+  const off=ctx=>{ if (!ACTIVE) return false; const d=ctx.chart.data.datasets[ctx.datasetIndex].data, a=d[ctx.p0DataIndex], b=d[ctx.p1DataIndex];
+    return (a && !isOn(a.i)) || (b && !isOn(b.i)); };
+  // Spalten mit gewollten Lücken (gp = Anzahl Lücken bis Zeile i): über eine Lücke hinweg keine Linie zeichnen
+  const gap=ctx=>{ const ds=ctx.chart.data.datasets[ctx.datasetIndex], a=ds.data[ctx.p0DataIndex], b=ds.data[ctx.p1DataIndex];
+    return ds.gp && a && b && ds.gp[a.i]!==ds.gp[b.i]; };
+  return { borderColor:ctx=>gap(ctx)?'transparent':off(ctx)?line:undefined, backgroundColor:ctx=>gap(ctx)?'transparent':off(ctx)?fill:undefined };
+}
+function rangeStats(v, a, b){
+  let min=Infinity,max=-Infinity,sum=0,n=0;
+  for (let i=a;i<=b;i++){ const x=v[i]; if (isNaN(x) || !isOn(i)) continue; if(x<min)min=x; if(x>max)max=x; sum+=x; n++; }
+  return n ? {min,max,avg:sum/n,n} : null;
+}
+function lowerIdx(tv){ const t=LOG.t; let lo=0, hi=t.length; while(lo<hi){ const m=(lo+hi)>>1; if (t[m]<tv) lo=m+1; else hi=m; } return lo; }
+// Min, Ø und Max im sichtbaren Ausschnitt, in jedem Diagramm
+const fv0 = v => { const r=+v.toFixed(Math.abs(v)<10?2:Math.abs(v)<100?1:0); return fv(r||0); };   // kein "-0.00"
+function visStats(){
+  if (!LOG) return;
+  const a=lowerIdx(VIEW.min), b=lowerIdx(VIEW.max+1e-9)-1;
+  document.querySelectorAll('#charts .vst').forEach(el=>{ const c=colBy(el.dataset.k); if (!c) return; const s=rangeStats(c.vals,a,b), ov=el.closest('.olegend');
+    el.textContent = !s ? T('keine aktiven Werte') : (ov?' ':'')+`min ${fv0(s.min)} · Ø ${fv0(s.avg)} · max ${fv0(s.max)}`; });
+}
+function computeActive(){
+  const n=LOG.t.length, fs=FILTERS.filter(f=>f.lo>f.min||f.hi<f.max);
+  OFFSPANS=[]; if (!fs.length){ ACTIVE=null; NACT=n; return; }
+  ACTIVE=new Uint8Array(n); NACT=0; let s=-1;
+  const cols=fs.map(f=>colBy(f.k));
+  for (let i=0;i<=n;i++){
+    let on=i<n; if (on) for (let j=0;j<fs.length;j++){ const v=cols[j].vals[i]; if (!(v>=fs[j].lo && v<=fs[j].hi)){ on=false; break; } }
+    if (i<n){ ACTIVE[i]=on?1:0; if (on) NACT++; }
+    if (i<n && !on){ if (s<0) s=i; } else if (s>=0){ OFFSPANS.push({s,e:i-1}); s=-1; }
+  }
+}
+function filterCols(){ return LOG.cols.filter(c=>{ const s=stats(c.vals); return s && s.max>s.min; }); }
+function fillFilterAdd(){
+  const used=new Set(FILTERS.map(f=>f.k)), cols=filterCols().filter(c=>!used.has(c.raw)), o=c=>`<option value="${esc(c.raw)}">${esc(c.raw)}</option>`;
+  const sens=cols.filter(c=>!c.rc), rc=cols.filter(c=>c.rc);
+  $('#fAdd').innerHTML=`<option value="">${esc(T('+ Parameter wählen …'))}</option>`+sens.map(o).join('')+(rc.length?`<optgroup label="${esc(T('Sender'))}">${rc.map(o).join('')}</optgroup>`:'');
+}
+const fDec = f => { const r=f.max-f.min; return r<1?3:r<20?2:r<200?1:0; };
+const fRound = (f,v) => +v.toFixed(fDec(f));
+const fPos = (f,v) => Math.round((v-f.min)/(f.max-f.min)*FSTEPS);
+const fVal = (f,p) => p<=0 ? f.min : p>=FSTEPS ? f.max : fRound(f, f.min+p/FSTEPS*(f.max-f.min));
+function addFilter(k){
+  const c=colBy(k), s=c&&stats(c.vals); if (!s || FILTERS.some(f=>f.k===k)) return;
+  const f={k, min:s.min, max:s.max, lo:s.min, hi:s.max, hist:new Array(FBINS).fill(0)};
+  for (const v of c.vals) if (!isNaN(v)) f.hist[Math.min(FBINS-1, Math.floor((v-s.min)/(s.max-s.min)*FBINS))]++;
+  FILTERS.push(f); renderFilters(); applyFilters();
+  document.querySelector(`.fitem[data-k="${CSS.escape(k)}"] input.lo`)?.focus();
+}
+function renderFilters(){
+  if (!LOG) return;
+  $('#flist').innerHTML = FILTERS.map(f=>{ const c=colBy(f.k), nm=esc(c.name), st=`step="${(1/10**fDec(f))}"`;
+    return `<div class="fitem" data-k="${esc(f.k)}"><span class="fname" title="${esc(f.k)}">${nm}${c.unit?`<small>${esc(c.unit)}</small>`:''}</span>`+
+      `<div class="frange"><canvas aria-hidden="true"></canvas><div class="ftrack"></div><div class="ffill"></div>`+
+      `<input type="range" class="lo" min="0" max="${FSTEPS}" aria-label="${esc(T('{n} Min',{n:c.name}))}"><input type="range" class="hi" min="0" max="${FSTEPS}" aria-label="${esc(T('{n} Max',{n:c.name}))}"></div>`+
+      `<label class="flo">Min <input type="number" class="nlo" ${st} inputmode="decimal"></label><label class="fhi">Max <input type="number" class="nhi" ${st} inputmode="decimal"></label>`+
+      `<button type="button" class="linkbtn freset" hidden>${T('Zurücksetzen')}</button><button type="button" class="zb" aria-label="${esc(T('Filter {n} entfernen',{n:c.name}))}" title="${esc(T('Filter entfernen'))}">✕</button></div>`; }).join('');
+  FILTERS.forEach(syncFilter); fillFilterAdd(); filterCount();
+}
+// Griffe, Zahlenfelder und Histogramm eines Filters an seinen Bereich anpassen
+function syncFilter(f){
+  const el=document.querySelector(`.fitem[data-k="${CSS.escape(f.k)}"]`); if (!el) return;
+  const lo=el.querySelector('input.lo'), hi=el.querySelector('input.hi'), pl=fPos(f,f.lo), ph=fPos(f,f.hi);
+  lo.value=pl; hi.value=ph;
+  lo.style.zIndex = pl>FSTEPS/2 ? 2 : 1;                                   // Griffe am rechten Rand bleiben greifbar
+  const nlo=el.querySelector('.nlo'), nhi=el.querySelector('.nhi');
+  if (document.activeElement!==nlo) nlo.value=fRound(f,f.lo); if (document.activeElement!==nhi) nhi.value=fRound(f,f.hi);
+  const fl=el.querySelector('.ffill'); fl.style.left=`calc(7px + (100% - 14px) * ${pl/FSTEPS})`; fl.style.width=`calc((100% - 14px) * ${(ph-pl)/FSTEPS})`;
+  const act=f.lo>f.min||f.hi<f.max; el.classList.toggle('on', act); el.querySelector('.freset').hidden=!act;
+  const cv=el.querySelector('canvas'), dpr=window.devicePixelRatio||1, W=Math.round(cv.clientWidth*dpr), H=Math.round(cv.clientHeight*dpr);
+  if (!W||!H) return; cv.width=W; cv.height=H;
+  const ctx=cv.getContext('2d'), top=Math.max(...f.hist)||1, bw=W/FBINS, on=css('--accent'), off=css('--line');
+  f.hist.forEach((n,j)=>{ if (!n) return; const a=f.min+j/FBINS*(f.max-f.min), b=f.min+(j+1)/FBINS*(f.max-f.min), h=Math.max(2*dpr, n/top*H);
+    ctx.fillStyle = b>=f.lo && a<=f.hi ? on : off; ctx.globalAlpha = b>=f.lo && a<=f.hi ? .8 : 1; ctx.fillRect(j*bw+.5*dpr, H-h, bw-1*dpr, h); });
+}
+function filterCount(){
+  const n=LOG.t.length, on=!!ACTIVE, txt=T('{a} von {b} Einträgen aktiv',{a:NACT.toLocaleString(LOC), b:n.toLocaleString(LOC)});
+  $('#fCount').textContent = FILTERS.length ? txt : ''; $('#fCount').classList.toggle('on', on);
+  $('#fReset').hidden = !FILTERS.length;
+  $('#statsNote').textContent = on ? T('Gefiltert: {t}',{t:txt}) : '';
+}
+function rawCount(){ $('#rawcount').textContent = T('{n} Zeilen · {m} Spalten',{n:LOG.raw.length.toLocaleString(LOC), m:LOG.header.length})+(ACTIVE?' · '+T('{a} aktiv',{a:NACT.toLocaleString(LOC)}):''); }
+function renderStatsTable(){
+  const n=LOG.t.length-1;
+  $('#stats').innerHTML = `<tr><th>${T('Kanal')}</th><th>${T('Einheit')}</th><th>${T('Am Zeitpunkt')}</th><th>Min</th><th>Ø</th><th>Max</th><th>${T('Werte')}</th></tr>` +
+    LOG.cols.filter(c=>!c.rc).map(c=>{const s=rangeStats(c.vals,0,n)||{}; return `<tr><td>${esc(c.name)}${c.derived?`<span class="ctag">${T('berechnet')}</span>`:''}</td><td class="u">${esc(c.unit)}</td><td class="cval" data-k="${esc(c.raw)}">${CURSOR!=null?fv(c.vals[CURSOR]):'–'}</td><td>${fmt(s.min,2)}</td><td>${fmt(s.avg,2)}</td><td>${fmt(s.max,2)}</td><td>${(s.n||0).toLocaleString(LOC)}</td></tr>`}).join('');
+}
+let fPending=false;
+function applyFilters(){
+  computeActive(); filterCount(); rawCount();
+  if (fPending) return; fPending=true;
+  requestAnimationFrame(()=>{ fPending=false; if (!LOG) return;
+    charts.forEach(c=>c.update('none')); visStats(); drawNav(); renderStatsTable(); rawFirst=-1; renderRaw(); });
+}
+(function filterEvents(){
+  const box=$('#flist'), fOf=el=>FILTERS.find(f=>f.k===el.closest('.fitem')?.dataset.k), el=f=>box.querySelector(`.fitem[data-k="${CSS.escape(f.k)}"]`);
+  $('#fAdd').addEventListener('change',e=>{ const k=e.target.value; e.target.value=''; if (k) addFilter(k); });
+  $('#fReset').addEventListener('click',()=>{ FILTERS=[]; renderFilters(); applyFilters(); });
+  box.addEventListener('input',e=>{ const f=fOf(e.target); if (!f || e.target.type!=='range') return;
+    const p=+e.target.value, isLo=e.target.classList.contains('lo');
+    if (isLo) f.lo=Math.min(fVal(f,p), f.hi); else f.hi=Math.max(fVal(f,p), f.lo);
+    if (isLo && p>fPos(f,f.hi)) e.target.value=fPos(f,f.hi); if (!isLo && p<fPos(f,f.lo)) e.target.value=fPos(f,f.lo);
+    syncFilter(f); applyFilters(); });
+  box.addEventListener('change',e=>{ const f=fOf(e.target); if (!f || e.target.type!=='number') return;
+    let v=parseFloat(String(e.target.value).replace(',','.')); const isLo=e.target.classList.contains('nlo');
+    if (isNaN(v)) v = isLo ? f.min : f.max;
+    v=Math.max(f.min, Math.min(f.max, v));
+    if (isLo){ f.lo=Math.min(v,f.hi); if (f.lo<=fRound(f,f.min)) f.lo=f.min; } else { f.hi=Math.max(v,f.lo); if (f.hi>=fRound(f,f.max)) f.hi=f.max; }
+    e.target.blur(); syncFilter(f); applyFilters(); });
+  box.addEventListener('keydown',e=>{ if (e.key==='Enter' && e.target.type==='number'){ e.preventDefault(); e.target.dispatchEvent(new Event('change',{bubbles:true})); } });
+  box.addEventListener('click',e=>{ const r=e.target.closest('.freset'), fr=r&&fOf(r);
+    if (fr){ fr.lo=fr.min; fr.hi=fr.max; syncFilter(fr); applyFilters(); el(fr)?.querySelector('input.lo')?.focus(); return; }
+    const b=e.target.closest('.zb'); if (!b) return; const f=fOf(b); if (!f) return;
+    FILTERS=FILTERS.filter(x=>x!==f); renderFilters(); applyFilters(); $('#fAdd').focus(); });
+  try{ new ResizeObserver(()=>FILTERS.forEach(syncFilter)).observe(box); }catch(e){}
+})();
 // ---------- Zoom & Verschieben: alle Zeitdiagramme teilen denselben Ausschnitt ----------
 const MIN_SPAN=5;
 function tEnd(){ for (let i=LOG.t.length-1;i>=0;i--) if(!isNaN(LOG.t[i])) return LOG.t[i]; return 1; }
@@ -1035,7 +1265,7 @@ function setView(min,max){
   const T=tEnd(), span=Math.min(Math.max(max-min,MIN_SPAN),T);
   min=Math.max(0,Math.min(min,T-span)); VIEW={min,max:min+span};
   for (const c of charts){ c.options.scales.x.min=VIEW.min; c.options.scales.x.max=VIEW.max; c.update('none'); }
-  drawNav(); scheduleTrack();
+  drawNav(); scheduleTrack(); visStats();
 }
 function zoomAt(f, center){ const c=center??(VIEW.min+VIEW.max)/2; setView(c-(c-VIEW.min)*f, c+(VIEW.max-c)*f); }
 const wheelFactor = e => Math.exp(Math.max(-.5,Math.min(.5,e.deltaY*(e.deltaMode?0.05:0.01))));
@@ -1077,6 +1307,8 @@ function drawNav(){
     let first=true; const step=Math.max(1,Math.floor(LOG.t.length/W));
     for (let i=0;i<LOG.t.length;i+=step){ const v=src.vals[i]; if(isNaN(v)||isNaN(LOG.t[i])) continue; const x=LOG.t[i]/T_*W, y=H-4*dpr-(v-s.min)/rg*(H-8*dpr); first?ctx.moveTo(x,y):ctx.lineTo(x,y); first=false; }
     ctx.stroke(); }
+  if (OFFSPANS.length){ ctx.fillStyle=css('--off-nav');
+    OFFSPANS.forEach(p=>{ const e=Math.min(p.e+1,LOG.t.length-1); ctx.fillRect(LOG.t[p.s]/T_*W,0,Math.max(1,(LOG.t[e]-LOG.t[p.s])/T_*W),H); }); }
   if (CURSOR!=null){ const x=LOG.t[CURSOR]/T_*W; ctx.strokeStyle=css('--warn'); ctx.lineWidth=2*dpr; ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
   const win=$('#navwin'); win.style.left=(VIEW.min/T_*100)+'%'; win.style.width=((VIEW.max-VIEW.min)/T_*100)+'%';
   const c=i=>LOG.clock[Math.max(0,LOG.t.findIndex(x=>x>=i))]?.slice(0,8)||'';
@@ -1142,6 +1374,16 @@ const cursorLine = { id:'cursorLine', afterDatasetsDraw(ch){
   const dots = ch.data.datasets[0]?.k ? ch.data.datasets.map(ds=>[colBy(ds.k), ch.scales[ds.yAxisID], ds.borderColor]) : [[colBy(ch.canvas.closest('.cbox')?.dataset.k), y, css('--warn')]];
   for (const [c, ys, col] of dots){ const v=c?.vals[CURSOR];
     if (v!=null && !isNaN(v) && ys){ const py=ys.getPixelForValue(v); if (py>=a.top&&py<=a.bottom){ ctx.fillStyle=col; ctx.beginPath(); ctx.arc(px,py,4,0,7); ctx.fill(); } } }
+  // Schild mit Zeit und Wert(en) neben der Linie, gleich für Klick ins Diagramm und Zeitstrahl
+  const many=dots.length>1, lines=dots.filter(d=>d[0]).map(([c,,col])=>({t:(many?c.name+': ':'')+fv(c.vals[CURSOR])+(c.unit?' '+c.unit:''), col}));
+  const fam=getComputedStyle(ch.canvas).getPropertyValue('--mono')||'monospace', lh=16, pad=6, sw=many?12:0;
+  ctx.font='600 12px '+fam; const head=LOG.clock[CURSOR].slice(0,8);
+  const w=Math.max(ctx.measureText(head).width, ...lines.map(l=>ctx.measureText(l.t).width+sw))+2*pad, h=(lines.length+1)*lh+2*pad-4;
+  let bx=px+8; if (bx+w>a.right) bx=px-8-w; bx=Math.max(a.left,bx); const by=a.top+4;
+  ctx.fillStyle=css('--panel'); ctx.strokeStyle=css('--warn'); ctx.lineWidth=1; ctx.globalAlpha=.94;
+  ctx.beginPath(); ctx.roundRect ? ctx.roundRect(bx,by,w,h,5) : ctx.rect(bx,by,w,h); ctx.fill(); ctx.globalAlpha=1; ctx.stroke();
+  ctx.textBaseline='top'; ctx.fillStyle=css('--warn'); ctx.fillText(head,bx+pad,by+pad);
+  lines.forEach((l,j)=>{ const ty=by+pad+(j+1)*lh; if (many){ ctx.fillStyle=l.col; ctx.fillRect(bx+pad,ty+4,8,3); } ctx.fillStyle=css('--fg'); ctx.fillText(l.t,bx+pad+sw,ty); });
   ctx.restore(); } };
 function setCursor(i, follow){
   if (!LOG) return;
@@ -1161,7 +1403,7 @@ function renderCursor(){
   $('#curHdl').style.left=pc+'%'; $('#curFill').style.width=pc+'%';
   tr.setAttribute('aria-valuenow',on?i+1:0); tr.setAttribute('aria-valuetext',on?LOG.clock[i]:T('kein Zeitpunkt'));
   // Diagramme und Übersichtsleiste
-  charts.forEach(c=>{ c.draw(); const k=c.canvas.closest('.cbox')?.dataset.k, col=colBy(k), sp=c.canvas.closest('.cbox')?.querySelector('.curv'); if (sp) sp.textContent = on&&col ? '▸ '+fv(col.vals[i])+' '+col.unit : ''; });
+  charts.forEach(c=>c.draw());
   drawNav(); scheduleTrack();
   // Übersicht: Werte am Zeitpunkt
   const th=on?THERM.findIndex(r=>i>=r.s&&i<=r.e):-1, cl=on?CLIMB.findIndex(r=>i>=r.s&&i<=r.e):-1;
@@ -1170,7 +1412,6 @@ function renderCursor(){
     `<div class="kpi on"><span class="l">${T('Uhrzeit')}</span><span class="v">${esc(LOG.clock[i].slice(0,8))}</span><span class="d">${T('{t} ab Start',{t:fmtDur(LOG.t[i])})}</span></div>`+
     `<div class="kpi ${th>=0||cl>=0?'on':''}"><span class="l">${T('Phase')}</span><span class="v">${th>=0?T('Thermik|phase'):cl>=0?T('Steigflug'):'–'}</span><span class="d">${th>=0?T('{a} von {b}',{a:'#'+(th+1),b:THERM.length}):cl>=0?T('{a} von {b}',{a:'#'+(cl+1),b:CLIMB.length}):T('kein Schalter aktiv')}</span></div>`+
     keys.map(c=>`<div class="kpi"><span class="l">${esc(c.name)}</span><span class="v">${fv(c.vals[i])}<small>${esc(c.unit)}</small></span></div>`).join('');
-  document.querySelectorAll('.olegend .olv').forEach(b=>{ const c=colBy(b.dataset.k); b.textContent = on&&c ? ' '+fv(c.vals[i]) : ''; });
   // Rohdaten
   revealRawCursor(); renderRaw();
   // Alle Werte
@@ -1207,7 +1448,7 @@ function renderRaw(){
   if (first!==rawFirst || last!==rawLast){
     rawFirst=first; rawLast=last; const cols=LOG.header.length; let h='';
     if (first) h+=`<tr class="sp"><td colspan="${cols+1}" style="height:${first*RAW_H}px"></td></tr>`;
-    for (let i=first;i<last;i++){ const r=LOG.raw[i]; h+=`<tr data-i="${i}"><td>${i+1}</td>${LOG.header.map((_,j)=>`<td>${esc(r[j]??'')}</td>`).join('')}</tr>`; }
+    for (let i=first;i<last;i++){ const r=LOG.raw[i]; h+=`<tr data-i="${i}"${isOn(i)?'':' class="off"'}><td>${i+1}</td>${LOG.header.map((_,j)=>`<td>${esc(r[j]??'')}</td>`).join('')}</tr>`; }
     if (last<n) h+=`<tr class="sp"><td colspan="${cols+1}" style="height:${(n-last)*RAW_H}px"></td></tr>`;
     $('#rawtable tbody').innerHTML=h;
   }
@@ -1240,7 +1481,7 @@ function showTab(id, focus){
   try{ history.replaceState(null,'','#'+id); }catch(e){}
   if (!LOG) return;
   // Diagramme in versteckten Tabs haben keine Grösse: beim Anzeigen neu ausmessen
-  if (id==='diagramme'){ charts.forEach(c=>c.resize()); drawNav(); }
+  if (id==='diagramme'){ charts.forEach(c=>c.resize()); drawNav(); FILTERS.forEach(syncFilter); }
   if (id==='steigen') Object.values(bars).forEach(c=>c?.resize());
   if (id==='karte') scheduleTrack();
   if (id==='rohdaten'){ rawFirst=-1; renderRaw(); revealRawCursor(); }
@@ -1259,14 +1500,14 @@ $('#chips').addEventListener('click',e=>{
   const k=b.dataset.k; selected.has(k)?selected.delete(k):selected.add(k);
   b.setAttribute('aria-pressed',selected.has(k));
   if (selected.has(k)){ ORDER=ORDER.filter(x=>x!==k).concat(k); saveOrder(); }
-  store.set('sel', JSON.stringify([...selected])); drawCharts();
+  mstore.set('sel', JSON.stringify([...selected])); drawCharts();
 });
 // ---------- eigene Reihenfolge der Diagramme ----------
 function orderedSelected(){
   const sel=[...selected], pos=k=>{ const i=ORDER.indexOf(k); return i<0 ? 1e6+sel.indexOf(k) : i; };
   return sel.sort((a,b)=>pos(a)-pos(b)).map(colBy).filter(Boolean);
 }
-function saveOrder(){ store.set('order', JSON.stringify(ORDER)); }
+function saveOrder(){ mstore.set('order', JSON.stringify(ORDER)); }
 function orderFromDom(){
   const dom=[...$('#charts').querySelectorAll('.cbox')].map(e=>e.dataset.k);
   ORDER = dom.concat(ORDER.filter(k=>!dom.includes(k))); saveOrder();
@@ -1303,14 +1544,14 @@ function orderFromDom(){
   box.addEventListener('pointerup',end); box.addEventListener('pointercancel',end);
 })();
 for (const [k,w] of Object.entries(W)){
-  $(w.sw).addEventListener('change',e=>{ store.set(k+'.sw',e.target.value); LOG&&refreshWidgets(); });
-  if (k==='climb') $('#climbThr').addEventListener('change',e=>{ store.set('climb.thr',e.target.value); LOG&&refreshWidgets(); });
-  $(w.h).addEventListener('change',e=>{ store.set(k+'.h',e.target.value); LOG&&refreshWidgets(); });
+  $(w.sw).addEventListener('change',e=>{ mstore.set(k+'.sw',e.target.value); LOG&&refreshWidgets(); });
+  if (k==='climb') $('#climbThr').addEventListener('change',e=>{ mstore.set('climb.thr',e.target.value); LOG&&refreshWidgets(); });
+  $(w.h).addEventListener('change',e=>{ mstore.set(k+'.h',e.target.value); LOG&&refreshWidgets(); });
 }
-$('#thermMode').addEventListener('change',e=>{ store.set('therm.mode',e.target.value); LOG&&drawBars(); });
-$('#showRc').addEventListener('change',()=>LOG&&renderChips());
+$('#thermMode').addEventListener('change',e=>{ mstore.set('therm.mode',e.target.value); LOG&&drawBars(); });
+$('#showRc').addEventListener('change',e=>{ mstore.set('showRc', e.target.checked?'1':'0'); LOG&&renderChips(); });
 document.querySelector('.seg').addEventListener('click',e=>{ const b=e.target.closest('[data-ov]'); if(!b) return;
-  OVERLAY = b.dataset.ov==='1'; store.set('overlay', OVERLAY?'1':'0'); if (LOG){ drawCharts(); renderCursor(); } });
+  OVERLAY = b.dataset.ov==='1'; mstore.set('overlay', OVERLAY?'1':'0'); if (LOG){ drawCharts(); renderCursor(); } });
 // ---------- Log-Auswahl ----------
 let FILES=[], CUR=-1;
 const readText = f => new Promise((ok,ko)=>{ const r=new FileReader(); r.onload=()=>ok(r.result); r.onerror=()=>ko(r.error); r.readAsText(f); });
@@ -1441,6 +1682,7 @@ async function deskBoot(){
   $('#impArcL').hidden = false; $('#impArc').checked = !!SETTINGS.archiveManual;
   $('#impArc').addEventListener('change', async e=>{ SETTINGS = await DESK.setSettings({ archiveManual:e.target.checked }); });
   DESK.onSync(renderSync); renderSync(await DESK.syncStatus());
+  if (DESK.appVersion){ const v=await DESK.appVersion(); $('#setVer').textContent=T('Version {v}',{v}); $('#infoVer').textContent=T('Ethos Log Viewer, Version {v}',{v}); $('#infoVer').hidden=false; }
   if (DESK.onUpdate){ DESK.onUpdate(renderUpdate); DESK.checkUpdate().then(renderUpdate).catch(()=>{}); }
   $('#ejectBtn').addEventListener('click', ejectSender);
   $('#syncInfo').addEventListener('click', showSyncInfo);
@@ -1458,6 +1700,9 @@ function openSettings(){
   $('#settingsDlg').showModal();
 }
 $('#openSettings').addEventListener('click', openSettings);
+$('#setCheck').addEventListener('click', async e=>{ e.target.disabled=true; $('#setUpd').textContent=T('Suche …');
+  try{ renderUpdate(await DESK.checkUpdate()); }catch(err){ $('#setUpd').textContent=T('Suche nach Updates fehlgeschlagen ({e})',{e:err.message}); }
+  e.target.disabled=false; });
 // Hell/Dunkel wirkt sofort; ohne Wahl folgt die App dem System
 $('#setTheme').addEventListener('change', e=>{ const t=e.target.value;
   if (t) document.documentElement.dataset.theme=t; else delete document.documentElement.dataset.theme;
@@ -1580,12 +1825,14 @@ function showSyncInfo(){
 }
 // Neue Version verfügbar
 function renderUpdate(u){
-  if (!u || !u.newer) return;
+  if (!u) return;
+  $('#setUpd').textContent = u.newer ? T('Version {v} ist verfügbar',{v:u.latest}) : u.error ? T('Suche nach Updates fehlgeschlagen ({e})',{e:u.error}) : T('Das ist die neueste Version.');
+  if (!u.newer) return;
   const el=$('#updNote'); el.hidden=false;
   el.innerHTML=`${esc(T('Version {v} ist verfügbar',{v:u.latest}))} <button type="button" class="zb wide" id="updGet">${T('Herunterladen')}</button>`;
   $('#updGet').addEventListener('click',()=>DESK.openUpdate(u.url));
 }
-(async function boot(){
+const BOOT = (async function boot(){
   if (typeof Chart==='undefined'){ $('#fileinfo').innerHTML=`<span class="err">${T('Die Diagramm-Bibliothek konnte nicht geladen werden. Lade die Seite neu.')}</span>`; return; }
   if (DESK){ try{ await deskBoot(); if (FILES.length) return; }catch(e){ console.error(e); } }
   try{ const r=await fetch('beispiel.csv'); if(!r.ok) throw 0; const text=await r.text(); const n='SB-10-2026-10-02-14-39-06.csv';
