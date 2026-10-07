@@ -40,6 +40,10 @@ OneDrive: Mit einer Client-ID in `pwa/config.json` (`onedriveClientId`, oder Umg
 
 Die Seite braucht HTTPS. `npm run build-pwa -- --ohne-beispiel` lässt das Beispiel-Log weg (es enthält eine echte GPS-Spur), `--beispiel-verschoben` nimmt es mit an einen anderen Ort verschobener Spur mit. Der Workflow „Web-App (GitHub Pages)“ läuft nur von Hand und veröffentlicht `site/` auf GitHub Pages. Nach einer Änderung holen sich installierte Geräte die neue Version beim nächsten Öffnen mit Netz.
 
+## Android-App
+
+`npm run build-android` baut `site/` mit Beispiel-Log (verschobene GPS-Spur) und kopiert es ins Android-Projekt `android/` (Capacitor). Die APK baut der Workflow „Android“ bei jedem Push, der `android/` oder `capacitor.config.json` ändert, oder von Hand; sie liegt danach als Artefakt beim Lauf unter „Actions“, veröffentlicht wird nichts. Versionsname und -nummer kommen aus `package.json`. Alle APKs sind mit `android/app/ethos-log-viewer.keystore` signiert, darum lässt sich eine neue APK über die alte installieren und die Einstellungen bleiben. Icons und Startbild erzeugt `scripts/android-icons.py` aus `pwa/icons`.
+
 GitHub Actions baut bei jedem Push den Windows-Installer (`.exe`) und das Mac-Image (`.dmg`, Intel und Apple Silicon) und legt beide unter „Releases“ als Version `v<version>` ab. Der Release-Text kommt aus dem Abschnitt der Version in `CHANGELOG.md`; vor dem Erhöhen der Version dort einen Abschnitt `## <version> – <datum>` anlegen.
 
 Die Mac-App ist nicht signiert. Beim ersten Start blockiert macOS sie: unter Systemeinstellungen → Datenschutz & Sicherheit „Dennoch öffnen“. Beim ersten Anschliessen des Senders fragt macOS einmal nach dem Zugriff auf Wechselmedien; „Erlauben“ wählen.

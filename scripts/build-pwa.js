@@ -40,12 +40,14 @@ const tail = `
 (function(){
   var ua = navigator.userAgent, ios = /iPad|iPhone|iPod/.test(ua) || (ua.includes('Mac') && navigator.maxTouchPoints > 1);
   var android = /Android/i.test(ua), mobile = ios || android;
+  var app = !!(window.Capacitor && Capacitor.isNativePlatform && Capacitor.isNativePlatform());
   var dir = 'webkitdirectory' in document.createElement('input');
   if (mobile || !dir) { var b = document.getElementById('pickFolder'); if (b) b.hidden = true; }
   if (android) { var f = document.getElementById('file'); if (f) f.removeAttribute('accept'); }
   if (mobile) document.querySelectorAll('#importDlg p.hint').forEach(function(p){ p.hidden = true; });
-  var v = document.getElementById('setVer'); if (v && !window.ethosDesktop) v.textContent = 'Web-App ${version}';
-  if ('serviceWorker' in navigator && location.protocol !== 'file:')
+  var v = document.getElementById('setVer'); if (v && !window.ethosDesktop) v.textContent = (app ? 'Android-App ' : 'Web-App ') + '${version}';
+  // in der Android-App liegen alle Dateien schon im Paket, ein Service Worker würde nur alte Stände festhalten
+  if ('serviceWorker' in navigator && location.protocol !== 'file:' && !app)
     window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(e){ console.warn('Service Worker:', e); }); });
 })();
 </script>
