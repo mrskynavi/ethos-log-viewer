@@ -2,6 +2,8 @@
 
 ## Noch nicht veröffentlicht
 
+- Filter bleiben beim Wechsel des Logs bestehen: Jeder Filter gilt für den Parameter mit demselben Namen im neuen Log, mit den gesetzten Grenzen (ausserhalb der Werte des neuen Logs rückt der Griff an den Rand). Fehlt der Parameter im neuen Log, bleibt der Filter gestrichelt als Hinweis stehen und gilt wieder, sobald ein Log ihn hat.
+
 ## 2026.10.0 – 2026-10-07
 
 - Neue Versionsnummern nach Jahr und Monat, wie bei Ethos: 2026.10.0 ist die erste Version im Oktober 2026, die nächste im selben Monat heisst 2026.10.1, im November 2026.11.0.
