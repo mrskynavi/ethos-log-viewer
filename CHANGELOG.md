@@ -2,6 +2,10 @@
 
 ## Noch nicht veröffentlicht
 
+- Logs mit springender Uhrzeit laden wieder schnell und richtig: Manche Sender stellen die Uhr während dem Flug laufend vom GPS, dabei springt die Stunde wild hin und her (Minuten und Sekunden laufen sauber weiter). Die App hat das als Tageswechsel gelesen, die Zeitachse wurde Wochen lang, die App hing beim Laden, und die Diagramme waren unlesbar. Jetzt zählt nur der Abstand ohne die vollen Stunden, die Uhrzeit läuft ab der ersten Zeile weiter, und über dem Log steht ein Hinweis.
+- Sensor „Flughöhe“ wird als Höhe erkannt (statt der GPS-Höhe über Meer), damit stimmen Flugzeit, Max. Höhe, Thermik und Steigflüge.
+- Wind Ø und TAS Ø in den Kennzahlen zeigen die Einheit der GPS-Geschwindigkeit (z. B. kn) statt immer km/h.
+
 ## 2026.10.0 – 2026-10-07
 
 - Neue Versionsnummern nach Jahr und Monat, wie bei Ethos: 2026.10.0 ist die erste Version im Oktober 2026, die nächste im selben Monat heisst 2026.10.1, im November 2026.11.0.
