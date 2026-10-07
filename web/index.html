@@ -144,7 +144,7 @@ dialog#settingsDlg::backdrop{background:color-mix(in srgb,#000 45%,transparent)}
 .fitem.on{border-color:var(--accent)}
 .fitem .fname{grid-area:nm;color:var(--fg);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .fitem .fname small{color:var(--muted);font-weight:400;margin-left:4px}
-.fitem .freset{grid-area:rs;justify-self:start;white-space:nowrap} .fitem .frange{grid-area:rg} .fitem .flo{grid-area:lo} .fitem .fhi{grid-area:hi} .fitem .zb{grid-area:x;height:26px;min-width:26px;font-size:.8rem}
+.fitem .freset{grid-area:rs;justify-self:start;white-space:nowrap} .fitem .freset[hidden]{display:inline;visibility:hidden} .fitem .frange{grid-area:rg} .fitem .flo{grid-area:lo} .fitem .fhi{grid-area:hi} .fitem .zb{grid-area:x;height:26px;min-width:26px;font-size:.8rem}
 .fitem label{display:inline-flex;gap:5px;align-items:center}
 .fitem input[type=number]{width:6.5em;font:500 .85rem var(--mono);padding:3px 6px;border:1px solid var(--line);border-radius:5px;background:var(--panel);color:var(--fg)}
 .frange{position:relative;height:40px;min-width:0}
@@ -1171,7 +1171,7 @@ function renderFilters(){
 function syncFilter(f){
   const el=document.querySelector(`.fitem[data-k="${CSS.escape(f.k)}"]`); if (!el) return;
   const lo=el.querySelector('input.lo'), hi=el.querySelector('input.hi'), pl=fPos(f,f.lo), ph=fPos(f,f.hi);
-  if (document.activeElement!==lo) lo.value=pl; if (document.activeElement!==hi) hi.value=ph;
+  lo.value=pl; hi.value=ph;
   lo.style.zIndex = pl>FSTEPS/2 ? 2 : 1;                                   // Griffe am rechten Rand bleiben greifbar
   const nlo=el.querySelector('.nlo'), nhi=el.querySelector('.nhi');
   if (document.activeElement!==nlo) nlo.value=fRound(f,f.lo); if (document.activeElement!==nhi) nhi.value=fRound(f,f.hi);
