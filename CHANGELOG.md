@@ -2,6 +2,8 @@
 
 ## Noch nicht veröffentlicht
 
+- Neuer Tab Polare: zeigt pro Modell, wie schnell es bei welcher Fahrt sinkt. Links stehen alle Logs des gewählten Modells zum An- und Abhaken (Auswahl pro Modell gemerkt, neue Logs automatisch dabei). Gezählt wird nur Gleitflug geradeaus mit Motor aus, eine Sekunde pro Punkt; das Sinken ist um Fahrtänderungen korrigiert. Pro 4-km/h-Klasse zählt der Median, durch die Mediane geht die geglättete Kurve Sinken = A·v³ + B/v. Kennzahlen beste Gleitzahl und geringstes Sinken mit Geschwindigkeit, Ansicht Sinken oder Gleitzahl, Glättung Physikalisch, Median oder Aus, dazu die Polare jedes Logs einzeln zum Vergleich. Logs, deren beste Gleitzahl mehr als 20 % von den übrigen abweicht, sind mit „weicht ab“ markiert.
+
 ## 2026.10.0 – 2026-10-07
 
 - Neue Versionsnummern nach Jahr und Monat, wie bei Ethos: 2026.10.0 ist die erste Version im Oktober 2026, die nächste im selben Monat heisst 2026.10.1, im November 2026.11.0.

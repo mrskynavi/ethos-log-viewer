@@ -185,6 +185,33 @@ td.u{color:var(--muted);text-align:left}
 .err{color:var(--bad);font-weight:500}
 section{display:grid;gap:10px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+/* Polare: links Logs des Modells zum An- und Abhaken, rechts Kennzahlen und Diagramm */
+.pol{display:grid;grid-template-columns:280px minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:860px){.pol{grid-template-columns:1fr}}
+.pol [hidden]{display:none!important}
+.pol-logs{display:grid;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;min-width:0}
+.pol-lh{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.pol-mini{display:flex;gap:6px}
+.pol-mini button{font:500 .8rem var(--body);border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:4px;padding:2px 8px;cursor:pointer}
+.pol-mini button:hover{color:var(--accent);border-color:var(--accent)}
+.pol-list{display:grid;gap:6px;margin:0;padding:0;list-style:none;max-height:60vh;overflow:auto}
+.pol-log{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;align-items:start}
+.pol-log:hover{border-color:var(--accent)}
+.pol-log.off{opacity:.55}
+.pol-log input{margin:3px 0 0;accent-color:var(--accent);width:16px;height:16px}
+.pol-log .nm{font-weight:600;display:flex;gap:6px;align-items:center;flex-wrap:wrap;min-width:0;cursor:pointer}
+.pol-log .sw{width:10px;height:10px;border-radius:50%;flex:none}
+.pol-log .meta{grid-column:2;font:.76rem var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.tag.warnt{background:color-mix(in srgb,var(--warn) 20%,transparent);color:var(--warn)}
+.pol-main{display:grid;gap:12px;min-width:0}
+.pol-box{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px 8px;min-width:0;display:grid;gap:8px}
+.pol-head{display:flex;justify-content:space-between;align-items:center;gap:6px 12px;flex-wrap:wrap}
+.pol-head span{font:.78rem var(--mono);color:var(--muted)}
+.pol-ctrl{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font-size:.88rem;color:var(--muted)}
+.pol-ctrl label{display:inline-flex;gap:6px;align-items:center;cursor:pointer}
+.pol-ctrl input{accent-color:var(--accent)}
+.pol-cv{position:relative;height:min(58vh,480px);min-height:300px}
+.pol-empty{display:grid;place-items:center;height:100%;color:var(--muted);text-align:center;padding:20px}
 </style>
 
 <style>
@@ -384,6 +411,7 @@ table.windh .wdv{display:inline-block;min-width:6.5ch;text-align:right}
     <button type="button" role="tab" class="tab" data-tab="uebersicht" id="tab-uebersicht" aria-controls="pane-uebersicht">Übersicht</button>
     <button type="button" role="tab" class="tab" data-tab="diagramme" id="tab-diagramme" aria-controls="pane-diagramme">Diagramme</button>
     <button type="button" role="tab" class="tab" data-tab="steigen" id="tab-steigen" aria-controls="pane-steigen">Thermik &amp; Steigflüge</button>
+    <button type="button" role="tab" class="tab" data-tab="polare" id="tab-polare" aria-controls="pane-polare">Polare</button>
     <button type="button" role="tab" class="tab" data-tab="karte" id="tab-karte" aria-controls="pane-karte">Karte &amp; Wind</button>
     <button type="button" role="tab" class="tab" data-tab="werte" id="tab-werte" aria-controls="pane-werte">Alle Werte</button>
     <button type="button" role="tab" class="tab" data-tab="rohdaten" id="tab-rohdaten" aria-controls="pane-rohdaten">Rohdaten</button>
@@ -429,6 +457,32 @@ table.windh .wdv{display:inline-block;min-width:6.5ch;text-align:right}
     </section>
   </div>
 
+  </div>
+  <div class="pane" role="tabpanel" id="pane-polare" data-tab="polare" aria-labelledby="tab-polare" hidden>
+  <div class="infopop" id="info-polare" hidden><p>Die Polare zeigt, wie schnell das Modell bei welcher Fahrt sinkt. Links stehen alle Logs des gewählten Modells; angehakte Logs fliessen ein. Die Auswahl wird pro Modell gemerkt, neue Logs sind automatisch dabei.</p><p>Jeder Punkt ist eine Sekunde Gleitflug: Motor aus (und 15 s danach), geradeaus (Kursänderung unter 8°/s) und ohne starkes Beschleunigen oder Bremsen. Die Fahrt ist die TAS, ohne Wind die GPS-Geschwindigkeit; das Sinken kommt vom Vario, korrigiert um Fahrtänderungen.</p><p>Die Punkte werden in 4-km/h-Klassen sortiert, pro Klasse zählt der Median (Band = mittlere Hälfte der Punkte). „Physikalisch“ legt durch die Mediane die Kurve Sinken = A·v³ + B/v, die Grundform jeder Polare; sie ist immer glatt und hat genau ein Minimum. „Median“ zeigt die geglätteten Mediane. Die Gerade vom Nullpunkt berührt die Kurve bei der besten Gleitzahl.</p><p>„weicht ab“: Die beste Gleitzahl dieses Logs liegt mehr als 20 % neben der Polare der übrigen angehakten Logs, z. B. wegen Thermik im Geradeausflug, Ballast oder anderem Setup. Thermik und Abwind verfälschen einzelne Punkte immer; mehr Logs und ruhige Flüge machen die Polare genauer.</p></div>
+  <div class="pol">
+    <section class="pol-logs">
+      <div class="pol-lh"><h2 class="hi">Logs <button type="button" class="iconbtn sm" data-info="info-polare" aria-expanded="false" aria-controls="info-polare" aria-label="So wird die Polare gerechnet">i</button></h2>
+        <span class="pol-mini"><button type="button" id="polAll">Alle</button><button type="button" id="polNone">Keine</button></span></div>
+      <ul class="pol-list" id="polList"></ul>
+      <p class="hint" id="polHint"></p>
+    </section>
+    <div class="pol-main">
+      <div class="kpis" id="polKpis"></div>
+      <section class="pol-box">
+        <div class="pol-head"><h2 class="hi">Polare <button type="button" class="iconbtn sm" data-info="info-polare" aria-expanded="false" aria-controls="info-polare" aria-label="So wird die Polare gerechnet">i</button></h2><span id="polInfo"></span></div>
+        <div class="pol-ctrl">
+          <span>Ansicht</span><span class="seg" id="polView"><button type="button" data-v="sink">Sinken</button><button type="button" data-v="glide">Gleitzahl</button></span>
+          <span>Glättung</span><span class="seg" id="polSmooth"><button type="button" data-v="phys">Physikalisch</button><button type="button" data-v="med">Median</button><button type="button" data-v="off">Aus</button></span>
+          <label><input type="checkbox" id="polPts"> Punkte</label>
+          <label><input type="checkbox" id="polBand"> Streuung</label>
+          <label><input type="checkbox" id="polEach"> Einzel-Logs</label>
+        </div>
+        <div class="pol-cv"><canvas id="polChart" aria-label="Polare: Sinken über Fluggeschwindigkeit"></canvas><div class="pol-empty" id="polEmpty" hidden></div></div>
+        <div class="legend" id="polLegend"></div>
+      </section>
+    </div>
+  </div>
   </div>
   <div class="pane" role="tabpanel" id="pane-karte" data-tab="karte" aria-labelledby="tab-karte" hidden>
   <div class="two">
@@ -501,6 +555,7 @@ table.windh .wdv{display:inline-block;min-width:6.5ch;text-align:right}
 <script>
 // ---------- Sprache: Deutsch ist der Quelltext, Englisch kommt aus EN; Standard = Sprache des Systems ----------
 const EN = {"Gleitzahl": "Glide ratio", "Strecke durch Höhenverlust über 10 s, aus {s} und {a}; nur im Gleitflug mit Motor aus": "Distance divided by height lost over 10 s, from {s} and {a}; gliding with the motor off only", "Gleitzahl = geflogene Strecke durch Höhenverlust, jeweils über 10 s gerechnet (5 s vor und nach dem Zeitpunkt). Die Strecke kommt aus der TAS, also durch die Luft; ohne Wind aus der GPS-Geschwindigkeit. Werte gibt es nur im Gleitflug: Motor aus und mindestens 0,2 m/s Sinken. Gleitzahl 20 heisst 20 m weit pro Meter Höhe.": "Glide ratio = distance flown divided by height lost, calculated over 10 s (5 s before and after the point in time). The distance comes from the TAS, i.e. through the air; without wind from the GPS speed. Values only exist while gliding: motor off and at least 0.2 m/s sink. A glide ratio of 20 means 20 m forward per metre of height.", "Filter": "Filter", "Parameter zum Filtern": "Parameter to filter", "Alle zurücksetzen": "Reset all", "So funktioniert der Filter": "How the filter works", "Parameter wählen und mit den beiden Griffen oder den Feldern Min und Max den Bereich einstellen. Die Balken zeigen, wie oft welcher Wert im Log vorkommt. Ein Logeintrag ist aktiv, wenn er bei allen Filtern im Bereich liegt. Inaktive Einträge bleiben in den Diagrammen sichtbar, auf grauem Hintergrund, auch in der Übersichtsleiste. Min, Ø und Max in den Diagrammen und unter „Alle Werte“ zählen nur aktive Einträge. „Zurücksetzen“ stellt einen Filter auf den ganzen Bereich, ✕ entfernt ihn.": "Pick a parameter and set the range with the two handles or the Min and Max fields. The bars show how often each value occurs in the log. A log entry is active when it lies inside the range of every filter. Inactive entries stay visible in the charts, on a grey background, also in the overview bar. Min, Ø and Max in the charts and under “All values” only count active entries. “Reset” sets a filter back to the full range, ✕ removes it.", "+ Parameter wählen …": "+ Choose parameter …", "{n} Min": "{n} min", "{n} Max": "{n} max", "Zurücksetzen": "Reset", "Filter {n} entfernen": "Remove filter {n}", "Filter entfernen": "Remove filter", "{a} von {b} Einträgen aktiv": "{a} of {b} entries active", "Gefiltert: {t}": "Filtered: {t}", "{a} aktiv": "{a} active", "keine aktiven Werte": "no active values", "Im sichtbaren Ausschnitt, nur aktive Einträge": "In the visible range, active entries only", "Info zur App": "About the app", "Modell": "Model", "Älteres Log": "Older log", "Neueres Log": "Newer log", "Einstellungen": "Settings", "Wertet Telemetrie-Logs (CSV) vom Ethos-Sender aus: Flugzeit, Motorläufe, Empfang, Akku, GPS-Spur, Thermik, Steigflüge, Wind und alle Sensoren. Logs lädst Du über „Import …“ oder ziehst die CSV-Dateien einfach ins Fenster. Die Dateien bleiben auf Deinem Gerät.": "Analyses telemetry logs (CSV) from Ethos radios: flight time, motor runs, link quality, batteries, GPS track, thermals, climbs, wind and all sensors. Load logs with “Import …” or simply drop the CSV files onto the window. The files stay on your device.", "Sender wird gesucht …": "Looking for the radio …", "Details zum Sync": "Sync details", "Jetzt vom Sender synchronisieren": "Sync from the radio now", "Archiv öffnen": "Open archive", "Letzter Sync": "Last sync", "Schliessen": "Close", "Logs importieren": "Import logs", "Dateien auswählen": "Choose files", "Ein oder mehrere Logs (.csv)": "One or more logs (.csv)", "Ordner öffnen": "Open folder", "Alle Logs eines Ordners, z.B. LOGS vom Sender": "All logs in a folder, e.g. LOGS from the radio", "Du kannst CSV-Dateien auch einfach irgendwo ins Fenster ziehen.": "You can also simply drop CSV files anywhere on the window.", "Importierte Logs ins Archiv kopieren": "Copy imported logs to the archive", "Logs hier ablegen": "Drop logs here", "Sprache": "Language", "Systemsprache": "System language", "Log-Ordner auf dem Sender": "Log folder on the radio", "Wird auf jedem angeschlossenen Laufwerk gesucht. Ein vollständiger Pfad wie E:\\logs geht auch.": "Searched on every connected drive. A full path such as E:\\logs works too.", "Archiv-Ordner": "Archive folder", "Wählen …": "Choose …", "Am besten ein Ordner in Google Drive oder OneDrive, dann sind die Logs auf allen Geräten da. Pro Modell entsteht ein Unterordner.": "Ideally a folder in Google Drive or OneDrive, so the logs are available on all your devices. Each model gets its own subfolder.", "Automatisch synchronisieren, sobald der Sender angeschlossen ist": "Sync automatically as soon as the radio is connected", "Importierte Logs immer ins Archiv kopieren": "Always copy imported logs to the archive", "Abbrechen": "Cancel", "Speichern": "Save", "Zeitpunkt im Log": "Point in time in the log", "Zeitpunkt": "Time", "Einen Datensatz zurück": "One record back", "Einen Datensatz vor": "One record forward", "Ziehen oder ins Diagramm klicken": "Drag or click into a chart", "Aus": "Off", "Ansichten": "Views", "Übersicht": "Overview", "Diagramme": "Charts", "Thermik & Steigflüge": "Thermals & climbs", "Karte & Wind": "Map & wind", "Alle Werte": "All values", "Lade Beispiel-Log …": "Loading example log …", "Kennzahlen": "Key figures", "Werte am Zeitpunkt": "Values at the selected time", "Gerechnet wie Deine Widgets „Thermik“ und „Steigfluege“: Ein Steigflug läuft, solange der Schalter EIN ist. Gibt es keinen Steigflug-Schalter, erkennt die App Steigflüge am ESC-Strom: Motor an, solange der Strom über der Schwelle liegt (Standard 3 A, kurze Lücken bis 1 s zählen mit). Gewinn = höchste Höhe während der Phase minus Starthöhe, Ø Steigen = Gewinn durch Dauer. Thermik zählt ab 5 s, Steigflüge ab 1 s. Eine Phase, die beim Logende noch läuft, zählt wie im Widget nicht. Die Zeiten sind so genau wie das Log (etwa 0,5 s).": "Calculated like your widgets “Thermik” and “Steigfluege”: a climb lasts as long as the switch is ON. Without a climb switch the app detects climbs from the ESC current: motor on while the current is above the threshold (default 3 A, short gaps up to 1 s count). Gain = highest altitude during the phase minus start altitude, avg climb = gain divided by duration. Thermals count from 5 s, climbs from 1 s. A phase still running at the end of the log does not count, as in the widget. Times are as precise as the log (about 0.5 s).", "Thermik": "Thermals", "So wird gerechnet": "How it is calculated", "Thermik-Schalter": "Thermal switch", "Höhenquelle": "Altitude source", "Balkenhöhe": "Bar height", "Steiggeschwindigkeit": "Climb rate", "Erreichte Höhe": "Height gained", "Steigdauer": "Climb time", "Steigflüge": "Climbs", "Steigflug-Schalter": "Climb switch", "ab": "above", "Höhengewinn (m) · Zahl = Ø Steigen (m/s)": "Height gain (m) · number = avg climb (m/s)", "GPS-Spur": "GPS track", "Spur herauszoomen": "Zoom track out", "Spur hineinzoomen": "Zoom track in", "Alles": "All", "Wind nach Höhe": "Wind by altitude", "Stufe": "Band", "Für die Tabelle braucht es GPS-Position, GPS-Geschwindigkeit und Kurven im Flug.": "The table needs GPS position, GPS speed and turns during the flight.", "Kanäle": "Channels", "Bedienung und Berechnung": "Controls and calculations", "Im Diagramm ziehen verschiebt. Zoomen mit Strg + Mausrad, Trackpad-Pinch oder den Knöpfen. Doppelklick zeigt alles. In der Leiste oben das Fenster ziehen oder an den Rändern grösser und kleiner machen.": "Drag in a chart to pan. Zoom with Ctrl + mouse wheel, trackpad pinch or the buttons. Double-click shows everything. In the bar above, drag the window or resize it at its edges.", "Zeitachse in Minuten ab Logbeginn. Hinterlegt: Steigflüge blau, Thermik grün, rot der oben gewählte Schalterzustand. Reihenfolge ändern: Diagramm am Griff ⋮⋮ ziehen oder mit ▲ ▼ verschieben.": "Time axis in minutes from the start of the log. Background: climbs blue, thermals green, red the switch state chosen above. Reorder: drag a chart by its handle ⋮⋮ or move it with ▲ ▼.", "ƒ = berechneter Wert. Leistung = Strom × Spannung, Energie = Leistung über die Zeit aufsummiert. GPS Kurs, Windgeschw., Windrichtung und TAS rechnen wie Deine Widgets „GPS Course“ und „Wind Estimator“ mit deren Standardwerten (40 Werte alle 0,7 s, Fit jede Sekunde, Kurs ab 3 m Abstand). Vor dem ersten gültigen Fit zeigt der Wind 0 und die TAS die Geschwindigkeit über Grund, genau wie am Sender.": "ƒ = calculated value. Power = current × voltage, energy = power summed over time. GPS course, wind speed, wind direction and TAS are calculated like your widgets “GPS Course” and “Wind Estimator” with their default settings (40 samples every 0.7 s, fit every second, course from 3 m distance). Before the first valid fit the wind shows 0 and the TAS shows ground speed, exactly as on the radio.", "Sender-Kanäle, Schalter und logische Schalter anzeigen": "Show radio channels, switches and logical switches", "Herauszoomen": "Zoom out", "Hineinzoomen": "Zoom in", "Rot markieren": "Mark red", "Schalter": "Switch", "Zustand": "State", "automatisch": "automatic", "Die Datei enthält keine Datenzeilen.": "The file contains no data rows.", "Keine Spalte \"Time\" gefunden. Ist das ein Ethos-Telemetrie-Log?": "No \"Time\" column found. Is this an Ethos telemetry log?", "Leistung": "Power", "Energie": "Energy", "Integral von {p} Leistung": "Integral of {p} power", "GPS Kurs (ber.)": "GPS course (calc.)", "Azimut zwischen zwei GPS-Fixes, ab 3 m Abstand (Widget GPS Course)": "Bearing between two GPS fixes, from 3 m distance (GPS Course widget)", "Windgeschw.": "Wind speed", "Kasa-Kreisfit über GPS-Geschwindigkeit und GPS Kurs (ber.), Widget Wind Estimator": "Kasa circle fit over GPS speed and GPS course (calc.), Wind Estimator widget", "Windrichtung": "Wind direction", "Richtung, aus der der Wind kommt (Widget Wind Estimator)": "Direction the wind comes from (Wind Estimator widget)", "Bodenvektor minus Windvektor (Widget Wind Estimator)": "Ground vector minus wind vector (Wind Estimator widget)", "Logdauer": "Log duration", "{n} Zeilen": "{n} rows", "Flugzeit": "Flight time", "Höhe über 5 m": "Altitude above 5 m", "Motorläufe": "Motor runs", "{t} Motorzeit": "{t} motor time", "Max. Höhe": "Max. altitude", "Max. Tempo": "Max. speed", "Sinken max {v}": "Sink max {v}", "Start {a} · Ende {b}": "Start {a} · end {b}", "Verbraucht": "Consumed", "aus {d}": "from {d}", "{v} Wh gesamt": "{v} Wh total", "Senderakku min": "Radio battery min", "Start {v}": "Start {v}", "N,NO,O,SO,S,SW,W,NW": "N,NE,E,SE,S,SW,W,NW", "Keine GPS-Daten im Log.": "No GPS data in the log.", "Gitter {s} m · Norden oben": "Grid {s} m · north up", "Höhe": "Altitude", "Steigflug": "Climb", "max. Entfernung vom Start {d} m": "max. distance from start {d} m", "Kräftig: sichtbarer Zeitausschnitt": "Bold: visible time range", "Beispiel: Dein Log": "Example: your log", "Geladen": "Loaded", "{n} Sensoren": "{n} sensors", "Kanal": "Channel", "Einheit": "Unit", "Am Zeitpunkt": "At selected time", "Werte": "Values", "berechnet": "calculated", "– wählen –": "– choose –", "{n} (automatisch)": "{n} (automatic)", "Ø Steigen": "Avg climb", "Gesamthöhe": "Total height", "Gesamtdauer": "Total time", "Kein Steigflug. Prüfe, ob der richtige Schalter gewählt ist.": "No climbs. Check that the right switch is selected.", "Uhrzeit": "Time of day", "Dauer": "Duration", "Höchste": "Highest", "Gewinn": "Gain", "Verbrauch": "Consumption", "Steigflug {n}": "Climb {n}", "Gewinn {v}": "Gain {v}", "Dauer {v}": "Duration {v}", "Ø Steigen {v}": "Avg climb {v}", "Steiggeschwindigkeit (m/s)": "Climb rate (m/s)", "Erreichte Höhe (m)": "Height gained (m)", "Steigdauer (s)": "Climb time (s)", "an": "on", "aus": "off", "oben": "up", "Mitte": "middle", "unten": "down", "Kein Wind berechnet. Dafür braucht es GPS-Position, GPS-Geschwindigkeit und Kurven im Flug.": "No wind calculated. This needs GPS position, GPS speed and turns during the flight.", "Wind Ø": "Wind avg", "aus|wind": "from", "wechselnd": "variable", "Gezählt werden die {n} akzeptierten Wind-Fits, jeweils in der Höhe ({a}), in der sie gerechnet wurden. Richtung = Vektormittel; „wechselnd“ heisst, die Richtungen in dieser Stufe streuen stark. Der Pfeil zeigt, wohin der Wind weht.": "Counts the {n} accepted wind fits, each at the altitude ({a}) where it was calculated. Direction = vector mean; “variable” means the directions in this band scatter widely. The arrow shows where the wind blows to.", "Berechnet: {n}": "Calculated: {n}", "Ziehen zum Umsortieren": "Drag to reorder", "{n} verschieben": "Move {n}", "{n} nach oben": "Move {n} up", "{n} nach unten": "Move {n} down", "Wähle oben einen oder mehrere Kanäle aus.": "Choose one or more channels above.", "{a} von {b}": "{a} of {b}", "{t} ab Start": "{t} from start", "kein Zeitpunkt": "no point in time", "Kein Zeitpunkt gewählt": "No point in time selected", "Oben den Zeitstrahl ziehen oder in ein Diagramm klicken.": "Drag the time bar or click into a chart.", "Phase": "Phase", "Thermik|phase": "Thermal", "kein Schalter aktiv": "no switch active", "Am Zeitpunkt {t}: {w} {u} aus {d}° in {h} m.": "At {t}: {w} {u} from {d}° at {h} m.", "Keine CSV-Dateien gefunden. Ethos speichert Logs im Ordner LOGS als .csv.": "No CSV files found. Ethos saves logs as .csv in the LOGS folder.", "Log wählen": "Choose log", "Datum": "Date", "Sensoren": "Sensors", "Zeilen": "Rows", "Grösse": "Size", "Datei": "File", "ja": "yes", "nein": "no", "Modelle": "Models", "Lade {n} …": "Loading {n} …", "Datei konnte nicht gelesen werden.": "The file could not be read.", "{n} ins Archiv kopiert.": "{n} copied to the archive.", "Archiv": "Archive", "Im Archiv sichern": "Save to archive", "Im Archiv gesichert": "Saved to archive", "Sync: Sobald der Sender angeschlossen ist, kopiert die App neue Logs aus „{p}“ ins Archiv, ein Ordner pro Modell. Archiv: {a}": "Sync: as soon as the radio is connected, the app copies new logs from “{p}” to the archive, one folder per model. Archive: {a}", "Sync läuft: {d} von {n}": "Syncing: {d} of {n}", "Sender gefunden, suche neue Logs …": "Radio found, looking for new logs …", "Sync unterbrochen, Sender getrennt": "Sync interrupted, radio disconnected", "{n} kopiert, {m} fehlen noch · {t} · geht beim nächsten Anschliessen weiter": "{n} copied, {m} still missing · {t} · continues next time you connect", "{n} neu im Archiv": "{n} new in the archive", "Keine neuen Logs": "No new logs", "{n} Fehler": "{n} errors", "Sender angeschlossen": "Radio connected", "Sender getrennt": "Radio disconnected", "Sync fehlgeschlagen": "Sync failed", "Zugriff auf den Sender erlauben": "Allow access to the radio", "macOS fragt nach dem Zugriff auf das Wechselmedium. Nach „Erlauben“ startet der Sync von selbst.": "macOS is asking for access to the removable volume. After “Allow” the sync starts by itself.", "Automatischer Sync aus": "Automatic sync off", "Sender nicht angeschlossen": "Radio not connected", "Fehler": "Error", "Zeit": "Time", "Kopiert": "Copied", "Nicht kopiert": "Not copied", "{n}, der Sender wurde während dem Sync getrennt. Beim nächsten Anschliessen werden sie geholt.": "{n}, the radio was disconnected during the sync. They will be fetched the next time you connect.", "Sender": "Radio", "Version {v} ist verfügbar": "Version {v} is available", "Herunterladen": "Download", "Die Diagramm-Bibliothek konnte nicht geladen werden. Lade die Seite neu.": "The chart library could not be loaded. Reload the page.", "Öffne ein Ethos-Log (CSV), um es auszuwerten.": "Open an Ethos log (CSV) to analyse it.", "Sender auswerfen, damit er abgezogen werden kann": "Eject the radio so you can unplug it", "⏏ Auswerfen": "⏏ Eject", "Sender ausgeworfen, Du kannst ihn abziehen": "Radio ejected, you can unplug it", "Wird ausgeworfen …": "Ejecting …", "Auswerfen fehlgeschlagen: {e}": "Eject failed: {e}", "Der Sync läuft noch.": "The sync is still running.", "Kein Sender angeschlossen.": "No radio connected.", "Das Laufwerk wird noch verwendet.": "The drive is still in use.", "Inoffizielles Werkzeug, nicht mit dem Hersteller von Ethos verbunden. Ethos ist eine Marke ihres Inhabers.": "Unofficial tool, not affiliated with the maker of Ethos. Ethos is a trademark of its owner.", "Darstellung": "Appearance", "Wie System": "Same as system", "Hell": "Light", "Dunkel": "Dark", "Rohdaten": "Raw data", "So funktioniert es": "How it works", "Alle Zeilen und Spalten so, wie sie im Log stehen. Ein Klick auf eine Zeile setzt den Zeitpunkt; die Zeile des gewählten Zeitpunkts ist hervorgehoben.": "All rows and columns exactly as they are in the log. Clicking a row sets the point in time; the row of the selected time is highlighted.", "{n} Zeilen · {m} Spalten": "{n} rows · {m} columns", "Darstellung der Diagramme": "Chart layout", "Einzeln": "Separate", "Überlagert": "Overlaid", "Alle Kanäle überlagert": "All channels overlaid", "„Überlagert“ zeigt alle gewählten Kanäle in einem Diagramm. Jeder Kanal hat seine eigene Skala und füllt die ganze Höhe; die ersten zwei Skalen stehen links und rechts in der Farbe des Kanals.": "“Overlaid” shows all selected channels in one chart. Each channel has its own scale and uses the full height; the first two scales are shown left and right in the channel colour.", "Web-Version": "Web version", "Nach Updates suchen": "Check for updates", "Version {v}": "Version {v}", "Ethos Log Viewer, Version {v}": "Ethos Log Viewer, version {v}", "Suche nach Updates fehlgeschlagen ({e})": "Update check failed ({e})", "Das ist die neueste Version.": "You have the latest version.", "Suche …": "Checking …", "Steuerkurs (windkorr.)": "Heading (wind-corr.)", "Richtung, in die die Nase zeigt: GPS Kurs (ber.) korrigiert um den Wind": "Direction the nose points: GPS course (calc.) corrected for the wind", "Drift": "Drift", "Kurs über Grund minus Steuerkurs; positiv = Wind von links, das Modell wird nach rechts versetzt": "Course over ground minus heading; positive = wind from the left, the model drifts to the right", "Gegenwind": "Headwind", "Windanteil gegen die Flugrichtung; negativ = Rückenwind": "Wind component against the direction of flight; negative = tailwind", "Distanz zum Start": "Distance to start", "Waagrechte Distanz zum ersten gültigen GPS-Fix": "Horizontal distance to the first valid GPS fix", "Steuerkurs (windkorr.) = Richtung, in die die Nase zeigt, aus Bodenvektor minus Windvektor. Drift = Kurs über Grund minus Steuerkurs (positiv = nach rechts versetzt). Gegenwind = Windanteil gegen die Flugrichtung, negativ heisst Rückenwind. Distanz zum Start = waagrechte Distanz zum ersten GPS-Fix, Effektive Distanz = schräg vom Startpunkt zum Modell, mit der Höhe.": "Heading (wind-corr.) = direction the nose points, from ground vector minus wind vector. Drift = course over ground minus heading (positive = pushed to the right). Headwind = wind component against the direction of flight, negative means tailwind. Distance to start = horizontal distance to the first GPS fix, effective distance = straight line from the start point to the model, including altitude.", "Effektive Distanz": "Effective distance", "Schräge Distanz vom Startpunkt zum Modell: waagrechte Distanz und Höhe über dem Start ({a})": "Straight-line distance from the start point to the model: horizontal distance and height above the start ({a})"};
+Object.assign(EN, {"Polare": "Polar", "Alle": "All", "Keine": "None", "Ansicht": "View", "Sinken": "Sink", "Glättung": "Smoothing", "Physikalisch": "Physical", "Median": "Median", "Punkte": "Points", "Streuung": "Spread", "Einzel-Logs": "Single logs", "So wird die Polare gerechnet": "How the polar is calculated", "Polare: Sinken über Fluggeschwindigkeit": "Polar: sink over airspeed", "Die Polare zeigt, wie schnell das Modell bei welcher Fahrt sinkt. Links stehen alle Logs des gewählten Modells; angehakte Logs fliessen ein. Die Auswahl wird pro Modell gemerkt, neue Logs sind automatisch dabei.": "The polar shows how fast the model sinks at which airspeed. On the left are all logs of the selected model; ticked logs are included. The selection is remembered per model, new logs are included automatically.", "Jeder Punkt ist eine Sekunde Gleitflug: Motor aus (und 15 s danach), geradeaus (Kursänderung unter 8°/s) und ohne starkes Beschleunigen oder Bremsen. Die Fahrt ist die TAS, ohne Wind die GPS-Geschwindigkeit; das Sinken kommt vom Vario, korrigiert um Fahrtänderungen.": "Each point is one second of gliding: motor off (and 15 s after), flying straight (course change below 8°/s) and without strong acceleration or braking. The speed is the TAS, without wind the GPS speed; the sink comes from the vario, corrected for speed changes.", "Die Punkte werden in 4-km/h-Klassen sortiert, pro Klasse zählt der Median (Band = mittlere Hälfte der Punkte). „Physikalisch“ legt durch die Mediane die Kurve Sinken = A·v³ + B/v, die Grundform jeder Polare; sie ist immer glatt und hat genau ein Minimum. „Median“ zeigt die geglätteten Mediane. Die Gerade vom Nullpunkt berührt die Kurve bei der besten Gleitzahl.": "The points are sorted into 4 km/h classes; each class counts its median (band = middle half of the points). “Physical” fits the curve sink = A·v³ + B/v through the medians, the basic shape of every polar; it is always smooth with exactly one minimum. “Median” shows the smoothed medians. The line from the origin touches the curve at the best glide ratio.", "„weicht ab“: Die beste Gleitzahl dieses Logs liegt mehr als 20 % neben der Polare der übrigen angehakten Logs, z. B. wegen Thermik im Geradeausflug, Ballast oder anderem Setup. Thermik und Abwind verfälschen einzelne Punkte immer; mehr Logs und ruhige Flüge machen die Polare genauer.": "“deviates”: the best glide ratio of this log is more than 20 % off the polar of the other ticked logs, e.g. because of thermals while flying straight, ballast or a different setup. Lift and sink always distort single points; more logs and calm flights make the polar more accurate.", "Lese Logs … {a} von {b}": "Reading logs … {a} of {b}", "weicht ab": "deviates", "{d} Flug · {n} Gleitpunkte · GZ {g}": "{d} flight · {n} glide points · L/D {g}", "{a} von {b} Logs in der Polare.": "{a} of {b} logs in the polar.", "Kein Log ausgewählt.": "No log selected.", "Beste Gleitzahl": "Best glide ratio", "bei {v} km/h": "at {v} km/h", "Geringstes Sinken": "Minimum sink", "zu wenig Punkte": "not enough points", "Gleitpunkte": "Glide points", "aus {n} Logs · {k} Klassen": "from {n} logs · {k} classes", "Fahrtbereich": "Speed range", "mit genug Punkten": "with enough points", "Gleitpunkte (1 s)": "Glide points (1 s)", "Mittlere Hälfte · ◆ Median je Klasse": "Middle half · ◆ median per class", "Polare ({n} Logs)": "Polar ({n} logs)", "Beste Gleitzahl {v}": "Best glide ratio {v}", "Geringstes Sinken {v} m/s": "Minimum sink {v} m/s", "{n} Punkte": "{n} points", "Median je {b} km/h": "median per {b} km/h", "ungeglättet": "unsmoothed", "Kein Log ausgewählt. Hake links mindestens ein Log an.": "No log selected. Tick at least one log on the left.", "Keine Gleitpunkte gefunden. Die Polare braucht Fahrt (TAS oder GPS-Geschwindigkeit), Vario oder Höhe und Gleitflug mit Motor aus.": "No glide points found. The polar needs speed (TAS or GPS speed), vario or altitude and gliding with the motor off.", "Fluggeschwindigkeit (km/h)": "Airspeed (km/h)", "Sinken (m/s) ↓": "Sink (m/s) ↓"});
 const LANGS = ['de','en'];
 let LANG_PREF = ''; try{ LANG_PREF = localStorage.getItem('ethoslv.lang')||''; }catch(e){}
 const LANG = LANGS.includes(LANG_PREF) ? LANG_PREF : ((navigator.languages||[navigator.language]).map(l=>String(l).slice(0,2).toLowerCase()).find(l=>LANGS.includes(l)) || 'en');
@@ -1466,8 +1521,174 @@ function revealRawCursor(){
   box.addEventListener('scroll',()=>{ if(pend) return; pend=true; requestAnimationFrame(()=>{ pend=false; renderRaw(); }); },{passive:true});
   box.addEventListener('click',e=>{ const r=e.target.closest('tr[data-i]'); if (r) setCursor(+r.dataset.i); });
 })();
+// ---------- Polare pro Modell ----------
+// Gleitpunkt = eine Sekunde Gleitflug: Motor aus (und 15 s danach), geradeaus (GPS-Kurs ändert unter 8°/s),
+// Fahrt ändert unter 0,6 m/s². Gerechnet über ±2,5 s. Fahrt = TAS, sonst GPS-Geschwindigkeit.
+// Sinken energiekorrigiert: −(Vario + Δ(v²/2g)/Δt), ohne Vario aus der Höhe.
+// Pro 4-km/h-Klasse (mind. 12 Punkte) der Median; die Kurve Sinken = A·v³ + B/v geht durch die Mediane.
+const POLAR={half:2.5, after:15, turn:8, acc:0.6, minV:5, bin:4, minN:12, dev:0.2, skip:30};
+const POLAR_CACHE=new Map();
+let polarChart=null, polarJob=0, POLAR_LOGS=null;
+const PST={view:store.get('polar.view')||'sink', smooth:store.get('polar.smooth')||'phys',
+  pts:store.get('polar.pts')!=='0', band:store.get('polar.band')!=='0', each:store.get('polar.each')==='1'};
+function polarPoints(log){
+  const ch=channels(log); if (!log.cols.some(c=>c.derived)) addDerived(log,ch);
+  const spd=log.cols.find(c=>c.key==='tas')||ch.spd, crs=log.cols.find(c=>c.key==='gpscrs');
+  if (!spd || !(ch.vario||ch.alt)) return [];
+  const u=(spd.unit||'km/h').toLowerCase(), f=u==='m/s'?1:u==='kn'||u==='kt'?0.514444:u==='mph'?0.44704:1/3.6;
+  const t=log.t, n=t.length, v=spd.vals.map(x=>x*f), out=[];
+  const lastMot=new Array(n); let lm=-Infinity;
+  for (let i=0;i<n;i++){ if (ch.rpm ? ch.rpm.vals[i]>300 : ch.cur ? ch.cur.vals[i]>3 : false) lm=t[i]; lastMot[i]=lm; }
+  let j=0, k=0, lastSec=-1;
+  for (let i=0;i<n;i++){
+    const ti=t[i]; if (isNaN(ti) || ti<POLAR.skip) continue;
+    const sec=Math.floor(ti); if (sec===lastSec) continue;
+    while (j<i && !(t[j]>=ti-POLAR.half)) j++;
+    if (k<i) k=i; while (k<n-1 && t[k+1]<=ti+POLAR.half) k++;
+    const dt=t[k]-t[j]; if (!(dt>=3) || ti-lastMot[k]<POLAR.after) continue;
+    const v0=v[j], v1=v[k]; if (isNaN(v0)||isNaN(v1) || Math.abs(v1-v0)/dt>POLAR.acc) continue;
+    let sv=0, nv=0, sw=0, nw=0;
+    for (let m=j;m<=k;m++){ if (!isNaN(v[m])){ sv+=v[m]; nv++; } if (ch.vario && !isNaN(ch.vario.vals[m])){ sw+=ch.vario.vals[m]; nw++; } }
+    const vm=sv/nv; if (!(vm>POLAR.minV)) continue;
+    if (crs){ const c0=crs.vals[j], c1=crs.vals[k]; if (isNaN(c0)||isNaN(c1) || Math.abs(((c1-c0+540)%360)-180)/dt>POLAR.turn) continue; }
+    const climb = ch.vario ? (nw ? sw/nw : NaN) : (ch.alt.vals[k]-ch.alt.vals[j])/dt;
+    const sink=-(climb + (v1*v1-v0*v0)/(2*9.81*dt));
+    if (!(sink>-3 && sink<5)) continue;
+    out.push([vm*3.6, sink]); lastSec=sec;
+  }
+  return out;
+}
+function median(a){ const s=[...a].sort((x,y)=>x-y), n=s.length; return n%2 ? s[(n-1)/2] : (s[n/2-1]+s[n/2])/2; }
+function quant(a,p){ const s=[...a].sort((x,y)=>x-y), i=(s.length-1)*p, lo=Math.floor(i); return s[lo]+(s[Math.ceil(i)]-s[lo])*(i-lo); }
+function polarBins(pts){
+  const b=new Map();
+  for (const [v,w] of pts){ const k=Math.floor(v/POLAR.bin)*POLAR.bin+POLAR.bin/2; if (!b.has(k)) b.set(k,[]); b.get(k).push(w); }
+  return [...b].filter(([,a])=>a.length>=POLAR.minN).sort((x,y)=>x[0]-y[0])
+    .map(([k,a])=>({v:k, m:median(a), q1:quant(a,.25), q3:quant(a,.75), n:a.length}));
+}
+// Kleinste Quadrate für Sinken = A·v³ + B/v (v in m/s), jede Klasse mit ihrer Punktzahl gewichtet
+function polarFit(bs){
+  let s11=0,s12=0,s22=0,t1=0,t2=0;
+  for (const b of bs){ const v=b.v/3.6, f1=v**3, f2=1/v; s11+=b.n*f1*f1; s12+=b.n*f1*f2; s22+=b.n*f2*f2; t1+=b.n*f1*b.m; t2+=b.n*f2*b.m; }
+  const det=s11*s22-s12*s12; if (bs.length<3 || !det) return null;
+  const A=(t1*s22-t2*s12)/det, B=(s11*t2-s12*t1)/det; if (A<=0 || B<=0) return null;
+  const w=kmh=>{ const v=kmh/3.6; return A*v**3+B/v; };
+  const vms=Math.pow(B/(3*A),.25)*3.6, vbg=Math.pow(B/A,.25)*3.6;
+  return {w, vms, wms:w(vms), vbg, ld:vbg/3.6/w(vbg)};
+}
+function polarCurve(bs, mode){
+  if (!bs.length || mode==='off') return null;
+  const lo=bs[0].v-POLAR.bin/2, hi=bs[bs.length-1].v+POLAR.bin/2;
+  if (mode==='phys'){ const f=polarFit(bs); if (!f) return null;
+    const pts=[]; for (let x=lo;x<=hi+.01;x+=1) pts.push({x, y:f.w(x)}); return {pts, ...f}; }
+  const sm=bs.map((b,i)=>{ const a=bs[i-1]||b, c=bs[i+1]||b; return {x:b.v, y:(a.m+2*b.m+c.m)/4}; });
+  let best=null, ld=0, ms=sm[0];
+  for (const p of sm){ const g=p.x/3.6/p.y; if (p.y>0 && g>ld){ ld=g; best=p; } if (p.y<ms.y) ms=p; }
+  return best ? {pts:sm, vms:ms.x, wms:ms.y, vbg:best.x, ld} : null;
+}
+async function polarLog(f){
+  const key=f.name+'|'+f.size; if (POLAR_CACHE.has(key)) return POLAR_CACHE.get(key);
+  let r;
+  try{ if (FILES[CUR]===f && LOG) r={pts:polarPoints(LOG)};
+    else { const txt = f.file ? await readText(f.file) : f.path ? await DESK.readFile(f.path) : f.text; r={pts:polarPoints(parseCSV(txt))}; } }
+  catch(e){ r={pts:[], err:e.message||T('Datei konnte nicht gelesen werden.')}; }
+  POLAR_CACHE.set(key,r); return r;
+}
+const polarOff=()=>{ try{ return new Set(JSON.parse(mstore.get('polar.off')||'[]')); }catch(e){ return new Set(); } };
+async function renderPolar(){
+  if ($('#pane-polare').hidden) return;
+  const job=++polarJob, model=FILES[CUR]?.model; if (model==null) return;
+  const idx=models().get(model)||[], off=polarOff(), logs=[];
+  for (let n=0;n<idx.length;n++){
+    const f=FILES[idx[n]];
+    if (!POLAR_CACHE.has(f.name+'|'+f.size)){ $('#polHint').textContent=T('Lese Logs … {a} von {b}',{a:n+1,b:idx.length}); await new Promise(r=>setTimeout(r)); }
+    const r=await polarLog(f); if (job!==polarJob) return;
+    logs.push({f, ...r, on:!off.has(f.name), color:PALETTE[n%PALETTE.length]});
+  }
+  POLAR_LOGS={model, logs}; drawPolar();
+}
+function savePolarOff(){ mstore.set('polar.off', JSON.stringify(POLAR_LOGS.logs.filter(l=>!l.on).map(l=>l.f.name))); }
+function drawPolar(){
+  if (!POLAR_LOGS) return;
+  const logs=POLAR_LOGS.logs, sel=logs.filter(l=>l.on), pts=sel.flatMap(l=>l.pts), bs=polarBins(pts);
+  const c=polarCurve(bs,PST.smooth), ref=polarCurve(bs,'phys')||polarCurve(bs,'med'), kc=c||ref;
+  // Log-Liste: "weicht ab", wenn die beste Gleitzahl > 20 % neben der Polare der übrigen angehakten Logs liegt
+  $('#polList').innerHTML=logs.map((l,i)=>{
+    const lc=polarCurve(polarBins(l.pts),'phys'), rest=polarCurve(polarBins(sel.filter(o=>o!==l).flatMap(o=>o.pts)),'phys');
+    const dev=l.on && lc && rest && Math.abs(lc.ld-rest.ld)/rest.ld>POLAR.dev;
+    return `<li class="pol-log${l.on?'':' off'}"><input type="checkbox" id="pol-${i}" data-i="${i}"${l.on?' checked':''}>`+
+      `<label for="pol-${i}" class="nm"><i class="sw" style="background:${l.color}"></i>${esc(l.f.date)} ${esc((l.f.time||'').slice(0,5))}${dev?` <span class="tag warnt">${T('weicht ab')}</span>`:''}</label>`+
+      `<span class="meta">${l.err?esc(l.err):T('{d} Flug · {n} Gleitpunkte · GZ {g}',{d:l.f.dur!=null?fmtDur(l.f.dur):'–', n:l.pts.length.toLocaleString(LOC), g:lc?fmt(lc.ld,0):'–'})}</span></li>`; }).join('');
+  $('#polHint').textContent = sel.length ? T('{a} von {b} Logs in der Polare.',{a:sel.length,b:logs.length}) : T('Kein Log ausgewählt.');
+  const k=(l,v,u,d)=>`<div class="kpi"><span class="l">${esc(l)}</span><span class="v">${v}<small>${esc(u)}</small></span><span class="d">${esc(d)}</span></div>`;
+  $('#polKpis').innerHTML = (kc ? k(T('Beste Gleitzahl'),fmt(kc.ld,0),'',T('bei {v} km/h',{v:fmt(kc.vbg,0)}))+k(T('Geringstes Sinken'),fmt(kc.wms,2),'m/s',T('bei {v} km/h',{v:fmt(kc.vms,0)}))
+      : k(T('Beste Gleitzahl'),'–','',T('zu wenig Punkte'))+k(T('Geringstes Sinken'),'–','',T('zu wenig Punkte')))+
+    k(T('Gleitpunkte'),pts.length.toLocaleString(LOC),'',T('aus {n} Logs · {k} Klassen',{n:sel.length,k:bs.length}))+
+    k(T('Fahrtbereich'),bs.length?`${fmt(bs[0].v-POLAR.bin/2,0)}–${fmt(bs[bs.length-1].v+POLAR.bin/2,0)}`:'–','km/h',T('mit genug Punkten'));
+  const G=PST.view==='glide', fg=css('--fg'), mu=css('--muted'), ln=css('--line'), ac=css('--accent'), good=css('--good'), warn=css('--warn');
+  const tr=(v,w)=>G ? (w>.12 ? v/3.6/w : null) : w, ds=[], leg=[];
+  const cloud=(p,col)=>({type:'scatter', data:p.map(([v,w])=>({x:v,y:tr(v,w)})).filter(q=>q.y!=null), pointRadius:1.6, backgroundColor:col, borderWidth:0, order:5});
+  if (PST.pts && pts.length){
+    if (PST.each) sel.forEach(l=>ds.push(cloud(l.pts,l.color+'55'))); else ds.push(cloud(pts,mu+'4d'));
+    leg.push(`<span><i style="background:${mu};width:8px;height:8px;border-radius:50%"></i>${T('Gleitpunkte (1 s)')}</span>`);
+  }
+  if (PST.band && bs.length){
+    ds.push({type:'line', data:bs.map(b=>({x:b.v,y:tr(b.v,b.q3)})), borderWidth:0, pointRadius:0, fill:false, order:4});
+    ds.push({type:'line', data:bs.map(b=>({x:b.v,y:tr(b.v,b.q1)})), borderWidth:0, pointRadius:0, fill:'-1', backgroundColor:ac+'26', order:4});
+    ds.push({type:'scatter', data:bs.map(b=>({x:b.v,y:tr(b.v,b.m)})), pointRadius:3.5, pointStyle:'rectRot', backgroundColor:ac, borderWidth:0, order:2});
+    leg.push(`<span><i style="background:${ac}26"></i>${T('Mittlere Hälfte · ◆ Median je Klasse')}</span>`);
+  }
+  if (PST.each) sel.forEach(l=>{ const lc=polarCurve(polarBins(l.pts), PST.smooth==='off'?'phys':PST.smooth); if (!lc) return;
+    ds.push({type:'line', data:lc.pts.map(p=>({x:p.x,y:tr(p.x,p.y)})), borderColor:l.color, borderWidth:1.6, borderDash:[5,4], pointRadius:0, tension:.3, order:1});
+    leg.push(`<span><i style="background:${l.color};height:3px"></i>${esc(l.f.date)} ${esc((l.f.time||'').slice(0,5))}</span>`); });
+  if (c){
+    ds.push({type:'line', label:'polar', data:c.pts.map(p=>({x:p.x,y:tr(p.x,p.y)})), borderColor:fg, borderWidth:3, pointRadius:0, tension:.35, order:0});
+    leg.push(`<span><i style="background:${fg};height:3px"></i>${T('Polare ({n} Logs)',{n:sel.length})}</span>`);
+    const wbg=c.vbg/3.6/c.ld;
+    if (!G){
+      ds.push({type:'line', data:[{x:0,y:0},{x:c.vbg*1.35,y:wbg*1.35}], borderColor:good, borderWidth:1.4, borderDash:[2,3], pointRadius:0, order:0});
+      ds.push({type:'scatter', data:[{x:c.vbg,y:wbg}], pointRadius:6, backgroundColor:good, order:-1});
+      ds.push({type:'scatter', data:[{x:c.vms,y:c.wms}], pointRadius:6, pointStyle:'triangle', backgroundColor:warn, order:-1});
+      leg.push(`<span><i style="background:${good};width:8px;height:8px;border-radius:50%"></i>${T('Beste Gleitzahl {v}',{v:fmt(c.ld,0)})}</span><span><i style="background:${warn};width:8px;height:8px;border-radius:50%"></i>${T('Geringstes Sinken {v} m/s',{v:fmt(c.wms,2)})}</span>`);
+    } else {
+      ds.push({type:'scatter', data:[{x:c.vbg,y:c.ld}], pointRadius:6, backgroundColor:good, order:-1});
+      leg.push(`<span><i style="background:${good};width:8px;height:8px;border-radius:50%"></i>${T('Beste Gleitzahl {v}',{v:fmt(c.ld,0)})}</span>`);
+    }
+  }
+  $('#polLegend').innerHTML=leg.join('');
+  $('#polInfo').textContent = `${POLAR_LOGS.model} · ${T('{n} Punkte',{n:pts.length.toLocaleString(LOC)})} · ${PST.smooth==='phys'?'A·v³ + B/v':PST.smooth==='med'?T('Median je {b} km/h',{b:POLAR.bin}):T('ungeglättet')}`;
+  const none=!pts.length;
+  $('#polEmpty').hidden=!none; $('#polChart').hidden=none;
+  $('#polEmpty').textContent = !sel.length ? T('Kein Log ausgewählt. Hake links mindestens ein Log an.') : T('Keine Gleitpunkte gefunden. Die Polare braucht Fahrt (TAS oder GPS-Geschwindigkeit), Vario oder Höhe und Gleitflug mit Motor aus.');
+  if (polarChart){ polarChart.destroy(); polarChart=null; }
+  if (none) return;
+  const xmax=Math.ceil(Math.max(100,...pts.map(p=>p[0]))/10)*10, tf={family:css('--mono'),size:11};
+  polarChart=new Chart($('#polChart'),{ data:{datasets:ds}, options:{
+    animation:false, maintainAspectRatio:false, parsing:false,
+    interaction:{mode:'nearest', intersect:false},
+    plugins:{legend:{display:false}, tooltip:{filter:it=>it.dataset.label==='polar', callbacks:{label:it=>G
+      ? `${fmt(it.parsed.x,0)} km/h · ${T('Gleitzahl')} ${fmt(it.parsed.y,1)}`
+      : `${fmt(it.parsed.x,0)} km/h · ${fmt(it.parsed.y,2)} m/s · ${T('Gleitzahl')} ${fmt(it.parsed.x/3.6/it.parsed.y,1)}`}}},
+    scales:{
+      x:{type:'linear', min:0, max:xmax, title:{display:true, text:T('Fluggeschwindigkeit (km/h)'), color:mu, font:tf}, grid:{color:ln}, ticks:{color:mu, stepSize:10}},
+      y: G ? {min:0, max:50, title:{display:true, text:T('Gleitzahl'), color:mu, font:tf}, grid:{color:ln}, ticks:{color:mu}}
+           : {reverse:true, min:0, max:2.5, title:{display:true, text:T('Sinken (m/s) ↓'), color:mu, font:tf}, grid:{color:ln}, ticks:{color:mu, callback:v=>fmt(v,1)}} } } });
+}
+(function polarEvents(){
+  const seg=(id,key)=>{ const el=$(id); el.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===PST[key]));
+    el.addEventListener('click',e=>{ const b=e.target.closest('button'); if (!b) return; PST[key]=b.dataset.v; store.set('polar.'+key,PST[key]);
+      el.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b)); drawPolar(); }); };
+  seg('#polView','view'); seg('#polSmooth','smooth');
+  for (const [id,key] of [['#polPts','pts'],['#polBand','band'],['#polEach','each']]){
+    $(id).checked=PST[key]; $(id).addEventListener('change',e=>{ PST[key]=e.target.checked; store.set('polar.'+key,PST[key]?'1':'0'); drawPolar(); }); }
+  $('#polList').addEventListener('change',e=>{ const i=e.target.dataset?.i; if (i==null||!POLAR_LOGS) return; POLAR_LOGS.logs[+i].on=e.target.checked; savePolarOff(); drawPolar(); });
+  const all=on=>{ if (!POLAR_LOGS) return; POLAR_LOGS.logs.forEach(l=>l.on=on); savePolarOff(); drawPolar(); };
+  $('#polAll').addEventListener('click',()=>all(true)); $('#polNone').addEventListener('click',()=>all(false));
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change',drawPolar);
+  new MutationObserver(drawPolar).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+})();
 // ---------- Tabs ----------
-const TABS=['uebersicht','diagramme','steigen','karte','werte','rohdaten'];
+const TABS=['uebersicht','diagramme','steigen','polare','karte','werte','rohdaten'];
 function showTab(id, focus){
   if (!TABS.includes(id)) id='uebersicht';
   document.querySelectorAll('.tab').forEach(b=>{ const on=b.dataset.tab===id; b.setAttribute('aria-selected',on); b.tabIndex=on?0:-1; if(on&&focus) b.focus(); });
@@ -1484,6 +1705,7 @@ function showTab(id, focus){
   if (id==='diagramme'){ charts.forEach(c=>c.resize()); drawNav(); FILTERS.forEach(syncFilter); }
   if (id==='steigen') Object.values(bars).forEach(c=>c?.resize());
   if (id==='karte') scheduleTrack();
+  if (id==='polare') renderPolar();
   if (id==='rohdaten'){ rawFirst=-1; renderRaw(); revealRawCursor(); }
 }
 $('.tabs').addEventListener('click',e=>{ const b=e.target.closest('.tab'); if(b) showTab(b.dataset.tab); });
@@ -1649,7 +1871,7 @@ $('#nextLog').addEventListener('click',()=>stepLog(-1));
 async function openLog(i){
   const f=FILES[i]; if(!f) return; CUR=i; if (f.file||f.path) store.set('model',f.model); renderLogs();
   $('#fileinfo').innerHTML=`<span class="hint">${esc(T('Lade {n} …',{n:f.name}))}</span>`;
-  try{ const txt = f.file ? await readText(f.file) : f.path ? await DESK.readFile(f.path) : f.text; render(parseCSV(txt), f.name, !f.file && !f.path); deskFileinfo(f); }
+  try{ const txt = f.file ? await readText(f.file) : f.path ? await DESK.readFile(f.path) : f.text; render(parseCSV(txt), f.name, !f.file && !f.path); deskFileinfo(f); renderPolar(); }
   catch(err){ $('#fileinfo').innerHTML=`<span class="err">${esc(f.name)}: ${esc(err.message||T('Datei konnte nicht gelesen werden.'))}</span>`; }
 }
 $('#pickFiles').addEventListener('click',()=>$('#file').click());
