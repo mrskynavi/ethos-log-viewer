@@ -156,11 +156,12 @@ a { color: var(--acc); }
 <p>Beim ersten Start sucht die App einen guten Ort für das Archiv. Hast Du <b>Google Drive für den Desktop</b> installiert, schlägt sie <code>…/My Drive/Ethos Logs</code> vor, sonst Deinen <b>OneDrive</b>-Ordner und als letzte Wahl <code>Dokumente/Ethos Logs</code>. Prüfe den Vorschlag einmal in den Einstellungen.</p>
 <p>Die Einstellungen öffnest Du mit dem Zahnrad <span class="btn">⚙</span> oben rechts.</p>
 <figure class="third"><img src="bilder/06-einstellungen.png" alt="" style="width:34%"><figcaption>Einstellungen in der Desktop-App</figcaption></figure>
-<div class="note"><b>Web-Version</b>Im Browser enthalten die Einstellungen nur Sprache und Darstellung, weil es dort keinen Sync und kein Archiv gibt.</div>
+<div class="note"><b>Web-Version</b>Im Browser enthalten die Einstellungen nur Sprache, Darstellung und Geschwindigkeit, weil es dort keinen Sync und kein Archiv gibt.</div>
 <table>
 <tr><th>Feld</th><th>Bedeutung</th></tr>
 <tr><td><b>Sprache</b></td><td>„Systemsprache“, „Deutsch“ oder „English“. Standard ist die Sprache des Betriebssystems. Nach dem Speichern lädt die Oberfläche neu. Sensornamen kommen aus dem Log und bleiben in der Sprache des Senders.</td></tr>
 <tr><td><b>Darstellung</b></td><td>„Wie System“, „Hell“ oder „Dunkel“. Die Wahl wirkt sofort.</td></tr>
+<tr><td><b>Geschwindigkeit</b></td><td>Einheit für alle Geschwindigkeiten: km/h (Standard), kn, m/s oder mph. Die Werte werden umgerechnet, egal in welcher Einheit der Sensor loggt. Gilt für alle Modelle.</td></tr>
 <tr><td><b>Log-Ordner auf dem Sender</b></td><td>Wo die Logs auf dem Sender liegen. Standard <code>Radio/logs</code>. Die App sucht diesen Pfad auf jedem angeschlossenen Laufwerk. Der erste Teil darf auch der Name des Laufwerks sein, also ein Laufwerk <code>RADIO</code> mit dem Ordner <code>logs</code>. Ein vollständiger Pfad wie <code>E:\logs</code> geht auch.</td></tr>
 <tr><td><b>Archiv-Ordner</b></td><td>Wohin die Logs kopiert werden. <span class="btn">Wählen …</span> öffnet die Ordnerauswahl. Am besten ein Ordner in Google Drive oder OneDrive, dann hast Du die Logs auf allen Geräten. Pro Modell entsteht ein Unterordner.</td></tr>
 <tr><td><b>Automatisch synchronisieren …</b></td><td>Ein: Sobald der Sender angeschlossen ist, holt die App neue Logs. Aus: Die Sync-Zeile zeigt „Automatischer Sync aus“.</td></tr>
@@ -387,6 +388,8 @@ a { color: var(--acc); }
 <h2>Hell und dunkel</h2>
 <p>Unter <span class="btn">⚙</span> → <b>Darstellung</b> wählst Du „Wie System“, „Hell“ oder „Dunkel“. „Wie System“ folgt der Einstellung von Windows bzw. macOS.</p>
 <figure><img src="bilder/16-hell.png" alt=""><figcaption>Helle Darstellung</figcaption></figure>
+<h2>Geschwindigkeit</h2>
+<p>Unter <span class="btn">⚙</span> → <b>Geschwindigkeit</b> wählst Du die Einheit für alle Geschwindigkeiten: km/h (Standard), kn, m/s oder mph. Loggt ein Sensor in einer anderen Einheit (z. B. GPS-Geschwindigkeit in Knoten), rechnet die App um: Diagramme, Kennzahlen, Min/Ø/Max, Werte am Zeitpunkt, Filter, berechnete Werte wie TAS, Wind und Gegenwind sowie die Polare. Das Vario bleibt in m/s, die Rohdaten zeigen die Werte wie im Log. Nach dem Speichern wird das offene Log neu eingelesen; Filter auf einer Geschwindigkeit fallen dabei weg.</p>
 <h2>Sprache</h2>
 <p>Die Oberfläche gibt es auf Deutsch und Englisch (<span class="btn">⚙</span> → <b>Sprache</b>). Die Sensornamen stammen aus dem Log und bleiben in der Sprache des Senders.</p>
 <figure><img src="bilder/19-englisch.png" alt=""><figcaption>Englische Oberfläche</figcaption></figure>
@@ -403,12 +406,12 @@ a { color: var(--acc); }
 <tr><th>Was</th><th>Wo</th></tr>
 <tr><td>Logs</td><td>Im Archiv-Ordner, ein Unterordner pro Modell. Die App löscht dort nie etwas.</td></tr>
 <tr><td>Sync-Einstellungen (Log-Ordner auf dem Sender, Archiv-Ordner, automatischer Sync, Importe ins Archiv)</td><td>Datei <code>settings.json</code> im App-Datenordner:<br>Windows <code>%APPDATA%\Ethos Log Viewer</code><br>Mac <code>~/Library/Application Support/Ethos Log Viewer</code></td></tr>
-<tr><td>Ansicht (Sprache, Darstellung, letzter Tab, gewählte Kanäle, Reihenfolge der Diagramme, Einzeln/Überlagert, Schalter und Höhenquellen, Schwelle, Stufe, Rot markieren pro Modell, zuletzt gewähltes Modell)</td><td>Im Speicher der App bzw. des Browsers (Web-Version). Bleibt bei Updates erhalten.</td></tr>
+<tr><td>Ansicht (Sprache, Darstellung, Geschwindigkeitseinheit, letzter Tab, gewählte Kanäle, Reihenfolge der Diagramme, Einzeln/Überlagert, Schalter und Höhenquellen, Schwelle, Stufe, Rot markieren pro Modell, zuletzt gewähltes Modell)</td><td>Im Speicher der App bzw. des Browsers (Web-Version). Bleibt bei Updates erhalten.</td></tr>
 <tr><td>Zwischenspeicher der Log-Details (Dauer, Sensoren)</td><td>Ebenfalls im Speicher der App, damit die Log-Liste schnell erscheint.</td></tr>
 </table>
 <h2>Einstellungen pro Modell</h2>
 <p>Die App merkt sich die Einstellungen der Auswertung <b>pro Modell</b>: gewählte Kanäle und Reihenfolge der Diagramme, „Einzeln/Überlagert“, „Sender-Kanäle anzeigen“, Thermik- und Steigflug-Schalter mit Höhenquelle, Schwelle und Balkenhöhe, „Rot markieren“ sowie Höhenquelle und Stufe von „Wind nach Höhe“. Öffnest Du ein Log, kommen die Einstellungen dieses Modells zurück. Ein Modell, das noch keine eigenen Einstellungen hat, startet mit den zuletzt benutzten.</p>
-<p>Sprache, Darstellung und der zuletzt offene Tab gelten für alle Modelle.</p>
+<p>Sprache, Darstellung, Geschwindigkeitseinheit und der zuletzt offene Tab gelten für alle Modelle.</p>
 
 <!-- 16 -->
 <h1 id="k16"><span class="n">16</span>Troubleshooting und FAQ</h1>
