@@ -1,10 +1,10 @@
 name: Build
 
+# Voller Build mit Release, nur auf main. Zum Ausprobieren vorher: Workflow „Mac-Testbuild“ (mac-test.yml).
 on:
   push:
     branches: [main]
     tags: ['v*']
-  pull_request:
   workflow_dispatch:
 
 jobs:
