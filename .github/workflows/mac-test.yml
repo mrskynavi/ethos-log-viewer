@@ -1,0 +1,37 @@
+name: Mac-Testbuild
+
+# Baut nur die Mac-App (.dmg) zum Ausprobieren, bevor ein Release erstellt wird.
+# Läuft bei jedem Push auf einen Branch ausser main und von Hand (Actions → „Mac-Testbuild“ → Run workflow).
+# Das Image liegt danach als Artefakt beim Lauf; kein Release, kein Tag, kein Windows, kein Android, kein Handbuch.
+on:
+  push:
+    branches-ignore: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: mac-test-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm install
+      - run: npm test
+      - run: npm run dist
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      - id: v
+        run: |
+          echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+          echo "sha=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+          echo "branch=${GITHUB_REF_NAME//\//-}" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Mac-Test-${{ steps.v.outputs.version }}-${{ steps.v.outputs.branch }}-${{ steps.v.outputs.sha }}
+          path: dist/*.dmg
+          if-no-files-found: error
+          retention-days: 14
