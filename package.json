@@ -1,7 +1,7 @@
 {
   "name": "ethos-log-viewer",
   "productName": "Ethos Log Viewer",
-  "version": "1.3.0",
+  "version": "2026.10.0",
   "description": "Telemetrie-Logs vom Ethos-Sender auswerten und automatisch vom Sender ins Archiv synchronisieren",
   "author": "Christoph Mächler",
   "license": "UNLICENSED",

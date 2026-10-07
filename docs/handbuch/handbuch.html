@@ -142,6 +142,7 @@ a { color: var(--acc); }
 <figure><img src="bilder/s-update.png" alt=""><figcaption>Hinweis auf eine neue Version (Beispiel)</figcaption></figure>
 <p><span class="btn">Herunterladen</span> öffnet die Release-Seite im Browser. Installiere die neue Version wie oben beschrieben über die alte. Einstellungen und Archiv bleiben erhalten.</p>
 <p>Welche Version Du hast, siehst Du unten in den Einstellungen <span class="btn">⚙</span> und im <span class="btn">ⓘ</span>. In den Einstellungen sucht <span class="btn">Nach Updates suchen</span> sofort; daneben steht „Das ist die neueste Version.“, „Version … ist verfügbar“ oder warum die Suche nicht geklappt hat.</p>
+<p>Seit Oktober 2026 folgt die Versionsnummer dem Muster <b>Jahr.Monat.Nummer</b>, wie bei Ethos: 2026.10.0 ist die erste Version im Oktober 2026, 2026.10.1 die nächste im selben Monat, 2026.11.0 die erste im November. Vorher hiessen die Versionen 1.0.0 bis 1.3.0.</p>
 
 <h2>2.5 Deinstallieren</h2>
 <ul>
@@ -290,6 +291,7 @@ a { color: var(--acc); }
 <tr><td class="c"><span class="num">1</span></td><td>Kanäle</td><td>Ein Klick schaltet einen Sensor ein oder aus. Eingeschaltete Kanäle sind umrandet. <b>ƒ</b> markiert berechnete Werte. Die Auswahl bleibt pro Modell gespeichert.</td></tr>
 <tr><td class="c"><span class="num">2</span></td><td>Einzeln / Überlagert</td><td>Ein Diagramm pro Kanal oder alle Kanäle in einem Diagramm.</td></tr>
 <tr><td class="c"><span class="num">3</span></td><td>Sender-Kanäle …</td><td>Blendet zusätzlich Knüppel, Schalter (SA, SB …), logische Schalter (LS1 …) und Kanäle (K1 …) ein.</td></tr>
+<tr><td></td><td>Filter</td><td>Blendet Logeinträge nach Parametern aus (siehe unten). Die Zeile steht zwischen den Optionen und dem Zoom.</td></tr>
 <tr><td class="c"><span class="num">4</span></td><td>− + Alles</td><td>Herauszoomen, hineinzoomen, ganzes Log zeigen.</td></tr>
 <tr><td class="c"><span class="num">5</span></td><td>Ausschnitt</td><td>Sichtbarer Zeitraum und seine Länge.</td></tr>
 <tr><td class="c"><span class="num">6</span></td><td>Rot markieren</td><td>Färbt die Zeit rot, in der ein gewählter Schalter in einem gewählten Zustand stand (siehe unten).</td></tr>
@@ -302,22 +304,34 @@ a { color: var(--acc); }
 <li><b>Verschieben:</b> im Diagramm mit der Maus ziehen.</li>
 <li><b>Zoomen:</b> <span class="key">Strg</span> (Mac <span class="key">⌘</span>) + Mausrad, Trackpad-Pinch oder die Knöpfe − und +.</li>
 <li><b>Alles zeigen:</b> Doppelklick ins Diagramm oder <span class="btn">Alles</span>.</li>
-<li><b>Zeitpunkt setzen:</b> Klick ins Diagramm.</li>
+<li><b>Zeitpunkt setzen:</b> Klick oder Fingertipp ins Diagramm. Zeit und Wert stehen dann in einem Schild direkt neben der orangen Linie, in jedem Diagramm; am rechten Rand wechselt es auf die linke Seite. Der Zeitstrahl zeigt den Wert genau gleich an.</li>
 </ul>
-<p>Alle Diagramme teilen denselben Ausschnitt. Die Zeitachse zählt Minuten ab Logbeginn. Kopfzeile jedes Diagramms: Name, Wert am Zeitpunkt, Einheit, Minimum und Maximum.</p>
+<p>Alle Diagramme teilen denselben Ausschnitt. Die Zeitachse zählt Minuten ab Logbeginn. Kopfzeile jedes Diagramms: Name, Einheit sowie Min, Ø und Max des sichtbaren Ausschnitts. Diese drei Werte laufen beim Zoomen und Verschieben mit und zählen nur aktive Einträge (siehe Filter).</p>
 <h2>Farbige Hintergründe</h2>
 <p><b>Blau</b> hinterlegt sind Steigflüge, <b>grün</b> Thermikphasen und <b>rot</b> die Zeiten des unter „Rot markieren“ gewählten Schalterzustands. Steigflüge und Thermik kommen aus dem Tab „Thermik &amp; Steigflüge“.</p>
 <h2>Rot markieren</h2>
 <p>Wähle einen Schalter (SA …) oder logischen Schalter (LS …) und den Zustand, zum Beispiel <b>SB</b> und <b>oben (−1)</b>. Ohne eigene Wahl stellt die App das automatisch ein: derselbe Schalter wie für die Thermik, aber in der Gegenstellung. Ist SB unten = Thermik, wird SB oben rot markiert. Dann steht „automatisch“ daneben. Deine Wahl merkt sich die App pro Modell; der Link „automatisch“ setzt sie zurück.</p>
 <h2>Überlagert</h2>
 <figure><img src="bilder/10-ueberlagert.png" alt=""><figcaption>Höhe, Vario und ESC-Strom überlagert</figcaption></figure>
-<p>Jeder Kanal hat seine eigene Skala und nutzt die ganze Höhe. Die ersten zwei Skalen stehen links und rechts in der Farbe des Kanals. Die Legende oben zeigt die Werte am Zeitpunkt. Am übersichtlichsten ist „Überlagert“ mit zwei bis vier Kanälen.</p>
+<p>Jeder Kanal hat seine eigene Skala und nutzt die ganze Höhe. Die ersten zwei Skalen stehen links und rechts in der Farbe des Kanals. Die Legende oben zeigt bei jedem Kanal Min, Ø und Max des sichtbaren Ausschnitts; das Schild am Zeitpunkt listet alle Kanäle untereinander. Am übersichtlichsten ist „Überlagert“ mit zwei bis vier Kanälen.</p>
 <h2>Berechnete Werte (ƒ)</h2>
 <ul>
 <li><b>Leistung</b> = Strom × Spannung für jedes Paar mit gleichem Präfix (ESC, BEC, SRV1 …), <b>Energie</b> = Leistung über die Zeit aufsummiert.</li>
 <li><b>GPS Kurs (ber.), Windgeschw., Windrichtung, TAS</b> rechnen wie die Lua-Widgets „GPS Course“ und „Wind Estimator“ mit deren Standardwerten (40 Werte alle 0,7 s, Fit jede Sekunde, Kurs ab 3 m Abstand). Vor dem ersten gültigen Fit zeigt der Wind 0 und die TAS die Geschwindigkeit über Grund, genau wie am Sender.</li>
+<li><b>Steuerkurs (windkorr.)</b> = Richtung, in die die Nase zeigt (Bodenvektor minus Windvektor). <b>Drift</b> = Kurs über Grund minus Steuerkurs, positiv heisst nach rechts versetzt. <b>Gegenwind</b> = Windanteil gegen die Flugrichtung, negativ heisst Rückenwind.</li>
+<li><b>Distanz zum Start</b> = waagrechte Distanz zum ersten GPS-Fix. <b>Effektive Distanz</b> = schräg vom Startpunkt zum Modell, mit der Höhe über dem Start.</li>
+<li><b>Gleitzahl</b> = geflogene Strecke durch Höhenverlust, jeweils über 10 s gerechnet (5 s vor und nach dem Zeitpunkt). Die Strecke kommt aus der TAS, also durch die Luft; ohne Wind aus der GPS-Geschwindigkeit. Werte gibt es nur im Gleitflug, also mit Motor aus und mindestens 0,2 m/s Sinken; beim Steigen und mit Motor bleibt die Kurve leer. Gleitzahl 20 heisst 20 m weit pro Meter Höhe. Im Steigen der Thermik wird sie gross, weil die Luft mitträgt; aussagekräftig sind ruhige Gleitstrecken.</li>
 </ul>
 <p>Diese Erklärungen findest Du in der App auch hinter dem <span class="btn">ⓘ</span> neben „Kanäle“.</p>
+<h2>Filter</h2>
+<figure><img src="bilder/21-filter.png" alt="" style="width:88%;margin:0 auto"><figcaption>Filter auf Altitude 100–430 m, mit Gleitzahl</figcaption></figure>
+<p>Mit dem Filter blendest Du Logeinträge nach Werten aus, zum Beispiel alles unter 100 m Höhe. Unter „Filter“ wählst Du einen Parameter. Darauf erscheint ein Histogramm der vorhandenen Werte mit zwei Griffen und den Feldern <b>Min</b> und <b>Max</b>; mit beiden stellst Du den Bereich ein.</p>
+<ul>
+<li>Mehrere Filter lassen sich kombinieren. Aktiv ist ein Eintrag, wenn er bei allen Filtern im Bereich liegt. Daneben steht, wie viele Einträge aktiv sind.</li>
+<li>Inaktive Einträge verschwinden nicht: In den Diagrammen ist die Linie dort grau und der Hintergrund dezent grau, ebenso in der Übersichtsleiste. In den Rohdaten sind sie blass.</li>
+<li>Min, Ø und Max in den Diagrammen und unter „Alle Werte“ zählen nur aktive Einträge. Kennzahlen, Thermik und Steigflüge rechnen weiter mit dem ganzen Log.</li>
+<li><span class="btn">Zurücksetzen</span> stellt einen Filter auf den ganzen Bereich, ✕ entfernt ihn, „Alle zurücksetzen“ entfernt alle. Beim Laden eines anderen Logs sind die Filter wieder leer.</li>
+</ul>
 
 <!-- 10 -->
 <h1 id="k10"><span class="n">10</span>Tab „Thermik &amp; Steigflüge“</h1>
@@ -377,7 +391,7 @@ a { color: var(--acc); }
 <p>Die Oberfläche gibt es auf Deutsch und Englisch (<span class="btn">⚙</span> → <b>Sprache</b>). Die Sensornamen stammen aus dem Log und bleiben in der Sprache des Senders.</p>
 <figure><img src="bilder/19-englisch.png" alt=""><figcaption>Englische Oberfläche</figcaption></figure>
 <h2>Web-Version</h2>
-<p>Die Web-Version im Browser hat dieselben Tabs und Auswertungen. Es fehlen die Sync-Zeile, „Archiv öffnen“, „Auswerfen“ und die Archiv-Einstellungen. Logs öffnest Du über <span class="btn">Import …</span> oder per Ziehen ins Fenster; sie werden nur im Browser gelesen und nicht hochgeladen. Die Web-Version läuft auch auf Tablet und Handy; die Ansicht ordnet sich dann untereinander an.</p>
+<p>Die Web-Version im Browser hat dieselben Tabs und Auswertungen. Es fehlen die Sync-Zeile, „Archiv öffnen“, „Auswerfen“ und die Archiv-Einstellungen. Logs öffnest Du über <span class="btn">Import …</span> oder per Ziehen ins Fenster; sie werden nur im Browser gelesen und nicht hochgeladen. Die Web-Version läuft auch auf Tablet und Handy; die Ansicht ordnet sich dann untereinander an. Auf iPhone und iPad lässt sie sich in Safari mit „Teilen → Zum Home-Bildschirm“ installieren, auf Android in Chrome mit „App installieren“; danach läuft sie auch ohne Netz. Für Android gibt es zusätzlich eine eigene App (APK) mit Beispiel-Log.</p>
 <div class="two">
 <figure><img src="bilder/17-web.png" alt=""><figcaption>Web-Version mit Beispiel-Log</figcaption></figure>
 <figure class="third" style="flex:.45"><img src="bilder/20-handy.png" alt="" style="width:100%"><figcaption>Auf dem Handy</figcaption></figure>

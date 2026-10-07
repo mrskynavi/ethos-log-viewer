@@ -139,6 +139,15 @@ async function screenshots() {
   await p.click('.seg [data-ov="0"]');
   await p.click('#zIn'); await p.click('#zIn'); await p.waitForTimeout(500);
   await shot(p, '11-zoom', { ...(await from(p, '.chipopts')), height: 900 });
+  // Filter (Höhe 100–430 m) und Gleitzahl
+  await p.click('#zAll');
+  const only = async keep => { const st = await p.$$eval('#chips .chip', cs => cs.map(c => [c.dataset.k, c.getAttribute('aria-pressed') === 'true']));
+    for (const [k, on] of st) if (on !== keep.includes(k)) { await p.click(`.chip[data-k="${k.replace(/"/g, '\\"')}"]`); await p.waitForTimeout(50); } };
+  await only(['Altitude (m)', 'Steigr. Vario (m/s)', 'Gleitzahl']); await p.waitForTimeout(300);
+  await p.evaluate(() => { addFilter('Altitude (m)'); const f = FILTERS[0]; f.lo = 100; f.hi = 430; syncFilter(f); applyFilters(); document.activeElement.blur(); });
+  await p.waitForTimeout(800);
+  await shot(p, '21-filter', { ...(await from(p, '#filters')), height: 980 });
+  await p.evaluate(() => { FILTERS.length = 0; renderFilters(); applyFilters(); });
   // Thermik
   await p.click('#tab-steigen'); await p.waitForTimeout(900);
   await shot(p, '12-thermik', await from(p, '#curbar'));

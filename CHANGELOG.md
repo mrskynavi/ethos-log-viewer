@@ -2,6 +2,10 @@
 
 ## Noch nicht veröffentlicht
 
+## 2026.10.0 – 2026-10-07
+
+- Neue Versionsnummern nach Jahr und Monat, wie bei Ethos: 2026.10.0 ist die erste Version im Oktober 2026, die nächste im selben Monat heisst 2026.10.1, im November 2026.11.0.
+- Neuer berechneter Wert Gleitzahl (ƒ): geflogene Strecke (aus der TAS, ohne Wind aus der GPS-Geschwindigkeit) durch Höhenverlust, jeweils über 10 s gerechnet. Werte gibt es nur im Gleitflug, mit Motor aus und mindestens 0,2 m/s Sinken; sonst bleibt die Kurve leer. Erklärung im ⓘ neben „Kanäle“.
 - Logeinträge filtern (Tab Diagramme, unter den Kanälen): Parameter wählen und den Bereich mit zwei Griffen über einem Histogramm der vorhandenen Werte oder mit den Feldern Min und Max einstellen. Mehrere Parameter lassen sich kombinieren; aktiv ist ein Eintrag, wenn er bei allen Filtern im Bereich liegt. Jeder Filter hat „Zurücksetzen“ und ✕, dazu gibt es „Alle zurücksetzen“. Inaktive Einträge verschwinden nicht, sondern sind in den Diagrammen und in der Übersichtsleiste grau hinterlegt und in den Rohdaten blass. Min, Ø und Max unter „Alle Werte“ zählen nur aktive Einträge. Beim Laden eines anderen Logs sind die Filter wieder leer.
 - Jedes Diagramm zeigt im Titel Min, Ø und Max des sichtbaren Ausschnitts (nur aktive Einträge); die Werte laufen beim Zoomen und Verschieben mit. Im überlagerten Diagramm stehen sie in der Legende bei jedem Kanal.
 - Klick (oder Fingertipp) ins Diagramm und Zeitstrahl verhalten sich jetzt gleich: Beide setzen den Zeitpunkt, und Zeit und Wert stehen in einem Schild direkt neben der Linie, in jedem Diagramm. Im überlagerten Diagramm listet das Schild alle Kanäle. Das separate Hover-Fenster und die Werte im Diagrammtitel und in der Legende sind weg.
