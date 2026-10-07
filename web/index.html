@@ -1802,7 +1802,7 @@ function renderUpdate(u){
   el.innerHTML=`${esc(T('Version {v} ist verfügbar',{v:u.latest}))} <button type="button" class="zb wide" id="updGet">${T('Herunterladen')}</button>`;
   $('#updGet').addEventListener('click',()=>DESK.openUpdate(u.url));
 }
-(async function boot(){
+const BOOT = (async function boot(){
   if (typeof Chart==='undefined'){ $('#fileinfo').innerHTML=`<span class="err">${T('Die Diagramm-Bibliothek konnte nicht geladen werden. Lade die Seite neu.')}</span>`; return; }
   if (DESK){ try{ await deskBoot(); if (FILES.length) return; }catch(e){ console.error(e); } }
   try{ const r=await fetch('beispiel.csv'); if(!r.ok) throw 0; const text=await r.text(); const n='SB-10-2026-10-02-14-39-06.csv';
