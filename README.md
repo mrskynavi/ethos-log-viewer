@@ -2,7 +2,7 @@
 
 > Inoffizielles Werkzeug, nicht mit dem Hersteller von Ethos verbunden. Ethos ist eine Marke ihres Inhabers.
 
-Wertet Telemetrie-Logs (CSV) von Ethos-Sendern aus und holt neue Logs automatisch vom Sender, sobald er per USB angeschlossen ist.
+Wertet Telemetrie-Logs von Ethos-Sendern (CSV) und Jeti-Sendern (.log) aus und holt neue Logs automatisch vom Sender, sobald er per USB angeschlossen ist.
 
 Download und Handbuch: unter [Releases](https://github.com/mrskynavi/ethos-log-viewer/releases/latest) liegen der Windows-Installer, das Mac-Image und die Bedienanleitung als PDF.
 

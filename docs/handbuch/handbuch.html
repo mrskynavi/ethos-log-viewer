@@ -206,15 +206,16 @@ a { color: var(--acc); }
 <li>Danach steht dort zum Beispiel „2 Logs neu im Archiv“. Die neuen Logs erscheinen sofort in der Modell- und Log-Auswahl.</li>
 <li>Klicke auf <span class="btn">⏏ Auswerfen</span> und ziehe den Sender ab, wenn „Sender ausgeworfen, Du kannst ihn abziehen“ erscheint.</li>
 </ol>
+<p><b>Jeti-Sender:</b> Die App findet auch den Ordner <code>Log</code> eines Jeti-Senders (Tagesordner <code>JJJJMMTT</code> mit Dateien <code>hh-mm-ss.log</code>) und kopiert die Logs ins Archiv, Ordner <code>Jeti</code>, unter dem Namen <code>Jeti-JJJJ-MM-TT-hh-mm-ss.log</code>.</p>
 <p>Pro Anschluss synchronisiert die App einmal. Logs, die mit gleicher Grösse schon im Archiv liegen, überspringt sie. Wird der Sender während dem Sync getrennt, bricht der Sync sauber ab, angefangene Dateien bleiben nicht liegen, und beim nächsten Anschliessen geht es weiter.</p>
 
 <h2>5.2 Import von Dateien und Ordnern</h2>
 <p><span class="btn">Import …</span> öffnet dieses Fenster:</p>
 <figure class="half"><img src="bilder/05-import.png" alt=""><figcaption>Logs importieren</figcaption></figure>
 <ul>
-<li><b>Dateien auswählen:</b> ein oder mehrere Logs (.csv).</li>
-<li><b>Ordner öffnen:</b> alle Logs eines Ordners, zum Beispiel den Ordner LOGS direkt vom Sender oder eine Sicherung.</li>
-<li><b>Ziehen und Ablegen:</b> Du kannst CSV-Dateien auch einfach irgendwo ins Fenster ziehen. Es erscheint „Logs hier ablegen“.</li>
+<li><b>Dateien auswählen:</b> ein oder mehrere Logs, von Ethos (.csv) oder Jeti (.log).</li>
+<li><b>Ordner öffnen:</b> alle Logs eines Ordners, zum Beispiel den Ordner LOGS vom Ethos-Sender, den Ordner Log vom Jeti-Sender (mit allen Tagesordnern) oder eine Sicherung.</li>
+<li><b>Ziehen und Ablegen:</b> Du kannst Log-Dateien auch einfach irgendwo ins Fenster ziehen. Es erscheint „Logs hier ablegen“.</li>
 <li><b>Importierte Logs ins Archiv kopieren</b> (nur Desktop-App): kopiert die importierten Dateien gleich ins Archiv.</li>
 </ul>
 <p>Öffnest Du eine einzelne Datei, zeigt die App sie sofort an. Bei mehreren Dateien öffnet sie das zuletzt gewählte Modell, sonst das Modell des neuesten Logs. Ein importiertes Log, das nicht im Archiv ist, kannst Du später mit <span class="btn">Im Archiv sichern</span> in der Dateizeile ablegen.</p>
@@ -222,7 +223,7 @@ a { color: var(--acc); }
 <h2>5.3 Das Archiv</h2>
 <p>Ethos benennt Logs nach dem Muster <code>Modell-JJJJ-MM-TT-hh-mm-ss.csv</code>. Die App liest daraus das Modell und legt jedes Log in einen Unterordner mit dem Modellnamen:</p>
 <p><code>Ethos Logs/SB-10/SB-10-2026-10-02-14-39-06.csv</code><br><code>Ethos Logs/PlusX/PlusX-2026-10-01-17-20-31.csv</code></p>
-<p>Dateien, deren Name nicht diesem Muster folgt, landen im Ordner „Ohne Modell“. Die App löscht nie etwas im Archiv und nie etwas auf dem Sender.</p>
+<p>Jeti-Logs liegen im Ordner <code>Jeti</code>, weil Jeti keinen Modellnamen speichert; das Modell erkennt die App am Inhalt (siehe 5.5). Dateien, deren Name keinem Muster folgt, landen im Ordner „Ohne Modell“. Die App löscht nie etwas im Archiv und nie etwas auf dem Sender.</p>
 <div class="tip"><b>Tipp</b>Liegt das Archiv in Google Drive oder OneDrive, siehst Du die Logs auf allen Computern, auf denen die App läuft. Die App merkt sich Dauer und Sensoren jeder Datei, damit Cloud-Dateien nicht bei jedem Start ganz heruntergeladen werden müssen.</div>
 
 <h2>5.4 Modell und Log wählen</h2>
@@ -230,6 +231,19 @@ a { color: var(--acc); }
 <figure><img src="bilder/04-logliste.png" alt=""><figcaption>Log-Liste mit Datum, Startzeit, Dauer, Sensoren, GPS, Zeilen, Grösse und Dateiname</figcaption></figure>
 <p>Ein Klick auf eine Zeile öffnet das Log. Mit der Tastatur geht es auch: <span class="key">↓</span> öffnet die Liste, <span class="key">↑</span> <span class="key">↓</span> wählen, <span class="key">Enter</span> öffnet, <span class="key">Esc</span> schliesst. Mit <span class="btn">◀</span> <span class="btn">▶</span> blätterst Du zum älteren bzw. neueren Log.</p>
 <p>Die Details der Liste (Dauer, Sensoren, Zeilen) liest die App im Hintergrund nach und nach ein. Bis dahin steht „–“.</p>
+<p><b>Modell umbenennen:</b> <span class="btn">✎</span> neben dem Modell ändert den Namen, jederzeit und für jedes Modell. Der Name gilt für alle Logs des Modells und wird bei jedem späteren Import und Sync automatisch gesetzt. Bei Ethos erkennt die App das Modell am Anfang des Dateinamens (z. B. „SB-10“), bei Jeti an den Geräten im Log. Einstellungen, Polare und Filter bleiben erhalten. „Ursprünglicher Name“ stellt den alten Namen wieder her. Gibst Du den Namen eines anderen Modells ein, stehen beide in der Liste zusammen.</p>
+
+<h2>5.5 Jeti-Logs</h2>
+<p>Die App liest auch Telemetrie-Logs von Jeti-Sendern (<code>.log</code>). Sie erkennt das Format am Inhalt, nicht an der Endung.</p>
+<ul>
+<li><b>Modell:</b> Jeti speichert keinen Modellnamen. Die App erkennt das Modell an den Seriennummern der Geräte im Log (Empfänger, Vario, Regler …). Ein neues Modell heisst zuerst „Jeti-Modell 1“, „Jeti-Modell 2“ usw. Mit <span class="btn">✎</span> gibst Du ihm einen Namen. Tauschst Du einen Sensor, gilt das Modell als neu.</li>
+<li><b>Sensoren zuordnen:</b> Jeti-Sensoren haben keine festen Namen. Beim ersten Log eines Modells zeigt die App die Zuordnung der Sensoren zu den Kanälen der App (Höhe, Vario, GPS-Geschwindigkeit, Fahrt, Motor-Strom und -Spannung, Drehzahl, Verbrauch, Regler-Temperatur, Empfänger-Spannung, Empfangsqualität). Jede Zeile lässt sich ändern, „Ausblenden“ blendet einen Sensor aus. Alles andere bleibt ein eigener Kanal mit dem Namen aus dem Log. Später öffnet <span class="btn">Sensoren …</span> neben dem Modell die Zuordnung wieder. Sie gilt für alle Logs des Modells.</li>
+<li><b>Zeit:</b> Jeti schreibt jeden Sensor in seinem eigenen Takt. Die App legt alles auf ein Raster von 0,1 s; bis zum nächsten Messwert gilt der letzte (höchstens 10 s). Regler senden oft nur alle paar Sekunden, Motorläufe sind dann auf wenige Sekunden genau.</li>
+<li><b>Fahrt:</b> Ist ein Staurohr-Sensor als „Fahrt“ zugeordnet, nutzen Gleitzahl und Polare die gemessene Fahrt statt der berechneten TAS.</li>
+<li><b>Verbrauch:</b> Viele Jeti-Regler zählen über mehrere Flüge weiter. Die Kennzahl zeigt nur, was in diesem Log dazukam.</li>
+<li><b>Schalter:</b> Jeti speichert keine Schalter und Knüppel im Log. Thermik und „Rot markieren“ gibt es deshalb nicht; Steigflüge erkennt die App am Motor-Strom.</li>
+<li><b>Ende:</b> Meldungen des Senders wie „Telemetrieverlust“ nach der Landung zählen nicht zur Logdauer.</li>
+</ul>
 
 <!-- 6 -->
 <h1 id="k6"><span class="n">6</span>Die Sync-Zeile</h1>
@@ -527,8 +541,8 @@ a { color: var(--acc); }
 <p>Der Dateiname folgt nicht dem Ethos-Muster <code>Modell-JJJJ-MM-TT-hh-mm-ss.csv</code>, zum Beispiel weil er umbenannt wurde. Benenne die Datei im Archiv zurück und verschiebe sie in den passenden Modellordner.</p>
 
 <h2>Logs öffnen</h2>
-<h3>„Keine CSV-Dateien gefunden“.</h3>
-<p>Im gewählten Ordner liegen keine .csv-Dateien. Ethos speichert Logs im Ordner LOGS als .csv.</p>
+<h3>„Keine Logs gefunden“.</h3>
+<p>Im gewählten Ordner liegen keine Logs. Ethos speichert Logs im Ordner LOGS als .csv, Jeti im Ordner Log als .log.</p>
 <h3>„Keine Spalte "Time" gefunden. Ist das ein Ethos-Telemetrie-Log?“</h3>
 <p>Die Datei ist kein Ethos-Telemetrie-Log oder wurde zum Beispiel in Excel umgespeichert. Öffne die Originaldatei vom Sender.</p>
 <h3>Die Log-Liste zeigt „–“ bei Dauer oder Sensoren.</h3>

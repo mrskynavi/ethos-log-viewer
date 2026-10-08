@@ -87,7 +87,7 @@ async function checkUpdate() {
 ipcMain.handle('update:check', () => checkUpdate());
 ipcMain.handle('app:version', () => app.getVersion());
 ipcMain.handle('update:open', (_, url) => { if (/^https:\/\/github\.com\/mrskynavi\/ethos-log-viewer\//.test(url)) shell.openExternal(url); });
-ipcMain.handle('file:read', async (_, p) => { if (!allowed(p)) throw new Error('Kein Zugriff'); return fs.promises.readFile(p, 'utf8'); });
+ipcMain.handle('file:read', async (_, p) => { if (!allowed(p)) throw new Error('Kein Zugriff'); return S.decodeText(await fs.promises.readFile(p)); });
 ipcMain.handle('file:peek', async (_, p, n) => {
   if (!allowed(p)) throw new Error('Kein Zugriff');
   const fh = await fs.promises.open(p, 'r');
@@ -95,7 +95,7 @@ ipcMain.handle('file:peek', async (_, p, n) => {
     const { size } = await fh.stat(), len = Math.min(n, size);
     const head = Buffer.alloc(len), tail = Buffer.alloc(len);
     await fh.read(head, 0, len, 0); await fh.read(tail, 0, len, Math.max(0, size - len));
-    return { head: head.toString('utf8'), tail: tail.toString('utf8'), size };
+    return { head: S.decodeText(head), tail: S.decodeText(tail), size };
   } finally { await fh.close(); }
 });
 
