@@ -7,6 +7,7 @@
 - Sensor „Flughöhe“ wird als Höhe erkannt (statt der GPS-Höhe über Meer), damit stimmen Flugzeit, Max. Höhe, Thermik und Steigflüge.
 - Geschwindigkeitseinheit wählbar: unter ⚙ Einstellungen „Geschwindigkeit“ mit km/h (Standard), kn, m/s oder mph. Alle Geschwindigkeiten werden in diese Einheit umgerechnet, egal in welcher Einheit der Sensor loggt (z. B. GPS-Geschwindigkeit in kn beim Lak-17): Diagramme, Kennzahlen, Min/Ø/Max, Zeitpunkt-Werte, Filter, berechnete Werte wie TAS, Wind und Gegenwind, Wind nach Höhe und die Polare. Die Wahl gilt für alle Modelle; Vario bleibt in m/s, die Rohdaten zeigen die Werte wie im Log.
 - Diagramm direkt schliessen: Jedes Diagramm hat rechts in der Kopfzeile ein ✕, bei „Überlagert“ steht es in der Legende hinter jedem Kanal. Es wirkt genau wie ein Klick auf den Sensor-Knopf oben: Der Kanal ist danach abgewählt, der Knopf nicht mehr umrandet, und die Auswahl bleibt pro Modell gespeichert.
+- Filter bleiben beim Wechsel des Logs bestehen: Jeder Filter gilt für den Parameter mit demselben Namen im neuen Log, mit den gesetzten Grenzen (ausserhalb der Werte des neuen Logs rückt der Griff an den Rand). Fehlt der Parameter im neuen Log, bleibt der Filter gestrichelt als Hinweis stehen und gilt wieder, sobald ein Log ihn hat.
 
 ## 2026.10.0 – 2026-10-07
 
