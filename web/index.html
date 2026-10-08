@@ -324,6 +324,89 @@ table.windh .wdv{display:inline-block;min-width:6.5ch;text-align:right}
 .settings{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:.88rem;color:var(--muted)}
 .settings input{width:4.5em;font:500 .9rem var(--mono);padding:3px 6px;border:1px solid var(--line);border-radius:5px;background:var(--panel);color:var(--fg)}
 .toggle{font:.85rem var(--body);color:var(--muted);display:inline-flex;gap:6px;align-items:center}
+/* KI-Auswertung: Knopf im Tab Diagramme, Seitenleiste rechts, eigenes Fenster für Schlüssel und Optionen; MCP-Fenster */
+.kibtn{margin-left:auto;display:inline-flex;gap:8px;align-items:center;border:1px solid var(--accent);color:var(--accent);background:var(--accent-soft);border-radius:7px;padding:5px 12px;font:600 .9rem var(--body);cursor:pointer}
+.kibtn .spark{font:700 1rem var(--display)}
+.kibtn[aria-expanded="true"]{background:var(--accent);color:#fff}
+.kibtn.fresh{animation:kipop 1.2s ease-out 2}
+@keyframes kipop{0%{box-shadow:0 0 0 0 var(--accent)}100%{box-shadow:0 0 0 10px transparent}}
+.kirow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:space-between;border-top:1px solid var(--line);padding-top:12px}
+.kirow-t{display:flex;gap:8px;align-items:center;flex-wrap:wrap;min-width:0;font-size:.92rem}
+.kstat{font:600 .75rem var(--body);border-radius:999px;padding:1px 8px;background:var(--line);color:var(--muted)}
+.kstat.on{background:color-mix(in srgb,var(--good) 18%,transparent);color:var(--good)}
+.kstat.bad{background:color-mix(in srgb,var(--bad) 15%,transparent);color:var(--bad)}
+dialog.kidlg{border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--fg);padding:20px;width:min(560px,calc(100vw - 32px))}
+dialog.kidlg::backdrop{background:color-mix(in srgb,#000 45%,transparent)}
+.kidlg .backlink{border:0;background:none;color:var(--accent);padding:0;font:500 .9rem var(--body);cursor:pointer;justify-self:start}
+.keystate{display:flex;gap:8px;align-items:center;font-size:.88rem;border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.keystate .led{width:10px;height:10px;border-radius:50%;background:var(--muted);flex:none}
+.keystate.on .led{background:var(--good)}
+.keyrow{display:flex;gap:6px;flex-wrap:wrap} .keyrow input{flex:1 1 200px}
+.setform input[type=password],.setform input[type=number]{font:500 .92rem var(--mono);padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);min-width:0}
+.setform details{font-weight:400}
+.setform details summary{cursor:pointer;color:var(--accent)}
+.setform details ol{margin:6px 0 0;padding-left:18px;display:grid;gap:2px}
+.setform label.opt{display:flex;gap:8px;align-items:flex-start;font-weight:500}
+.setform label.opt input{margin-top:4px;accent-color:var(--accent)}
+.setform label.opt small{display:block;color:var(--muted);font-weight:400;font-size:.82rem}
+.okline{color:var(--good);font-weight:600} .badline{color:var(--bad);font-weight:600}
+.note{border-radius:8px;padding:10px 12px;font-size:.88rem;display:grid;gap:6px}
+.note.info{background:var(--accent-soft)}
+.note.warn{background:color-mix(in srgb,var(--warn) 14%,transparent);border:1px solid color-mix(in srgb,var(--warn) 40%,transparent)}
+.note.bad{background:color-mix(in srgb,var(--bad) 12%,transparent);border:1px solid color-mix(in srgb,var(--bad) 40%,transparent)}
+.note .row{display:flex;gap:8px;flex-wrap:wrap}
+pre.code{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px;font:400 .75rem/1.5 var(--mono);overflow:auto;max-height:300px;margin:0;white-space:pre}
+.kipanel{position:fixed;top:0;right:0;bottom:0;width:min(440px,100vw);background:var(--panel);border-left:1px solid var(--line);z-index:50;display:flex;flex-direction:column;box-shadow:-8px 0 30px color-mix(in srgb,#000 18%,transparent)}
+@media (min-width:1100px){ body.kiopen{padding-right:440px} body.kiopen .kipanel{box-shadow:none} }
+.kipanel .dhead{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.kipanel .dhead h2{color:var(--fg)} .kipanel .dhead .x{margin-left:auto}
+.kipanel .steps{display:flex;gap:4px;padding:8px 14px;border-bottom:1px solid var(--line);font-size:.85rem}
+.kipanel .steps button{border:0;background:none;padding:4px 8px;border-radius:6px;color:var(--muted);cursor:pointer;font:500 .85rem var(--body)}
+.kipanel .steps button.on{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.kipanel .steps .n{font-family:var(--mono);margin-right:4px}
+.kipanel .dbody{padding:14px;display:grid;gap:14px;align-content:start;overflow:auto;flex:1}
+.kipanel .dfoot{padding:12px 14px;border-top:1px solid var(--line);display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;align-items:center}
+.kipanel fieldset{border:0;margin:0;padding:0;display:grid;gap:6px;min-width:0}
+.kipanel legend{font:600 1rem var(--display);padding:0;margin-bottom:4px;letter-spacing:.02em}
+.kipanel .opt{display:flex;gap:8px;align-items:flex-start;font-size:.9rem}
+.kipanel .opt input{margin-top:4px;accent-color:var(--accent)}
+.kipanel .opt small{display:block;color:var(--muted);font-size:.8rem}
+.kipanel .chanlist{display:grid;grid-template-columns:1fr 1fr;gap:2px 10px;max-height:190px;overflow:auto;border:1px solid var(--line);border-radius:8px;padding:6px 8px}
+.kipanel .chanlist .opt{font-size:.82rem;min-width:0} .kipanel .chanlist .opt span{overflow:hidden;text-overflow:ellipsis}
+.kipanel .sw{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:4px}
+.kipanel textarea,.kipanel input[type=text]{width:100%;border:1px solid var(--line);border-radius:7px;background:var(--bg);color:var(--fg);padding:7px 9px;font:400 .92rem var(--body)}
+.kipanel textarea{resize:vertical;min-height:62px}
+.qchips{display:flex;flex-wrap:wrap;gap:6px}
+.qchip{border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:999px;padding:2px 10px;font:400 .8rem var(--body);cursor:pointer;text-align:left}
+.qchip:hover{border-color:var(--accent)}
+.sent{border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+.sent summary{cursor:pointer;padding:7px 10px;display:flex;flex-wrap:wrap;gap:2px 8px;align-items:baseline;font-size:.82rem;list-style:none}
+.sent summary::-webkit-details-marker{display:none}
+.sent summary::before{content:"▸";color:var(--accent);margin-right:2px}
+.sent[open] summary::before{content:"▾"}
+.sent .sumt{font-weight:600;color:var(--accent)} .sent .sumd{color:var(--muted);min-width:0}
+.sent .sentin{padding:0 10px 10px;display:grid;gap:8px}
+.sendlist{margin:0;padding-left:18px;font-size:.84rem;display:grid;gap:2px}
+.sendlist .no{color:var(--muted);text-decoration:line-through}
+.ana{display:grid;gap:10px;font-size:.93rem}
+.ana p{margin:0} .ana h3{font:600 1.05rem var(--display);margin:4px 0 0;letter-spacing:.02em}
+.ana ul,.ana ol{margin:0;padding-left:20px;display:grid;gap:6px}
+.ana code{font:400 .82rem var(--mono);background:var(--bg);padding:0 4px;border-radius:4px}
+.ana .meta{font-size:.78rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 12px}
+.tl{border:0;background:var(--accent-soft);color:var(--accent);font:500 .78rem var(--mono);border-radius:4px;padding:0 5px;cursor:pointer}
+.acts{margin:0;padding:0;list-style:none;display:grid;gap:3px;font-size:.86rem}
+.bubble{background:var(--accent-soft);border-radius:8px;padding:8px 10px;font-size:.9rem;justify-self:end;max-width:90%}
+.prog{display:grid;gap:6px;font-size:.88rem} .prog div{display:flex;gap:8px;align-items:center}
+.dot{width:16px;height:16px;border-radius:50%;display:inline-grid;place-items:center;font-size:10px;flex:none}
+.dot.ok{background:var(--good);color:#fff}
+.dot.run{border:2px solid var(--accent);border-top-color:transparent;animation:kispin 1s linear infinite}
+@keyframes kispin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.dot.run,.kibtn.fresh{animation:none}}
+.followup{display:grid;gap:6px} .followup .row{display:flex;gap:6px} .followup .row input{flex:1;min-width:0}
+.linkbtn.nolink::before{content:none}
+.kipanel .mono{font-family:var(--mono);font-size:.85em}
+.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:var(--fg);color:var(--panel);padding:8px 14px;border-radius:8px;font-size:.9rem;z-index:120;max-width:calc(100% - 32px);box-shadow:0 8px 30px color-mix(in srgb,#000 30%,transparent)}
+@media (max-width:520px){ .kipanel .chanlist{grid-template-columns:1fr} .kibtn{margin-left:0} }
 </style>
 <div class="wrap">
   <header class="appbar">
@@ -396,8 +479,47 @@ table.windh .wdv{display:inline-block;min-width:6.5ch;text-align:right}
       <label class="deskonly">Archiv-Ordner<span class="row"><input type="text" id="setArchive" spellcheck="false"><button type="button" class="btn ghost" id="setPick">Wählen …</button></span><span class="hint">Am besten ein Ordner in Google Drive oder OneDrive, dann sind die Logs auf allen Geräten da. Pro Modell entsteht ein Unterordner.</span></label>
       <label class="check deskonly"><input type="checkbox" id="setAuto"> Automatisch synchronisieren, sobald der Sender angeschlossen ist</label>
       <label class="check deskonly"><input type="checkbox" id="setManual"> Importierte Logs immer ins Archiv kopieren</label>
+      <div class="kirow"><div class="kirow-t"><b>KI-Auswertung</b><span class="kstat" id="kStat">Aus</span><span class="hint" id="kStatTxt">Kein Schlüssel hinterlegt</span></div><button type="button" class="btn ghost" id="openKi">KI-Auswertung …</button></div>
+      <div class="kirow deskonly"><div class="kirow-t"><b>MCP-Server</b><span class="kstat" id="mStat">Aus</span><span class="hint" id="mStatTxt">Für Claude Desktop und andere KI-Programme</span></div><button type="button" class="btn ghost" id="openMcp">MCP …</button></div>
       <div class="about"><b>Ethos Log Viewer</b><span id="setVer">Web-Version</span><span class="hint" id="setUpd"></span><button type="button" class="btn ghost deskonly" id="setCheck">Nach Updates suchen</button></div>
       <div class="row end"><button type="button" class="btn ghost" id="setCancel">Abbrechen</button><button type="submit" class="btn" id="setSave">Speichern</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="kiDlg" class="kidlg" aria-labelledby="kiTitle">
+    <form method="dialog" class="setform" id="kiForm">
+      <button type="button" class="backlink" id="kiBack">‹ Einstellungen</button>
+      <h2 id="kiTitle">KI-Auswertung</h2>
+      <div class="keystate" id="keyState"><span class="led"></span><span id="keyStateTxt"></span></div>
+      <label for="kiKey">API-Schlüssel (Anthropic)
+        <span class="keyrow"><input type="password" id="kiKey" placeholder="sk-ant-… hier einfügen" autocomplete="off" spellcheck="false"><button type="button" class="btn ghost" id="kiShow">Anzeigen</button><button type="button" class="btn ghost" id="kiTest">Prüfen</button></span>
+        <span class="hint">Einen Schlüssel erstellst Du unter console.anthropic.com → API Keys. Die Kosten laufen über Dein Anthropic-Konto.</span>
+        <span class="hint" id="kiStoreHint">Wird nur auf diesem Gerät gespeichert, nie im Log-Archiv.</span>
+        <span id="kiMsg" class="hint"></span>
+      </label>
+      <details class="hint"><summary>So kommst Du zu einem Schlüssel</summary><ol><li>Auf console.anthropic.com ein Konto anlegen (unabhängig von einem Claude-Abo).</li><li>Unter Billing ein Guthaben aufladen, z. B. 5 $.</li><li>Unter API Keys „Create Key“ wählen und den Schlüssel kopieren. Er wird nur einmal angezeigt.</li><li>Hier einfügen, „Prüfen“, „Speichern“.</li></ol></details>
+      <label for="kiModel">Modell<select id="kiModel"><option value="claude-sonnet-5-5">Claude Sonnet 5.5 (schnell, günstig)</option><option value="claude-opus-5-5">Claude Opus 5.5 (gründlicher, teurer)</option></select></label>
+      <label class="opt"><input type="checkbox" id="kiOpenSent"> <span>Gesendete Daten immer aufgeklappt anzeigen<small>Aus: Eine Zeile fasst zusammen, was gesendet wird. Die Details lassen sich jederzeit aufklappen.</small></span></label>
+      <label class="opt"><input type="checkbox" id="kiAct"> <span>KI darf die App bedienen<small>Filter, Zeitbereich, Diagramme, Log und Polare. Jede Aktion wird angezeigt und lässt sich rückgängig machen.</small></span></label>
+      <label class="opt"><input type="checkbox" id="kiGps"> <span>GPS-Position standardmässig mitsenden<small>Aus: Die KI bekommt Geschwindigkeit und Höhe, aber nicht, wo Du fliegst.</small></span></label>
+      <div class="note warn"><b>Datenschutz</b><span>Für die Auswertung verlassen Daten Dein Gerät: die gewählten Kanäle als zusammengefasste Zahlenreihen, Kennzahlen, Modellname und Deine Frage. Die CSV-Datei selbst wird nie hochgeladen. Anthropic verarbeitet die Anfrage nach seinen Bedingungen für API-Kunden; sie wird nicht zum Training verwendet. Ohne Internet ist die Auswertung nicht verfügbar, alles andere in der App läuft weiter.</span></div>
+      <div class="row end"><button type="button" class="btn ghost" id="kiDel">Schlüssel entfernen</button><span style="flex:1"></span><button type="button" class="btn ghost" id="kiCancel">Abbrechen</button><button type="submit" class="btn">Speichern</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="mcpDlg" class="kidlg" aria-labelledby="mcpTitle">
+    <form method="dialog" class="setform" id="mcpForm">
+      <button type="button" class="backlink" id="mcpBack">‹ Einstellungen</button>
+      <h2 id="mcpTitle">MCP-Server</h2>
+      <p class="hint">Damit kann Claude Desktop (oder ein anderes Programm mit MCP) die App bedienen und Logs auswerten: dieselben Aktionen wie die KI-Auswertung. Der Server ist nur auf diesem Computer erreichbar und läuft nur, solange die App offen ist.</p>
+      <label class="opt"><input type="checkbox" id="mcpOn"> <span>MCP-Server einschalten<small>Standard aus. Ohne Schlüssel: Die KI läuft in Claude Desktop, über Dein Claude-Abo.</small></span></label>
+      <label for="mcpPort">Port<input type="number" id="mcpPort" min="1024" max="65535" step="1" style="width:9em"></label>
+      <div class="keystate" id="mcpState"><span class="led"></span><span id="mcpStateTxt"></span></div>
+      <div class="hint"><b>In Claude Desktop eintragen:</b> Einstellungen → Entwickler → „Konfiguration bearbeiten“, den Eintrag in claude_desktop_config.json einfügen (steht dort schon „mcpServers“, nur „ethos-log-viewer“ darin ergänzen), Claude Desktop neu starten.</div>
+      <pre class="code" id="mcpJson"></pre>
+      <div class="row"><button type="button" class="btn ghost" id="mcpCopy">Eintrag kopieren</button><span class="hint" id="mcpCopied"></span></div>
+      <div class="hint"><b>Claude Code:</b> <code id="mcpCli"></code></div>
+      <div class="row end"><button type="button" class="btn ghost" id="mcpCancel">Abbrechen</button><button type="submit" class="btn">Speichern</button></div>
     </form>
   </dialog>
 
@@ -483,6 +605,7 @@ table.windh .wdv{display:inline-block;min-width:6.5ch;text-align:right}
           <label><input type="checkbox" id="polPts"> Punkte</label>
           <label><input type="checkbox" id="polBand"> Streuung</label>
           <label><input type="checkbox" id="polEach"> Einzel-Logs</label>
+          <label title="Nur Einträge, die bei allen Filtern im Tab Diagramme im Bereich liegen, in allen Logs des Modells"><input type="checkbox" id="polFilt"> Filter anwenden</label>
         </div>
         <div class="pol-cv"><canvas id="polChart" aria-label="Polare: Sinken über Fluggeschwindigkeit"></canvas><div class="pol-empty" id="polEmpty" hidden></div></div>
         <div class="legend" id="polLegend"></div>
@@ -519,6 +642,7 @@ table.windh .wdv{display:inline-block;min-width:6.5ch;text-align:right}
     <div class="chipopts">
       <div class="seg" id="ovSeg" role="group" aria-label="Darstellung der Diagramme"><button type="button" data-ov="0" aria-pressed="true">Einzeln</button><button type="button" data-ov="1" aria-pressed="false">Überlagert</button></div>
       <label class="toggle"><input type="checkbox" id="showRc"> Sender-Kanäle, Schalter und logische Schalter anzeigen</label>
+      <button type="button" class="kibtn" id="kiOpen" hidden aria-expanded="false" aria-controls="kiPanel"><span class="spark">✦</span> KI-Auswertung</button>
     </div>
     <div class="filters" id="filters">
       <div class="fhead settings">
@@ -558,12 +682,21 @@ table.windh .wdv{display:inline-block;min-width:6.5ch;text-align:right}
   </div>
 </div>
 
+<aside class="kipanel" id="kiPanel" aria-label="KI-Auswertung" hidden>
+  <div class="dhead"><h2>KI-Auswertung</h2><span class="hint" id="kiModelLbl"></span><button type="button" class="zb x" id="kiClose" aria-label="KI-Auswertung schliessen">✕</button></div>
+  <div class="steps" role="tablist"><button type="button" data-step="1"><span class="n">1</span>Auswahl</button><button type="button" data-step="2"><span class="n">2</span>Analyse</button></div>
+  <div class="dbody" id="kiBody"></div>
+  <div class="dfoot" id="kiFoot"></div>
+</aside>
+<div class="toast" id="toast" role="status" hidden></div>
+
 <script>
 // ---------- Sprache: Deutsch ist der Quelltext, Englisch kommt aus EN; Standard = Sprache des Systems ----------
 const EN = {"Gleitzahl": "Glide ratio", "Strecke durch Höhenverlust über 10 s, aus {s} und {a}; nur im Gleitflug mit Motor aus": "Distance divided by height lost over 10 s, from {s} and {a}; gliding with the motor off only", "Gleitzahl = geflogene Strecke durch Höhenverlust, jeweils über 10 s gerechnet (5 s vor und nach dem Zeitpunkt). Die Strecke kommt aus der TAS, also durch die Luft; ohne Wind aus der GPS-Geschwindigkeit. Werte gibt es nur im Gleitflug: Motor aus und mindestens 0,2 m/s Sinken. Gleitzahl 20 heisst 20 m weit pro Meter Höhe.": "Glide ratio = distance flown divided by height lost, calculated over 10 s (5 s before and after the point in time). The distance comes from the TAS, i.e. through the air; without wind from the GPS speed. Values only exist while gliding: motor off and at least 0.2 m/s sink. A glide ratio of 20 means 20 m forward per metre of height.", "Filter": "Filter", "Parameter zum Filtern": "Parameter to filter", "Alle zurücksetzen": "Reset all", "So funktioniert der Filter": "How the filter works", "+ Parameter wählen …": "+ Choose parameter …", "{n} Min": "{n} min", "{n} Max": "{n} max", "Zurücksetzen": "Reset", "Filter {n} entfernen": "Remove filter {n}", "Filter entfernen": "Remove filter", "{a} von {b} Einträgen aktiv": "{a} of {b} entries active", "Gefiltert: {t}": "Filtered: {t}", "{a} aktiv": "{a} active", "keine aktiven Werte": "no active values", "Im sichtbaren Ausschnitt, nur aktive Einträge": "In the visible range, active entries only", "Info zur App": "About the app", "Modell": "Model", "Älteres Log": "Older log", "Neueres Log": "Newer log", "Einstellungen": "Settings", "Wertet Telemetrie-Logs (CSV) vom Ethos-Sender aus: Flugzeit, Motorläufe, Empfang, Akku, GPS-Spur, Thermik, Steigflüge, Wind und alle Sensoren. Logs lädst Du über „Import …“ oder ziehst die CSV-Dateien einfach ins Fenster. Die Dateien bleiben auf Deinem Gerät.": "Analyses telemetry logs (CSV) from Ethos radios: flight time, motor runs, link quality, batteries, GPS track, thermals, climbs, wind and all sensors. Load logs with “Import …” or simply drop the CSV files onto the window. The files stay on your device.", "Sender wird gesucht …": "Looking for the radio …", "Details zum Sync": "Sync details", "Jetzt vom Sender synchronisieren": "Sync from the radio now", "Archiv öffnen": "Open archive", "Letzter Sync": "Last sync", "Schliessen": "Close", "Logs importieren": "Import logs", "Dateien auswählen": "Choose files", "Ein oder mehrere Logs (.csv)": "One or more logs (.csv)", "Ordner öffnen": "Open folder", "Alle Logs eines Ordners, z.B. LOGS vom Sender": "All logs in a folder, e.g. LOGS from the radio", "Du kannst CSV-Dateien auch einfach irgendwo ins Fenster ziehen.": "You can also simply drop CSV files anywhere on the window.", "Importierte Logs ins Archiv kopieren": "Copy imported logs to the archive", "Logs hier ablegen": "Drop logs here", "Sprache": "Language", "Systemsprache": "System language", "Log-Ordner auf dem Sender": "Log folder on the radio", "Wird auf jedem angeschlossenen Laufwerk gesucht. Ein vollständiger Pfad wie E:\\logs geht auch.": "Searched on every connected drive. A full path such as E:\\logs works too.", "Archiv-Ordner": "Archive folder", "Wählen …": "Choose …", "Am besten ein Ordner in Google Drive oder OneDrive, dann sind die Logs auf allen Geräten da. Pro Modell entsteht ein Unterordner.": "Ideally a folder in Google Drive or OneDrive, so the logs are available on all your devices. Each model gets its own subfolder.", "Automatisch synchronisieren, sobald der Sender angeschlossen ist": "Sync automatically as soon as the radio is connected", "Importierte Logs immer ins Archiv kopieren": "Always copy imported logs to the archive", "Abbrechen": "Cancel", "Speichern": "Save", "Zeitpunkt im Log": "Point in time in the log", "Zeitpunkt": "Time", "Einen Datensatz zurück": "One record back", "Einen Datensatz vor": "One record forward", "Ziehen oder ins Diagramm klicken": "Drag or click into a chart", "Aus": "Off", "Ansichten": "Views", "Übersicht": "Overview", "Diagramme": "Charts", "Thermik & Steigflüge": "Thermals & climbs", "Karte & Wind": "Map & wind", "Alle Werte": "All values", "Lade Beispiel-Log …": "Loading example log …", "Kennzahlen": "Key figures", "Werte am Zeitpunkt": "Values at the selected time", "Gerechnet wie Deine Widgets „Thermik“ und „Steigfluege“: Ein Steigflug läuft, solange der Schalter EIN ist. Gibt es keinen Steigflug-Schalter, erkennt die App Steigflüge am ESC-Strom: Motor an, solange der Strom über der Schwelle liegt (Standard 3 A, kurze Lücken bis 1 s zählen mit). Gewinn = höchste Höhe während der Phase minus Starthöhe, Ø Steigen = Gewinn durch Dauer. Thermik zählt ab 5 s, Steigflüge ab 1 s. Eine Phase, die beim Logende noch läuft, zählt wie im Widget nicht. Die Zeiten sind so genau wie das Log (etwa 0,5 s).": "Calculated like your widgets “Thermik” and “Steigfluege”: a climb lasts as long as the switch is ON. Without a climb switch the app detects climbs from the ESC current: motor on while the current is above the threshold (default 3 A, short gaps up to 1 s count). Gain = highest altitude during the phase minus start altitude, avg climb = gain divided by duration. Thermals count from 5 s, climbs from 1 s. A phase still running at the end of the log does not count, as in the widget. Times are as precise as the log (about 0.5 s).", "Thermik": "Thermals", "So wird gerechnet": "How it is calculated", "Thermik-Schalter": "Thermal switch", "Höhenquelle": "Altitude source", "Balkenhöhe": "Bar height", "Steiggeschwindigkeit": "Climb rate", "Erreichte Höhe": "Height gained", "Steigdauer": "Climb time", "Steigflüge": "Climbs", "Steigflug-Schalter": "Climb switch", "ab": "above", "Höhengewinn (m) · Zahl = Ø Steigen (m/s)": "Height gain (m) · number = avg climb (m/s)", "GPS-Spur": "GPS track", "Spur herauszoomen": "Zoom track out", "Spur hineinzoomen": "Zoom track in", "Alles": "All", "Wind nach Höhe": "Wind by altitude", "Stufe": "Band", "Für die Tabelle braucht es GPS-Position, GPS-Geschwindigkeit und Kurven im Flug.": "The table needs GPS position, GPS speed and turns during the flight.", "Kanäle": "Channels", "Bedienung und Berechnung": "Controls and calculations", "Im Diagramm ziehen verschiebt. Zoomen mit Strg + Mausrad, Trackpad-Pinch oder den Knöpfen. Doppelklick zeigt alles. In der Leiste oben das Fenster ziehen oder an den Rändern grösser und kleiner machen.": "Drag in a chart to pan. Zoom with Ctrl + mouse wheel, trackpad pinch or the buttons. Double-click shows everything. In the bar above, drag the window or resize it at its edges.", "Zeitachse in Minuten ab Logbeginn. Hinterlegt: Steigflüge blau, Thermik grün, rot der oben gewählte Schalterzustand. Reihenfolge ändern: Diagramm am Griff ⋮⋮ ziehen oder mit ▲ ▼ verschieben. ✕ schliesst ein Diagramm, wie ein Klick auf den Sensor oben.": "Time axis in minutes from the start of the log. Background: climbs blue, thermals green, red the switch state chosen above. Reorder: drag a chart by its handle ⋮⋮ or move it with ▲ ▼. ✕ closes a chart, like clicking the sensor above.", "ƒ = berechneter Wert. Leistung = Strom × Spannung, Energie = Leistung über die Zeit aufsummiert. GPS Kurs, Windgeschw., Windrichtung und TAS rechnen wie Deine Widgets „GPS Course“ und „Wind Estimator“ mit deren Standardwerten (40 Werte alle 0,7 s, Fit jede Sekunde, Kurs ab 3 m Abstand). Vor dem ersten gültigen Fit zeigt der Wind 0 und die TAS die Geschwindigkeit über Grund, genau wie am Sender.": "ƒ = calculated value. Power = current × voltage, energy = power summed over time. GPS course, wind speed, wind direction and TAS are calculated like your widgets “GPS Course” and “Wind Estimator” with their default settings (40 samples every 0.7 s, fit every second, course from 3 m distance). Before the first valid fit the wind shows 0 and the TAS shows ground speed, exactly as on the radio.", "Sender-Kanäle, Schalter und logische Schalter anzeigen": "Show radio channels, switches and logical switches", "Herauszoomen": "Zoom out", "Hineinzoomen": "Zoom in", "Rot markieren": "Mark red", "Schalter": "Switch", "Zustand": "State", "automatisch": "automatic", "Die Datei enthält keine Datenzeilen.": "The file contains no data rows.", "Keine Spalte \"Time\" gefunden. Ist das ein Ethos-Telemetrie-Log?": "No \"Time\" column found. Is this an Ethos telemetry log?", "Leistung": "Power", "Energie": "Energy", "Integral von {p} Leistung": "Integral of {p} power", "GPS Kurs (ber.)": "GPS course (calc.)", "Azimut zwischen zwei GPS-Fixes, ab 3 m Abstand (Widget GPS Course)": "Bearing between two GPS fixes, from 3 m distance (GPS Course widget)", "Windgeschw.": "Wind speed", "Kasa-Kreisfit über GPS-Geschwindigkeit und GPS Kurs (ber.), Widget Wind Estimator": "Kasa circle fit over GPS speed and GPS course (calc.), Wind Estimator widget", "Windrichtung": "Wind direction", "Richtung, aus der der Wind kommt (Widget Wind Estimator)": "Direction the wind comes from (Wind Estimator widget)", "Bodenvektor minus Windvektor (Widget Wind Estimator)": "Ground vector minus wind vector (Wind Estimator widget)", "Logdauer": "Log duration", "{n} Zeilen": "{n} rows", "Flugzeit": "Flight time", "Höhe über 5 m": "Altitude above 5 m", "Motorläufe": "Motor runs", "{t} Motorzeit": "{t} motor time", "Max. Höhe": "Max. altitude", "Max. Tempo": "Max. speed", "Sinken max {v}": "Sink max {v}", "Start {a} · Ende {b}": "Start {a} · end {b}", "Verbraucht": "Consumed", "aus {d}": "from {d}", "{v} Wh gesamt": "{v} Wh total", "Senderakku min": "Radio battery min", "Start {v}": "Start {v}", "N,NO,O,SO,S,SW,W,NW": "N,NE,E,SE,S,SW,W,NW", "Keine GPS-Daten im Log.": "No GPS data in the log.", "Gitter {s} m · Norden oben": "Grid {s} m · north up", "Höhe": "Altitude", "Steigflug": "Climb", "max. Entfernung vom Start {d} m": "max. distance from start {d} m", "Kräftig: sichtbarer Zeitausschnitt": "Bold: visible time range", "Beispiel: Dein Log": "Example: your log", "Geladen": "Loaded", "{n} Sensoren": "{n} sensors", "Kanal": "Channel", "Einheit": "Unit", "Am Zeitpunkt": "At selected time", "Werte": "Values", "berechnet": "calculated", "– wählen –": "– choose –", "{n} (automatisch)": "{n} (automatic)", "Ø Steigen": "Avg climb", "Gesamthöhe": "Total height", "Gesamtdauer": "Total time", "Kein Steigflug. Prüfe, ob der richtige Schalter gewählt ist.": "No climbs. Check that the right switch is selected.", "Uhrzeit": "Time of day", "Dauer": "Duration", "Höchste": "Highest", "Gewinn": "Gain", "Verbrauch": "Consumption", "Steigflug {n}": "Climb {n}", "Gewinn {v}": "Gain {v}", "Dauer {v}": "Duration {v}", "Ø Steigen {v}": "Avg climb {v}", "Steiggeschwindigkeit (m/s)": "Climb rate (m/s)", "Erreichte Höhe (m)": "Height gained (m)", "Steigdauer (s)": "Climb time (s)", "an": "on", "aus": "off", "oben": "up", "Mitte": "middle", "unten": "down", "Kein Wind berechnet. Dafür braucht es GPS-Position, GPS-Geschwindigkeit und Kurven im Flug.": "No wind calculated. This needs GPS position, GPS speed and turns during the flight.", "Wind Ø": "Wind avg", "aus|wind": "from", "wechselnd": "variable", "Gezählt werden die {n} akzeptierten Wind-Fits, jeweils in der Höhe ({a}), in der sie gerechnet wurden. Richtung = Vektormittel; „wechselnd“ heisst, die Richtungen in dieser Stufe streuen stark. Der Pfeil zeigt, wohin der Wind weht.": "Counts the {n} accepted wind fits, each at the altitude ({a}) where it was calculated. Direction = vector mean; “variable” means the directions in this band scatter widely. The arrow shows where the wind blows to.", "Berechnet: {n}": "Calculated: {n}", "Ziehen zum Umsortieren": "Drag to reorder", "{n} verschieben": "Move {n}", "{n} nach oben": "Move {n} up", "{n} nach unten": "Move {n} down", "Wähle oben einen oder mehrere Kanäle aus.": "Choose one or more channels above.", "{a} von {b}": "{a} of {b}", "{t} ab Start": "{t} from start", "kein Zeitpunkt": "no point in time", "Kein Zeitpunkt gewählt": "No point in time selected", "Oben den Zeitstrahl ziehen oder in ein Diagramm klicken.": "Drag the time bar or click into a chart.", "Phase": "Phase", "Thermik|phase": "Thermal", "kein Schalter aktiv": "no switch active", "Am Zeitpunkt {t}: {w} {u} aus {d}° in {h} m.": "At {t}: {w} {u} from {d}° at {h} m.", "Keine CSV-Dateien gefunden. Ethos speichert Logs im Ordner LOGS als .csv.": "No CSV files found. Ethos saves logs as .csv in the LOGS folder.", "Log wählen": "Choose log", "Datum": "Date", "Sensoren": "Sensors", "Zeilen": "Rows", "Grösse": "Size", "Datei": "File", "ja": "yes", "nein": "no", "Modelle": "Models", "Lade {n} …": "Loading {n} …", "Datei konnte nicht gelesen werden.": "The file could not be read.", "{n} ins Archiv kopiert.": "{n} copied to the archive.", "Archiv": "Archive", "Im Archiv sichern": "Save to archive", "Im Archiv gesichert": "Saved to archive", "Sync: Sobald der Sender angeschlossen ist, kopiert die App neue Logs aus „{p}“ ins Archiv, ein Ordner pro Modell. Archiv: {a}": "Sync: as soon as the radio is connected, the app copies new logs from “{p}” to the archive, one folder per model. Archive: {a}", "Sync läuft: {d} von {n}": "Syncing: {d} of {n}", "Sender gefunden, suche neue Logs …": "Radio found, looking for new logs …", "Sync unterbrochen, Sender getrennt": "Sync interrupted, radio disconnected", "{n} kopiert, {m} fehlen noch · {t} · geht beim nächsten Anschliessen weiter": "{n} copied, {m} still missing · {t} · continues next time you connect", "{n} neu im Archiv": "{n} new in the archive", "Keine neuen Logs": "No new logs", "{n} Fehler": "{n} errors", "Sender angeschlossen": "Radio connected", "Sender getrennt": "Radio disconnected", "Sync fehlgeschlagen": "Sync failed", "Zugriff auf den Sender erlauben": "Allow access to the radio", "macOS fragt nach dem Zugriff auf das Wechselmedium. Nach „Erlauben“ startet der Sync von selbst.": "macOS is asking for access to the removable volume. After “Allow” the sync starts by itself.", "Automatischer Sync aus": "Automatic sync off", "Sender nicht angeschlossen": "Radio not connected", "Fehler": "Error", "Zeit": "Time", "Kopiert": "Copied", "Nicht kopiert": "Not copied", "{n}, der Sender wurde während dem Sync getrennt. Beim nächsten Anschliessen werden sie geholt.": "{n}, the radio was disconnected during the sync. They will be fetched the next time you connect.", "Sender": "Radio", "Version {v} ist verfügbar": "Version {v} is available", "Herunterladen": "Download", "Die Diagramm-Bibliothek konnte nicht geladen werden. Lade die Seite neu.": "The chart library could not be loaded. Reload the page.", "Öffne ein Ethos-Log (CSV), um es auszuwerten.": "Open an Ethos log (CSV) to analyse it.", "Sender auswerfen, damit er abgezogen werden kann": "Eject the radio so you can unplug it", "⏏ Auswerfen": "⏏ Eject", "Sender ausgeworfen, Du kannst ihn abziehen": "Radio ejected, you can unplug it", "Wird ausgeworfen …": "Ejecting …", "Auswerfen fehlgeschlagen: {e}": "Eject failed: {e}", "Der Sync läuft noch.": "The sync is still running.", "Kein Sender angeschlossen.": "No radio connected.", "Das Laufwerk wird noch verwendet.": "The drive is still in use.", "Inoffizielles Werkzeug, nicht mit dem Hersteller von Ethos verbunden. Ethos ist eine Marke ihres Inhabers.": "Unofficial tool, not affiliated with the maker of Ethos. Ethos is a trademark of its owner.", "Darstellung": "Appearance", "Wie System": "Same as system", "Hell": "Light", "Dunkel": "Dark", "Rohdaten": "Raw data", "So funktioniert es": "How it works", "Alle Zeilen und Spalten so, wie sie im Log stehen. Ein Klick auf eine Zeile setzt den Zeitpunkt; die Zeile des gewählten Zeitpunkts ist hervorgehoben.": "All rows and columns exactly as they are in the log. Clicking a row sets the point in time; the row of the selected time is highlighted.", "{n} Zeilen · {m} Spalten": "{n} rows · {m} columns", "Darstellung der Diagramme": "Chart layout", "Einzeln": "Separate", "Überlagert": "Overlaid", "Alle Kanäle überlagert": "All channels overlaid", "„Überlagert“ zeigt alle gewählten Kanäle in einem Diagramm. Jeder Kanal hat seine eigene Skala und füllt die ganze Höhe; die ersten zwei Skalen stehen links und rechts in der Farbe des Kanals.": "“Overlaid” shows all selected channels in one chart. Each channel has its own scale and uses the full height; the first two scales are shown left and right in the channel colour.", "Web-Version": "Web version", "Nach Updates suchen": "Check for updates", "Version {v}": "Version {v}", "Ethos Log Viewer, Version {v}": "Ethos Log Viewer, version {v}", "Suche nach Updates fehlgeschlagen ({e})": "Update check failed ({e})", "Das ist die neueste Version.": "You have the latest version.", "Suche …": "Checking …", "Steuerkurs (windkorr.)": "Heading (wind-corr.)", "Richtung, in die die Nase zeigt: GPS Kurs (ber.) korrigiert um den Wind": "Direction the nose points: GPS course (calc.) corrected for the wind", "Drift": "Drift", "Kurs über Grund minus Steuerkurs; positiv = Wind von links, das Modell wird nach rechts versetzt": "Course over ground minus heading; positive = wind from the left, the model drifts to the right", "Gegenwind": "Headwind", "Windanteil gegen die Flugrichtung; negativ = Rückenwind": "Wind component against the direction of flight; negative = tailwind", "Distanz zum Start": "Distance to start", "Waagrechte Distanz zum ersten gültigen GPS-Fix": "Horizontal distance to the first valid GPS fix", "Steuerkurs (windkorr.) = Richtung, in die die Nase zeigt, aus Bodenvektor minus Windvektor. Drift = Kurs über Grund minus Steuerkurs (positiv = nach rechts versetzt). Gegenwind = Windanteil gegen die Flugrichtung, negativ heisst Rückenwind. Distanz zum Start = waagrechte Distanz zum ersten GPS-Fix, Effektive Distanz = schräg vom Startpunkt zum Modell, mit der Höhe.": "Heading (wind-corr.) = direction the nose points, from ground vector minus wind vector. Drift = course over ground minus heading (positive = pushed to the right). Headwind = wind component against the direction of flight, negative means tailwind. Distance to start = horizontal distance to the first GPS fix, effective distance = straight line from the start point to the model, including altitude.", "Effektive Distanz": "Effective distance", "Schräge Distanz vom Startpunkt zum Modell: waagrechte Distanz und Höhe über dem Start ({a})": "Straight-line distance from the start point to the model: horizontal distance and height above the start ({a})", "Parameter wählen und mit den beiden Griffen oder den Feldern Min und Max den Bereich einstellen. Die Balken zeigen, wie oft welcher Wert im Log vorkommt. Ein Logeintrag ist aktiv, wenn er bei allen Filtern im Bereich liegt. Inaktive Einträge bleiben in den Diagrammen sichtbar, auf grauem Hintergrund, auch in der Übersichtsleiste. Min, Ø und Max in den Diagrammen und unter „Alle Werte“ zählen nur aktive Einträge. „Zurücksetzen“ stellt einen Filter auf den ganzen Bereich, ✕ entfernt ihn. Beim Wechsel des Logs bleiben die Filter bestehen und gelten für denselben Parameter im neuen Log.": "Pick a parameter and set the range with the two handles or the Min and Max fields. The bars show how often each value occurs in the log. A log entry is active when it lies inside the range of every filter. Inactive entries stay visible in the charts, on a grey background, also in the overview bar. Min, Ø and Max in the charts and under “All values” only count active entries. “Reset” sets a filter back to the full range, ✕ removes it. When you switch logs the filters stay and apply to the same parameter in the new log.", "Nicht in diesem Log, gilt wieder, sobald ein Log den Parameter hat": "Not in this log, applies again as soon as a log has this parameter"};
 Object.assign(EN, {"Polare": "Polar", "Alle": "All", "Keine": "None", "Ansicht": "View", "Sinken": "Sink", "Glättung": "Smoothing", "Physikalisch": "Physical", "Median": "Median", "Punkte": "Points", "Streuung": "Spread", "Einzel-Logs": "Single logs", "So wird die Polare gerechnet": "How the polar is calculated", "Polare: Sinken über Fluggeschwindigkeit": "Polar: sink over airspeed", "Die Polare zeigt, wie schnell das Modell bei welcher Fahrt sinkt. Links stehen alle Logs des gewählten Modells; angehakte Logs fliessen ein. Die Auswahl wird pro Modell gemerkt, neue Logs sind automatisch dabei.": "The polar shows how fast the model sinks at which airspeed. On the left are all logs of the selected model; ticked logs are included. The selection is remembered per model, new logs are included automatically.", "Jeder Punkt ist eine Sekunde Gleitflug: Motor aus (und 15 s danach), geradeaus (Kursänderung unter 8°/s) und ohne starkes Beschleunigen oder Bremsen. Die Fahrt ist die TAS, ohne Wind die GPS-Geschwindigkeit; das Sinken kommt vom Vario, korrigiert um Fahrtänderungen.": "Each point is one second of gliding: motor off (and 15 s after), flying straight (course change below 8°/s) and without strong acceleration or braking. The speed is the TAS, without wind the GPS speed; the sink comes from the vario, corrected for speed changes.", "Die Punkte werden in 4-km/h-Klassen sortiert, pro Klasse zählt der Median (Band = mittlere Hälfte der Punkte). „Physikalisch“ legt durch die Mediane die Kurve Sinken = A·v³ + B/v, die Grundform jeder Polare; sie ist immer glatt und hat genau ein Minimum. „Median“ zeigt die geglätteten Mediane. Die Gerade vom Nullpunkt berührt die Kurve bei der besten Gleitzahl.": "The points are sorted into 4 km/h classes; each class counts its median (band = middle half of the points). “Physical” fits the curve sink = A·v³ + B/v through the medians, the basic shape of every polar; it is always smooth with exactly one minimum. “Median” shows the smoothed medians. The line from the origin touches the curve at the best glide ratio.", "„weicht ab“: Die beste Gleitzahl dieses Logs liegt mehr als 20 % neben der Polare der übrigen angehakten Logs, z. B. wegen Thermik im Geradeausflug, Ballast oder anderem Setup. Thermik und Abwind verfälschen einzelne Punkte immer; mehr Logs und ruhige Flüge machen die Polare genauer.": "“deviates”: the best glide ratio of this log is more than 20 % off the polar of the other ticked logs, e.g. because of thermals while flying straight, ballast or a different setup. Lift and sink always distort single points; more logs and calm flights make the polar more accurate.", "Lese Logs … {a} von {b}": "Reading logs … {a} of {b}", "weicht ab": "deviates", "{d} Flug · {n} Gleitpunkte · GZ {g}": "{d} flight · {n} glide points · L/D {g}", "{a} von {b} Logs in der Polare.": "{a} of {b} logs in the polar.", "Kein Log ausgewählt.": "No log selected.", "Beste Gleitzahl": "Best glide ratio", "bei {v} {u}": "at {v} {u}", "Geschwindigkeit": "Speed", "Alle Geschwindigkeiten werden in diese Einheit umgerechnet, egal in welcher Einheit der Sensor loggt.": "All speeds are converted to this unit, whatever unit the sensor logs in.", "Geringstes Sinken": "Minimum sink", "zu wenig Punkte": "not enough points", "Gleitpunkte": "Glide points", "aus {n} Logs · {k} Klassen": "from {n} logs · {k} classes", "Fahrtbereich": "Speed range", "mit genug Punkten": "with enough points", "Gleitpunkte (1 s)": "Glide points (1 s)", "Mittlere Hälfte · ◆ Median je Klasse": "Middle half · ◆ median per class", "Polare ({n} Logs)": "Polar ({n} logs)", "Beste Gleitzahl {v}": "Best glide ratio {v}", "Geringstes Sinken {v} m/s": "Minimum sink {v} m/s", "{n} Punkte": "{n} points", "Median je {b} {u}": "median per {b} {u}", "ungeglättet": "unsmoothed", "Kein Log ausgewählt. Hake links mindestens ein Log an.": "No log selected. Tick at least one log on the left.", "Keine Gleitpunkte gefunden. Die Polare braucht Fahrt (TAS oder GPS-Geschwindigkeit), Vario oder Höhe und Gleitflug mit Motor aus.": "No glide points found. The polar needs speed (TAS or GPS speed), vario or altitude and gliding with the motor off.", "Fluggeschwindigkeit ({u})": "Airspeed ({u})", "Sinken (m/s) ↓": "Sink (m/s) ↓"});
 Object.assign(EN, {"Diagramm schliessen": "Close chart", "Kanal ausblenden": "Hide channel", "{n} schliessen": "Close {n}"});
 Object.assign(EN, {"Die Uhrzeit im Log springt in den Stunden ({n}×), die Zeitachse ist korrigiert.": "The time of day in the log jumps in the hours ({n}×), the time axis has been corrected."});
+Object.assign(EN, {"(Antwort gekürzt)": "(answer cut short)", ", mit Filter": ", with filter", "Abgebrochen: zu viele Schritte.": "Stopped: too many steps.", "Aktiv": "Active", "Aktueller Zoom": "Current zoom", "Alle Filter entfernt": "All filters removed", "An Claude gesendet, Claude wertet aus …": "Sent to Claude, Claude is analysing …", "Anthropic bremst gerade. In einer Minute nochmals versuchen.": "Anthropic is rate limiting. Try again in a minute.", "Anthropic meldet: Schlüssel ungültig oder widerrufen (401). Prüf den Schlüssel in den Einstellungen oder erstelle in der Anthropic-Konsole einen neuen.": "Anthropic reports: key invalid or revoked (401). Check the key in the settings or create a new one in the Anthropic console.", "Anzeigen": "Show", "Ausgeführt": "Done", "Ausgeschaltet.": "Switched off.", "Ausschnitt": "Range", "Auswahl ändern": "Change selection", "Bitte zuerst einen Schlüssel einfügen.": "Please paste a key first.", "Claude hat diese Anfrage abgelehnt.": "Claude declined this request.", "Claude meldet einen Fehler": "Claude reports an error", "Das sieht nicht nach einem Anthropic-Schlüssel aus (beginnt mit sk-ant-).": "That does not look like an Anthropic key (starts with sk-ant-).", "Daten zusammengestellt ({k} KB)": "Data prepared ({k} KB)", "Deine Frage oder Dein Auftrag": "Your question or task", "Der API-Schlüssel wurde abgelehnt": "The API key was rejected", "Der Schlüssel darf dieses Modell nicht benutzen ({m}).": "The key may not use this model ({m}).", "Diagramme: {l}": "Charts: {l}", "Die App ist wieder wie vorher.": "The app is back as it was.", "Die Daten gehen an Claude (Anthropic). Die CSV-Datei bleibt auf Deinem Gerät.": "The data goes to Claude (Anthropic). The CSV file stays on your device.", "Die KI darf die App nicht bedienen (Einstellungen → KI-Auswertung), sie antwortet nur.": "The AI may not operate the app (Settings → AI analysis), it only answers.", "Die KI kann antworten und die App bedienen: Filter setzen, Zeitbereich wählen, Diagramme ein- und ausblenden, eine Polare erstellen.": "The AI can answer and operate the app: set filters, pick a time range, show and hide charts, create a polar.", "Die KI-Auswertung braucht Internet. Alles andere in der App funktioniert weiter. Deine Auswahl bleibt erhalten.": "The AI analysis needs internet. Everything else in the app keeps working. Your selection is kept.", "Du kannst in der Zwischenzeit weiter in den Diagrammen arbeiten.": "You can keep working in the charts meanwhile.", "Einstellungen öffnen": "Open settings", "Ereignisse": "Events", "Erkannte Motorläufe, Steigflüge und Thermik": "Detected motor runs, climbs and thermals", "Erledigt.": "Done.", "Erstelle eine Polare nur aus dem Gleitflug, ohne Thermik": "Create a polar from gliding only, without thermals", "Filter entfernt: {p}": "Filter removed: {p}", "Filter gesetzt: {p} {a} bis {b}": "Filter set: {p} {a} to {b}", "Frage": "Question", "Frage oder Auftrag": "Question or task", "Führt aus: {n}": "Running: {n}", "Für Claude Desktop und andere KI-Programme": "For Claude Desktop and other AI programs", "Für die KI-Auswertung braucht die App einen Schlüssel von Anthropic. Du kannst ihn unter ⚙ Einstellungen → KI-Auswertung eintragen.": "The AI analysis needs a key from Anthropic. Enter it under ⚙ Settings → AI analysis.", "GPS-Position": "GPS position", "Ganzer Flug": "Whole flight", "Genau so wird gesendet": "Exactly what is sent", "Geschwindigkeiten über Grund, Wind nicht herausgerechnet, ausser die KI sagt es. KI-Auswertungen können danebenliegen; prüf wichtige Aussagen im Diagramm.": "Speeds over ground, wind not removed unless the AI says so. AI analyses can be wrong; check important statements in the chart.", "Gesendete Daten": "Data sent", "Gleitzahl und Polare": "Glide ratio and polar", "Gleitzahl und Polare des Modells": "Glide ratio and polar of the model", "Guthaben aufgebraucht": "Credit used up", "Im Diagramm oder in der Zoomleiste ändern, das Panel folgt.": "Change it in the chart or the zoom bar, the panel follows.", "Im Tab Polare ansehen": "View in the Polar tab", "Ist der Empfang in Ordnung?": "Is the reception OK?", "JSON kopieren": "Copy JSON", "Kein Schlüssel hinterlegt": "No key stored", "Kein Schlüssel hinterlegt. Der Knopf KI-Auswertung ist ausgeblendet.": "No key stored. The AI analysis button is hidden.", "Kein Zugriff": "No access", "Keine Verbindung zu Claude": "No connection to Claude", "Kennzahlen (Min / Ø / Max)": "Key figures (min / avg / max)", "Kopieren nicht möglich": "Copy not possible", "Lade unter console.anthropic.com → Billing Guthaben auf und versuch es nochmals.": "Add credit under console.anthropic.com → Billing and try again.", "Leer lassen für eine allgemeine Auswertung. Oder z. B.: Erstelle eine Polare ohne Thermik.": "Leave empty for a general analysis. Or e.g.: Create a polar without thermals.", "Liest Daten: {n}": "Reading data: {n}", "Log geöffnet: {n}": "Log opened: {n}", "Läuft": "Running", "Läuft auf {u}": "Running on {u}", "Min / Ø / Max und ": "min / avg / max and ", "Modellname": "Model name", "Modellname „{m}“": "Model name “{m}”", "Motorläufe, Steigflüge, Thermik": "Motor runs, climbs, thermals", "Noch kein API-Schlüssel": "No API key yet", "Nochmals versuchen": "Try again", "Polare im Tab Polare erstellt: {n} Logs, {p} Gleitpunkte{f}": "Polar created in the Polar tab: {n} logs, {p} glide points{f}", "Prüfe …": "Checking …", "Rückgängig": "Undo", "Rückgängig gemacht": "Undone", "Schlüssel entfernt. KI-Auswertung ist ausgeblendet.": "Key removed. AI analysis is hidden.", "Schlüssel gespeichert. KI-Auswertung ist jetzt im Tab Diagramme verfügbar.": "Key saved. AI analysis is now available in the Charts tab.", "Schlüssel gültig. Verbindung zu Claude steht.": "Key valid. Connected to Claude.", "Schlüssel hinterlegt": "Key stored", "Schlüssel {h} hinterlegt. Der Knopf KI-Auswertung ist im Tab Diagramme sichtbar.": "Key {h} stored. The AI analysis button is visible in the Charts tab.", "Senden": "Send", "Senden und auswerten": "Send and analyse", "Standard aus. Dann weiss die KI nicht, wo Du fliegst.": "Off by default. Then the AI does not know where you fly.", "Startet nicht: {e}": "Does not start: {e}", "Tab gewechselt: {t}": "Tab switched: {t}", "Text kopieren": "Copy text", "Verbergen": "Hide", "Vorgewählt sind die Kanäle, die gerade als Diagramm offen sind.": "Preselected are the channels currently open as charts.", "Was gesendet wird": "What is sent", "Weitere Frage oder Auftrag": "Another question or task", "Wie effizient waren die Motorläufe?": "How efficient were the motor runs?", "Wie gut habe ich die Thermik genutzt?": "How well did I use the thermals?", "Wird beim Speichern entfernt.": "Removed when you save.", "Wird nur auf diesem Gerät gespeichert, im Browser. Nie im Log-Archiv.": "Stored on this device only, in the browser. Never in the log archive.", "Wird nur auf diesem Gerät gespeichert, verschlüsselt im Schlüsselbund des Systems. Nie im Log-Archiv.": "Stored on this device only, encrypted in the system keychain. Never in the log archive.", "Zeitbereich gesetzt: {a} – {b}": "Time range set: {a} – {b}", "Zu viele Anfragen": "Too many requests", "Zusätzlich mitgeben": "Also include", "etwa {n} Tokens": "about {n} tokens", "mit GPS": "with GPS", "ohne GPS": "without GPS", "optional": "optional", "z. B. Zeig dazu die Geschwindigkeit als Diagramm": "e.g. Show the speed as a chart too", "{n} Kanäle": "{n} channels", "{n} Kanäle ({l}), je {k}ca. 60 Punkte aus {d}": "{n} channels ({l}), each {k}about 60 points from {d}", "Öffne zuerst ein Log.": "Open a log first.", "KI-Auswertung": "AI analysis", "KI-Auswertung …": "AI analysis …", "MCP-Server": "MCP server", "MCP …": "MCP …", "Aus": "Off", "Fehler": "Error", "Kopiert": "Copied", "‹ Einstellungen": "‹ Settings", "API-Schlüssel (Anthropic)": "API key (Anthropic)", "sk-ant-… hier einfügen": "paste sk-ant-… here", "Prüfen": "Check", "Einen Schlüssel erstellst Du unter console.anthropic.com → API Keys. Die Kosten laufen über Dein Anthropic-Konto.": "Create a key under console.anthropic.com → API Keys. Costs are billed to your Anthropic account.", "Wird nur auf diesem Gerät gespeichert, nie im Log-Archiv.": "Stored on this device only, never in the log archive.", "So kommst Du zu einem Schlüssel": "How to get a key", "Auf console.anthropic.com ein Konto anlegen (unabhängig von einem Claude-Abo).": "Create an account on console.anthropic.com (separate from a Claude subscription).", "Unter Billing ein Guthaben aufladen, z. B. 5 $.": "Add credit under Billing, e.g. $5.", "Unter API Keys „Create Key“ wählen und den Schlüssel kopieren. Er wird nur einmal angezeigt.": "Choose “Create Key” under API Keys and copy the key. It is shown only once.", "Hier einfügen, „Prüfen“, „Speichern“.": "Paste it here, “Check”, “Save”.", "Modell": "Model", "Claude Sonnet 5.5 (schnell, günstig)": "Claude Sonnet 5.5 (fast, cheaper)", "Claude Opus 5.5 (gründlicher, teurer)": "Claude Opus 5.5 (more thorough, pricier)", "Gesendete Daten immer aufgeklappt anzeigen": "Always show the data sent expanded", "Aus: Eine Zeile fasst zusammen, was gesendet wird. Die Details lassen sich jederzeit aufklappen.": "Off: one line sums up what is sent. The details can be expanded any time.", "KI darf die App bedienen": "AI may operate the app", "Filter, Zeitbereich, Diagramme, Log und Polare. Jede Aktion wird angezeigt und lässt sich rückgängig machen.": "Filters, time range, charts, log and polar. Every action is shown and can be undone.", "GPS-Position standardmässig mitsenden": "Send GPS position by default", "Aus: Die KI bekommt Geschwindigkeit und Höhe, aber nicht, wo Du fliegst.": "Off: the AI gets speed and height, but not where you fly.", "Datenschutz": "Privacy", "Für die Auswertung verlassen Daten Dein Gerät: die gewählten Kanäle als zusammengefasste Zahlenreihen, Kennzahlen, Modellname und Deine Frage. Die CSV-Datei selbst wird nie hochgeladen. Anthropic verarbeitet die Anfrage nach seinen Bedingungen für API-Kunden; sie wird nicht zum Training verwendet. Ohne Internet ist die Auswertung nicht verfügbar, alles andere in der App läuft weiter.": "For the analysis, data leaves your device: the chosen channels as summarised number series, key figures, model name and your question. The CSV file itself is never uploaded. Anthropic processes the request under its terms for API customers; it is not used for training. Without internet the analysis is not available, everything else in the app keeps working.", "Schlüssel entfernen": "Remove key", "Damit kann Claude Desktop (oder ein anderes Programm mit MCP) die App bedienen und Logs auswerten: dieselben Aktionen wie die KI-Auswertung. Der Server ist nur auf diesem Computer erreichbar und läuft nur, solange die App offen ist.": "Lets Claude Desktop (or another program with MCP) operate the app and analyse logs: the same actions as the AI analysis. The server is reachable from this computer only and runs only while the app is open.", "MCP-Server einschalten": "Switch on MCP server", "Standard aus. Ohne Schlüssel: Die KI läuft in Claude Desktop, über Dein Claude-Abo.": "Off by default. No key needed: the AI runs in Claude Desktop, on your Claude subscription.", "Port": "Port", "In Claude Desktop eintragen:": "Add to Claude Desktop:", "Einstellungen → Entwickler → „Konfiguration bearbeiten“, den Eintrag in claude_desktop_config.json einfügen (steht dort schon „mcpServers“, nur „ethos-log-viewer“ darin ergänzen), Claude Desktop neu starten.": "Settings → Developer → “Edit Config”, add this entry under “mcpServers” in claude_desktop_config.json, restart Claude Desktop.", "Eintrag kopieren": "Copy entry", "Claude Code:": "Claude Code:", "Filter anwenden": "Apply filters", "Nur Einträge, die bei allen Filtern im Tab Diagramme im Bereich liegen, in allen Logs des Modells": "Only entries inside every filter of the Charts tab, in all logs of the model", "KI-Auswertung schliessen": "Close AI analysis", "Auswahl": "Selection", "Analyse": "Analysis"});
 const LANGS = ['de','en'];
 let LANG_PREF = ''; try{ LANG_PREF = localStorage.getItem('ethoslv.lang')||''; }catch(e){}
 const LANG = LANGS.includes(LANG_PREF) ? LANG_PREF : ((navigator.languages||[navigator.language]).map(l=>String(l).slice(0,2).toLowerCase()).find(l=>LANGS.includes(l)) || 'en');
@@ -1006,14 +1139,14 @@ function render(log, name, example){
   $('#rawtable thead').innerHTML = `<tr><th>#</th>${log.header.map(h=>`<th>${esc(h)}</th>`).join('')}</tr>`;
   rawCount();
   $('#rawwrap').scrollTop=0; rawFirst=-1; renderRaw();
-  drawCharts(); drawTrack(log,CH,CLIMB,THERM); drawBars(); renderCursor();
+  drawCharts(); drawTrack(log,CH,CLIMB,THERM); drawBars(); renderCursor(); kiPing(true);
 }
 // ---------- Widget-Panels ----------
 const W = {
   therm:{ sw:'#thermSw', h:'#thermH', min:5, def:['SB'] },
   climb:{ sw:'#climbSw', h:'#climbH', min:1, def:['LS9'] },
 };
-const store = { get(k){ try{return localStorage.getItem('ethoslv.'+k);}catch(e){return null;} }, set(k,v){ try{localStorage.setItem('ethoslv.'+k,v);}catch(e){} } };
+const store = { get(k){ try{return localStorage.getItem('ethoslv.'+k);}catch(e){return null;} }, set(k,v){ try{localStorage.setItem('ethoslv.'+k,v);}catch(e){} }, del(k){ try{localStorage.removeItem('ethoslv.'+k);}catch(e){} } };
 // Einstellungen pro Modell; ein Modell ohne eigene Werte übernimmt die zuletzt benutzten
 const mkey = k => 'm.'+(FILES[CUR]?.model||'_')+'.'+k;
 const mstore = { get(k){ const v=store.get(mkey(k)); return v!=null ? v : store.get(k); }, set(k,v){ store.set(mkey(k),v); store.set(k,v); } };
@@ -1341,7 +1474,8 @@ function applyFilters(){
   computeActive(); filterCount(); rawCount();
   if (fPending) return; fPending=true;
   requestAnimationFrame(()=>{ fPending=false; if (!LOG) return;
-    charts.forEach(c=>c.update('none')); visStats(); drawNav(); renderStatsTable(); rawFirst=-1; renderRaw(); });
+    charts.forEach(c=>c.update('none')); visStats(); drawNav(); renderStatsTable(); rawFirst=-1; renderRaw(); kiPing(); });
+  if (PST.filt){ clearTimeout(applyFilters.pol); applyFilters.pol=setTimeout(renderPolar,400); }
 }
 (function filterEvents(){
   const box=$('#flist'), fOf=el=>FILTERS.find(f=>f.k===el.closest('.fitem')?.dataset.k), el=f=>box.querySelector(`.fitem[data-k="${CSS.escape(f.k)}"]`);
@@ -1372,7 +1506,7 @@ function setView(min,max){
   const T=tEnd(), span=Math.min(Math.max(max-min,MIN_SPAN),T);
   min=Math.max(0,Math.min(min,T-span)); VIEW={min,max:min+span};
   for (const c of charts){ c.options.scales.x.min=VIEW.min; c.options.scales.x.max=VIEW.max; c.update('none'); }
-  drawNav(); scheduleTrack(); visStats();
+  drawNav(); scheduleTrack(); visStats(); kiPing();
 }
 function zoomAt(f, center){ const c=center??(VIEW.min+VIEW.max)/2; setView(c-(c-VIEW.min)*f, c+(VIEW.max-c)*f); }
 const wheelFactor = e => Math.exp(Math.max(-.5,Math.min(.5,e.deltaY*(e.deltaMode?0.05:0.01))));
@@ -1582,9 +1716,17 @@ const POLAR={half:2.5, after:15, turn:8, acc:0.6, minV:5, bin:4, minN:12, dev:0.
 const POLAR_CACHE=new Map();
 let polarChart=null, polarJob=0, POLAR_LOGS=null;
 const PST={view:store.get('polar.view')||'sink', smooth:store.get('polar.smooth')||'phys',
-  pts:store.get('polar.pts')!=='0', band:store.get('polar.band')!=='0', each:store.get('polar.each')==='1'};
+  pts:store.get('polar.pts')!=='0', band:store.get('polar.band')!=='0', each:store.get('polar.each')==='1', filt:store.get('polar.filt')==='1'};
+// „Filter anwenden“: die Filter aus dem Tab Diagramme gelten über den Parameternamen auch für die Polare, in jedem Log des Modells
+const polFilters = () => PST.filt ? FILTERS.filter(f=>f.wlo!=null||f.whi!=null) : [];
+const polSig = () => JSON.stringify(polFilters().map(f=>[f.k,f.wlo,f.whi]));
+function polarMask(log){
+  const fs=polFilters().map(f=>({f, c:log.cols.find(c=>c.raw===f.k)})).filter(x=>x.c); if (!fs.length) return null;
+  return log.t.map((_,i)=>fs.every(({f,c})=>{ const v=c.vals[i]; return !isNaN(v) && (f.wlo==null||v>=f.wlo) && (f.whi==null||v<=f.whi); }));
+}
 function polarPoints(log){
   const ch=channels(log); if (!log.cols.some(c=>c.derived)) addDerived(log,ch);
+  const mask=polarMask(log);
   const spd=log.cols.find(c=>c.key==='tas')||ch.spd, crs=log.cols.find(c=>c.key==='gpscrs');
   if (!spd || !(ch.vario||ch.alt)) return [];
   const f=speedFactor(spd.unit)??speedMs();
@@ -1598,6 +1740,7 @@ function polarPoints(log){
     while (j<i && !(t[j]>=ti-POLAR.half)) j++;
     if (k<i) k=i; while (k<n-1 && t[k+1]<=ti+POLAR.half) k++;
     const dt=t[k]-t[j]; if (!(dt>=3) || ti-lastMot[k]<POLAR.after) continue;
+    if (mask && !(mask[j] && mask[i] && mask[k])) continue;
     const v0=v[j], v1=v[k]; if (isNaN(v0)||isNaN(v1) || Math.abs(v1-v0)/dt>POLAR.acc) continue;
     let sv=0, nv=0, sw=0, nw=0;
     for (let m=j;m<=k;m++){ if (!isNaN(v[m])){ sv+=v[m]; nv++; } if (ch.vario && !isNaN(ch.vario.vals[m])){ sw+=ch.vario.vals[m]; nw++; } }
@@ -1639,7 +1782,7 @@ function polarCurve(bs, mode){
   return best ? {pts:sm, vms:ms.x, wms:ms.y, vbg:best.x, ld} : null;
 }
 async function polarLog(f){
-  const key=f.name+'|'+f.size; if (POLAR_CACHE.has(key)) return POLAR_CACHE.get(key);
+  const key=f.name+'|'+f.size+'|'+polSig(); if (POLAR_CACHE.has(key)) return POLAR_CACHE.get(key);
   let r;
   try{ if (FILES[CUR]===f && LOG) r={pts:polarPoints(LOG)};
     else { const txt = f.file ? await readText(f.file) : f.path ? await DESK.readFile(f.path) : f.text; r={pts:polarPoints(parseCSV(txt))}; } }
@@ -1653,7 +1796,7 @@ async function renderPolar(){
   const idx=models().get(model)||[], off=polarOff(), logs=[];
   for (let n=0;n<idx.length;n++){
     const f=FILES[idx[n]];
-    if (!POLAR_CACHE.has(f.name+'|'+f.size)){ $('#polHint').textContent=T('Lese Logs … {a} von {b}',{a:n+1,b:idx.length}); await new Promise(r=>setTimeout(r)); }
+    if (!POLAR_CACHE.has(f.name+'|'+f.size+'|'+polSig())){ $('#polHint').textContent=T('Lese Logs … {a} von {b}',{a:n+1,b:idx.length}); await new Promise(r=>setTimeout(r)); }
     const r=await polarLog(f); if (job!==polarJob) return;
     logs.push({f, ...r, on:!off.has(f.name), color:PALETTE[n%PALETTE.length]});
   }
@@ -1732,6 +1875,7 @@ function drawPolar(){
     el.addEventListener('click',e=>{ const b=e.target.closest('button'); if (!b) return; PST[key]=b.dataset.v; store.set('polar.'+key,PST[key]);
       el.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b)); drawPolar(); }); };
   seg('#polView','view'); seg('#polSmooth','smooth');
+  $('#polFilt').checked=PST.filt; $('#polFilt').addEventListener('change',e=>{ PST.filt=e.target.checked; store.set('polar.filt',PST.filt?'1':'0'); renderPolar(); });
   for (const [id,key] of [['#polPts','pts'],['#polBand','band'],['#polEach','each']]){
     $(id).checked=PST[key]; $(id).addEventListener('change',e=>{ PST[key]=e.target.checked; store.set('polar.'+key,PST[key]?'1':'0'); drawPolar(); }); }
   $('#polList').addEventListener('change',e=>{ const i=e.target.dataset?.i; if (i==null||!POLAR_LOGS) return; POLAR_LOGS.logs[+i].on=e.target.checked; savePolarOff(); drawPolar(); });
@@ -1775,7 +1919,7 @@ function toggleSel(k){
   selected.has(k)?selected.delete(k):selected.add(k);
   $('#chips').querySelectorAll('.chip').forEach(b=>{ if (b.dataset.k===k) b.setAttribute('aria-pressed',selected.has(k)); });
   if (selected.has(k)){ ORDER=ORDER.filter(x=>x!==k).concat(k); saveOrder(); }
-  mstore.set('sel', JSON.stringify([...selected])); drawCharts();
+  mstore.set('sel', JSON.stringify([...selected])); drawCharts(); kiPing();
 }
 $('#chips').addEventListener('click',e=>{
   const b=e.target.closest('.chip'); if(!b) return;
@@ -1982,6 +2126,7 @@ function openSettings(){
   $('#setSpeed').value = SPEED;
   if (DESK && SETTINGS){ $('#setSender').value=SETTINGS.senderPath; $('#setArchive').value=SETTINGS.archiveDir;
     $('#setAuto').checked=!!SETTINGS.autoSync; $('#setManual').checked=!!SETTINGS.archiveManual; }
+  kiSettingsRow(); mcpSettingsRow();
   $('#settingsDlg').showModal();
 }
 $('#openSettings').addEventListener('click', openSettings);
@@ -2129,4 +2274,432 @@ const BOOT = (async function boot(){
     FILES=[{name:n, ...nameInfo(n), size:text.length, dur:b-a, text, ...headerInfo(text.slice(0,4000), text.length)}]; openLog(0); }
   catch(e){ $('#fileinfo').innerHTML=`<span class="hint">${T('Öffne ein Ethos-Log (CSV), um es auszuwerten.')}</span>`; }
 })();
+
+// ---------- Aktionen: eine Liste für die KI-Auswertung in der App und für den MCP-Server der Desktop-App ----------
+// Lesen: app_zustand, daten_lesen, logs_auflisten. Bedienen: Log, Filter, Zeitbereich, Diagramme, Tab, Polare, Rückgängig.
+// Jede Aktion merkt sich vorher den Zustand der App; rueckgaengig (oder „Rückgängig“ im Panel) stellt ihn wieder her.
+const fmtT = s => { s=Math.max(0,Math.round(+s||0)); const h=Math.floor(s/3600), m=Math.floor(s%3600/60), ss=String(s%60).padStart(2,'0'); return h ? h+':'+String(m).padStart(2,'0')+':'+ss : m+':'+ss; };
+function tSec(v){
+  if (v==null || v==='') return null;
+  if (typeof v==='number') return v;
+  const s=String(v).trim(), m=/^(\d+):(\d{1,2})(?::(\d{1,2}))?$/.exec(s);
+  if (m) return m[3]!=null ? +m[1]*3600+ +m[2]*60+ +m[3] : +m[1]*60+ +m[2];
+  const n=parseFloat(s.replace(',','.')); if (isNaN(n)) throw new Error(`Zeit „${v}“ nicht verstanden, bitte m:ss oder Sekunden.`); return n;
+}
+const rnd = v => v==null||isNaN(v) ? null : +v.toFixed(Math.abs(v)<10?2:Math.abs(v)<100?1:0);
+function needLog(){ if (!LOG) throw new Error('Es ist noch kein Log geladen.'); }
+function colFind(q){
+  needLog(); const s=String(q??'').trim().toLowerCase(), cs=LOG.cols;
+  const c = cs.find(c=>c.raw.toLowerCase()===s) || cs.find(c=>c.name.toLowerCase()===s) || cs.find(c=>c.key===s)
+    || cs.find(c=>!c.rc && c.raw.toLowerCase().includes(s)) || cs.find(c=>c.raw.toLowerCase().includes(s));
+  if (!s || !c) throw new Error(`Kanal „${q}“ gibt es in diesem Log nicht. Vorhanden: ${cs.filter(c=>!c.rc).map(c=>c.raw).join(', ')}`);
+  return c;
+}
+// Zustand merken und wiederherstellen (für Rückgängig)
+function appSnap(){
+  return { cur:FILES[CUR]?.name, filters:FILTERS.map(f=>({k:f.k,name:f.name,unit:f.unit,wlo:f.wlo,whi:f.whi})), view:{...VIEW},
+    sel:[...selected], order:[...ORDER], overlay:OVERLAY, tab:store.get('tab')||'uebersicht',
+    polOff:mstore.get('polar.off'), pst:{view:PST.view, smooth:PST.smooth, filt:PST.filt} };
+}
+async function appRestore(s){
+  if (s.cur && FILES[CUR]?.name!==s.cur){ const i=FILES.findIndex(f=>f.name===s.cur); if (i>=0) await openLog(i); }
+  FILTERS=s.filters.map(o=>(LOG&&makeFilter(o.k,o.wlo,o.whi)) || {...o, missing:true}); renderFilters(); applyFilters();
+  ORDER=[...s.order]; saveOrder(); OVERLAY=s.overlay; mstore.set('overlay', OVERLAY?'1':'0');
+  selected=new Set(s.sel.filter(k=>LOG?.cols.some(c=>c.raw===k))); mstore.set('sel', JSON.stringify([...selected]));
+  if (s.polOff!=null) mstore.set('polar.off', s.polOff);
+  Object.assign(PST, s.pst); for (const k of ['view','smooth']) store.set('polar.'+k, PST[k]); store.set('polar.filt', PST.filt?'1':'0'); polSegSync();
+  if (LOG){ renderChips(); drawCharts(); setView(s.view.min, s.view.max); renderCursor(); }
+  showTab(s.tab); renderPolar();
+}
+function polSegSync(){
+  for (const [id,key] of [['#polView','view'],['#polSmooth','smooth']]) $(id).querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===PST[key]));
+  $('#polFilt').checked=PST.filt;
+}
+function setSelected(keys, overlay){
+  selected=new Set(keys); for (const k of keys) if (!ORDER.includes(k)) ORDER.push(k); saveOrder();
+  mstore.set('sel', JSON.stringify([...selected]));
+  if (overlay!=null){ OVERLAY=!!overlay; mstore.set('overlay', OVERLAY?'1':'0'); }
+  renderChips(); drawCharts(); renderCursor(); kiPing();
+}
+// Zusammenfassung der Polare des Modells (wie im Tab Polare)
+function polarSummary(){
+  if (!POLAR_LOGS) return null;
+  const K=1/3.6/speedMs(), sel=POLAR_LOGS.logs.filter(l=>l.on), pts=sel.flatMap(l=>l.pts), bs=polarBins(pts);
+  const c=polarCurve(bs,PST.smooth)||polarCurve(bs,'phys')||polarCurve(bs,'med');
+  return { modell:POLAR_LOGS.model, logs_in_polare:sel.map(l=>l.f.name), logs_gesamt:POLAR_LOGS.logs.length, gleitpunkte:pts.length,
+    filter_angewendet:PST.filt ? polFilters().map(f=>({parameter:f.k, min:f.wlo, max:f.whi})) : false, glaettung:PST.smooth, einheit:SPEED,
+    beste_gleitzahl:c?rnd(c.ld):null, beste_gleitzahl_bei:c?rnd(c.vbg*K):null, geringstes_sinken_ms:c?rnd(c.wms):null, geringstes_sinken_bei:c?rnd(c.vms*K):null,
+    klassen:bs.map(b=>({fahrt:rnd(b.v*K), sinken_median_ms:rnd(b.m), punkte:b.n})) };
+}
+// Daten für die KI: pro Kanal Min/Ø/Max und eine heruntergerechnete Reihe, dazu Ereignisse, Gleiten, Hinweise.
+// Zählt nur aktive Einträge (Filter), wie die Diagramme.
+function kiData(o={}){
+  needLog();
+  const end=tEnd(), von=Math.max(0, tSec(o.von) ?? (o.ganz ? 0 : VIEW.min)), bis=Math.min(end, tSec(o.bis) ?? (o.ganz ? end : VIEW.max));
+  if (!(bis>von)) throw new Error('Der Zeitbereich ist leer.');
+  const a=lowerIdx(von), b=Math.max(a, lowerIdx(bis+1e-9)-1), N=Math.max(10, Math.min(500, Math.round(o.punkte||60))), ex={kpi:true, events:true, glide:true, model:true, gps:false, ...o.extra};
+  const keys=(o.kanaele?.length ? o.kanaele.map(k=>colFind(k).raw) : orderedSelected().map(c=>c.raw));
+  const out={};
+  if (ex.model){ out.modell=FILES[CUR]?.model||null; out.log=FILES[CUR]?.name||null; out.logbeginn=(LOG.date+' '+(LOG.clock[0]||'').slice(0,8)).trim(); }
+  out.ausschnitt={von:fmtT(von), bis:fmtT(bis), dauer_s:Math.round(bis-von), logdauer:fmtT(end), ganzer_flug: von<=0.5 && bis>=end-0.5};
+  if (o.frage) out.frage=o.frage;
+  if (FILTERS.some(f=>!f.missing&&(f.lo>f.min||f.hi<f.max))) out.filter={aktiv:FILTERS.filter(f=>!f.missing&&(f.lo>f.min||f.hi<f.max)).map(f=>({parameter:f.k, min:rnd(f.lo), max:rnd(f.hi)})), aktive_eintraege:NACT, eintraege:LOG.t.length};
+  const step=(bis-von)/N;
+  out.kanaele={};
+  for (const k of keys){ const c=colBy(k); if (!c) continue; const st=rangeStats(c.vals,a,b), w=[], sum=new Float64Array(N), cnt=new Uint32Array(N);
+    for (let i=a;i<=b;i++){ const v=c.vals[i]; if (isNaN(v)||!isOn(i)) continue; const j=Math.min(N-1, Math.floor((LOG.t[i]-von)/step)); if (j<0) continue; sum[j]+=v; cnt[j]++; }
+    for (let j=0;j<N;j++) w.push(cnt[j] ? rnd(sum[j]/cnt[j]) : null);
+    out.kanaele[c.raw]={...(c.derived?{berechnet:c.note||true}:{}), ...(ex.kpi&&st?{min:rnd(st.min), avg:rnd(st.avg), max:rnd(st.max)}:{}), punkte_alle_s:rnd(step), werte:w};
+  }
+  if (ex.kpi) out.kennzahlen_flug=kpis(LOG,CH,RUNS).map(k=>`${k.l}: ${String(k.v).replace(/<[^>]+>/g,'')}${k.u?' '+k.u:''}${k.d?' ('+k.d+')':''}`);
+  if (ex.events){
+    const inR=r=>LOG.t[r.e]>=von && LOG.t[r.s]<=bis, tt=i=>fmtT(LOG.t[i]);
+    out.ereignisse=[
+      ...RUNS.filter(inR).map(r=>({typ:'Motorlauf', von:tt(r.s), bis:tt(r.e), dauer_s:rnd(r.dur), hoehe_m:[rnd(r.a0),rnd(r.a1)], strom_max_A:rnd(r.curMax), mAh:rnd(r.mah)})),
+      ...CLIMB.filter(inR).map(r=>({typ:'Steigflug', von:tt(r.s), bis:tt(r.e), dauer_s:rnd(r.dur), hoehe_m:[rnd(r.h0),rnd(r.hi)], steigen_ms:rnd(r.rate)})),
+      ...THERM.filter(inR).map(r=>({typ:'Thermik', von:tt(r.s), bis:tt(r.e), dauer_s:rnd(r.dur), hoehe_m:[rnd(r.h0),rnd(r.hi)], steigen_ms:rnd(r.rate)})),
+    ].sort((x,y)=>tSec(x.von)-tSec(y.von));
+  }
+  if (ex.glide){ const g=calc('glide'), gv=[]; if (g) for (let i=a;i<=b;i++) if (!isNaN(g.vals[i])&&isOn(i)) gv.push(g.vals[i]);
+    out.gleiten={gleitzahl_median:gv.length?rnd(median(gv)):null, gleitzahl_werte:gv.length, polare:polarSummary()}; }
+  const hw=['Zeiten = Flugzeit ab Logbeginn (m:ss)', `Geschwindigkeiten in ${SPEED}; GPS-Geschwindigkeit ist über Grund, TAS (falls berechnet) durch die Luft`];
+  if (CH.vario){ const s=stats(CH.vario.vals); if (s && Math.max(Math.abs(s.max),Math.abs(s.min))>=9.9) hw.push('Vario-Sensor begrenzt bei ±10 m/s'); }
+  if (LOG.hourJumps) hw.push('Die Uhrzeit im Log springt, die Zeitachse ist korrigiert');
+  out.hinweise=hw;
+  if (ex.gps && LOG.gps){ const p=[]; for (let j=0;j<N;j++){ const i=lowerIdx(von+j*step); const g=LOG.gps[i]; if (g) p.push(g.map(x=>+x.toFixed(5))); } out.gps={spur_lat_lon:p}; }
+  return out;
+}
+function appState(){
+  needLog();
+  return { modell:FILES[CUR]?.model, log:FILES[CUR]?.name, logs_des_modells:(models().get(FILES[CUR]?.model)||[]).length, logdauer:fmtT(tEnd()),
+    tab:store.get('tab'), zeitbereich:{von:fmtT(VIEW.min), bis:fmtT(VIEW.max)}, diagramme:orderedSelected().map(c=>c.raw), ueberlagert:OVERLAY,
+    filter:FILTERS.map(f=>f.missing?{parameter:f.k, fehlt_im_log:true}:{parameter:f.k, min:rnd(f.lo), max:rnd(f.hi), bereich:[rnd(f.min),rnd(f.max)]}), aktive_eintraege:NACT, eintraege:LOG.t.length,
+    geschwindigkeitseinheit:SPEED, kanaele:LOG.cols.filter(c=>!c.rc).map(c=>{ const s=stats(c.vals); return {name:c.raw, ...(c.derived?{berechnet:true}:{}), min:rnd(s?.min), max:rnd(s?.max)}; }),
+    sender_kanaele:LOG.cols.filter(c=>c.rc).map(c=>c.raw), kennzahlen:kpis(LOG,CH,RUNS).map(k=>`${k.l}: ${k.v}${k.u?' '+k.u:''}`), polare:polarSummary() };
+}
+const TAB_NAMES={uebersicht:'uebersicht', übersicht:'uebersicht', diagramme:'diagramme', steigen:'steigen', thermik:'steigen', steigflüge:'steigen', polare:'polare', karte:'karte', wind:'karte', werte:'werte', 'alle werte':'werte', rohdaten:'rohdaten'};
+const arr = v => v==null ? [] : Array.isArray(v) ? v : [v];
+const S_TIME={type:['string','number'], description:'Flugzeit ab Logbeginn, "m:ss" oder Sekunden'};
+const ACTIONS=[
+  { name:'app_zustand', read:true, desc:'Zustand der App: geladenes Modell und Log, Tab, Zeitbereich (Zoom), offene Diagramme, Filter, alle Kanäle mit Min/Max, Kennzahlen, Polare. Zuerst aufrufen.',
+    schema:{type:'object', properties:{}}, run:()=>appState() },
+  { name:'daten_lesen', read:true, desc:'Zahlen aus dem geladenen Log: pro Kanal Min/Ø/Max und eine gleichmässig heruntergerechnete Reihe, dazu Motorläufe, Steigflüge, Thermik, Gleitzahl und Polare. Ohne Angaben: offene Diagramme im aktuellen Zoom, 60 Punkte. Zählt nur aktive Einträge (Filter).',
+    schema:{type:'object', properties:{kanaele:{type:'array', items:{type:'string'}, description:'Kanalnamen wie in app_zustand'}, von:S_TIME, bis:S_TIME, ganz:{type:'boolean', description:'ganzer Flug statt Zoom'}, punkte:{type:'integer', minimum:10, maximum:500}}},
+    run:a=>kiData({kanaele:arr(a.kanaele), von:a.von, bis:a.bis, ganz:a.ganz, punkte:a.punkte}) },
+  { name:'logs_auflisten', read:true, desc:'Alle geladenen Logs, nach Modell gruppiert, mit Datum, Startzeit und Dauer.',
+    schema:{type:'object', properties:{}},
+    run:()=>{ const out={}; for (const [m,l] of models()) out[m]=l.slice(0,200).map(i=>{ const f=FILES[i]; return {name:f.name, datum:f.date, start:f.time, dauer:f.dur!=null?fmtT(f.dur):null, offen:i===CUR}; }); return out; } },
+  { name:'log_oeffnen', desc:'Ein anderes Log öffnen: per Dateiname, oder per Modell (dann das neueste Log dieses Modells).',
+    schema:{type:'object', properties:{name:{type:'string'}, modell:{type:'string'}}},
+    run:async a=>{ let i=-1;
+      if (a.name){ const s=String(a.name).toLowerCase(); i=FILES.findIndex(f=>f.name.toLowerCase()===s); if (i<0) i=FILES.findIndex(f=>f.name.toLowerCase().includes(s)); }
+      else if (a.modell){ const m=[...models().keys()].find(k=>k.toLowerCase()===String(a.modell).toLowerCase()); if (m) i=models().get(m)[0]; }
+      if (i<0) throw new Error('Kein passendes Log gefunden. logs_auflisten zeigt alle.');
+      await openLog(i); return {log:FILES[CUR].name, modell:FILES[CUR].model}; },
+    say:(a,r)=>T('Log geöffnet: {n}',{n:r.log}) },
+  { name:'filter_setzen', desc:'Filter auf einen Kanal setzen oder ändern: nur Einträge mit Werten zwischen min und max sind aktiv (die übrigen werden grau und zählen nicht). Fehlt min oder max, ist diese Seite offen. Filter bleiben beim Wechsel des Logs bestehen.',
+    schema:{type:'object', properties:{parameter:{type:'string', description:'Kanalname'}, min:{type:'number'}, max:{type:'number'}}, required:['parameter']},
+    run:a=>{ const c=colFind(a.parameter); let f=FILTERS.find(x=>x.k===c.raw&&!x.missing);
+      if (!f){ f=makeFilter(c.raw); if (!f) throw new Error(`„${c.raw}“ hat keinen Wertebereich zum Filtern.`); FILTERS=FILTERS.filter(x=>x.k!==c.raw).concat(f); }
+      const cl=v=>Math.max(f.min, Math.min(f.max, v));
+      f.lo = a.min==null ? f.min : cl(+a.min); f.hi = a.max==null ? f.max : cl(+a.max); if (f.hi<f.lo) [f.lo,f.hi]=[f.hi,f.lo];
+      fWant(f); renderFilters(); applyFilters();
+      return {parameter:c.raw, min:rnd(f.lo), max:rnd(f.hi), aktive_eintraege:NACT, eintraege:LOG.t.length}; },
+    say:(a,r)=>T('Filter gesetzt: {p} {a} bis {b}',{p:r.parameter, a:fv0(r.min), b:fv0(r.max)}) },
+  { name:'filter_entfernen', desc:'Einen Filter entfernen, oder mit alle=true alle Filter.',
+    schema:{type:'object', properties:{parameter:{type:'string'}, alle:{type:'boolean'}}},
+    run:a=>{ if (a.alle) FILTERS=[]; else { const c=colFind(a.parameter); if (!FILTERS.some(f=>f.k===c.raw)) throw new Error(`Auf „${c.raw}“ ist kein Filter gesetzt.`); FILTERS=FILTERS.filter(f=>f.k!==c.raw); }
+      renderFilters(); applyFilters(); return {filter:FILTERS.map(f=>f.k), aktive_eintraege:NACT}; },
+    say:a=>a.alle?T('Alle Filter entfernt'):T('Filter entfernt: {p}',{p:a.parameter}) },
+  { name:'zeitbereich_setzen', desc:'Zeitbereich (Zoom) der Diagramme setzen. ganz=true zeigt den ganzen Flug.',
+    schema:{type:'object', properties:{von:S_TIME, bis:S_TIME, ganz:{type:'boolean'}}},
+    run:a=>{ needLog(); if (a.ganz || (a.von==null&&a.bis==null)) setView(0,tEnd()); else setView(tSec(a.von)??0, tSec(a.bis)??tEnd()); return {von:fmtT(VIEW.min), bis:fmtT(VIEW.max)}; },
+    say:(a,r)=>T('Zeitbereich gesetzt: {a} – {b}',{a:r.von, b:r.bis}) },
+  { name:'diagramme_zeigen', desc:'Diagramme ein- oder ausblenden. nur = genau diese Kanäle zeigen. ueberlagert = alle in ein Diagramm (true) oder einzeln (false).',
+    schema:{type:'object', properties:{nur:{type:'array', items:{type:'string'}}, einblenden:{type:'array', items:{type:'string'}}, ausblenden:{type:'array', items:{type:'string'}}, ueberlagert:{type:'boolean'}}},
+    run:a=>{ const ks=new Set(a.nur ? arr(a.nur).map(k=>colFind(k).raw) : selected);
+      for (const k of arr(a.einblenden)) ks.add(colFind(k).raw); for (const k of arr(a.ausblenden)) ks.delete(colFind(k).raw);
+      setSelected([...ks], a.ueberlagert); return {diagramme:orderedSelected().map(c=>c.raw), ueberlagert:OVERLAY}; },
+    say:(a,r)=>T('Diagramme: {l}',{l:r.diagramme.join(', ')||'–'})+(a.ueberlagert!=null?' · '+(r.ueberlagert?T('Überlagert'):T('Einzeln')):'') },
+  { name:'tab_wechseln', desc:'Ansicht wechseln: uebersicht, diagramme, steigen (Thermik & Steigflüge), polare, karte (Karte & Wind), werte (Alle Werte), rohdaten.',
+    schema:{type:'object', properties:{tab:{type:'string', enum:TABS}}, required:['tab']},
+    run:a=>{ const t=TAB_NAMES[String(a.tab).toLowerCase()]; if (!t) throw new Error('Unbekannter Tab. Möglich: '+TABS.join(', ')); showTab(t); return {tab:t}; },
+    say:(a,r)=>T('Tab gewechselt: {t}',{t:$(`#tab-${r.tab}`).textContent}) },
+  { name:'polare_erstellen', desc:'Polare des Modells im Tab Polare berechnen und zeigen (Sinken über Fahrt aus allen angehakten Logs des Modells, nur Gleitflug geradeaus mit Motor aus). filter_anwenden=true: nur Einträge, die bei den gesetzten Filtern aktiv sind (z. B. vorher Thermik oder Vario > 0,3 m/s herausfiltern). Gibt beste Gleitzahl, geringstes Sinken und die Klassen zurück.',
+    schema:{type:'object', properties:{filter_anwenden:{type:'boolean'}, logs:{type:'array', items:{type:'string'}, description:'nur diese Logs (Dateinamen); leer = Auswahl bleibt'}, alle_logs:{type:'boolean'}, ansicht:{type:'string', enum:['sinken','gleitzahl']}, glaettung:{type:'string', enum:['physikalisch','median','aus']}}},
+    run:async a=>{ needLog();
+      if (a.filter_anwenden!=null){ PST.filt=!!a.filter_anwenden; store.set('polar.filt',PST.filt?'1':'0'); }
+      if (a.ansicht){ PST.view=a.ansicht==='gleitzahl'?'glide':'sink'; store.set('polar.view',PST.view); }
+      if (a.glaettung){ PST.smooth={physikalisch:'phys', median:'med', aus:'off'}[a.glaettung]||PST.smooth; store.set('polar.smooth',PST.smooth); }
+      polSegSync(); showTab('polare'); await renderPolar();
+      if (POLAR_LOGS && (a.alle_logs || arr(a.logs).length)){ const want=arr(a.logs).map(x=>String(x).toLowerCase());
+        POLAR_LOGS.logs.forEach(l=>l.on = a.alle_logs || want.some(w=>l.f.name.toLowerCase().includes(w))); savePolarOff(); drawPolar(); }
+      return polarSummary(); },
+    say:(a,r)=>T('Polare im Tab Polare erstellt: {n} Logs, {p} Gleitpunkte{f}',{n:r?.logs_in_polare.length??0, p:(r?.gleitpunkte??0).toLocaleString(LOC), f:r?.filter_angewendet?T(', mit Filter'):''}) },
+  { name:'rueckgaengig', desc:'Die letzte Aktion rückgängig machen (Filter, Zeitbereich, Diagramme, Log, Tab, Polare).',
+    schema:{type:'object', properties:{}}, undo:true,
+    run:async()=>{ const s=UNDO.pop(); if (!s) throw new Error('Es gibt nichts rückgängig zu machen.'); await appRestore(s); return {ok:true, zustand:{log:FILES[CUR]?.name, zeitbereich:{von:fmtT(VIEW.min),bis:fmtT(VIEW.max)}, filter:FILTERS.map(f=>f.k), diagramme:[...selected]}}; },
+    say:()=>T('Rückgängig gemacht') },
+];
+const UNDO=[];
+let actQueue=Promise.resolve();
+window.ETHOS_API = {
+  // kind: 'all' | 'read'; Format wie MCP (inputSchema)
+  tools(kind='all'){ return ACTIONS.filter(x=>kind==='all'||x.read).map(x=>({name:x.name, description:x.desc, inputSchema:x.schema})); },
+  // Aktionen laufen nacheinander, nie zwei gleichzeitig
+  call(name, args, src){ const r=actQueue.then(()=>this._call(name, args, src)); actQueue=r.catch(()=>{}); return r; },
+  async _call(name, args, src){
+    await BOOT;
+    const x=ACTIONS.find(a=>a.name===name); if (!x) return {ok:false, error:'Unbekanntes Werkzeug: '+name};
+    try{
+      const snap = x.read||x.undo ? null : appSnap();
+      const result = await x.run(args||{});
+      let action=null;
+      if (!x.read){ if (snap){ UNDO.push(snap); if (UNDO.length>30) UNDO.shift(); } action=x.say(args||{}, result); if (src==='mcp') toast('Claude (MCP): '+action); }
+      return {ok:true, result, action, polar:name==='polare_erstellen'};
+    }catch(e){ return {ok:false, error:e.message||String(e)}; }
+  },
+};
+let toastT=0;
+function toast(t){ const e=$('#toast'); e.textContent=t; e.hidden=false; clearTimeout(toastT); toastT=setTimeout(()=>e.hidden=true, 4000); }
+
+// ---------- KI-Auswertung: Schlüssel und Aufruf (Desktop über das SDK im Hauptprozess, Web direkt aus dem Browser) ----------
+const KI_MODELS={'claude-sonnet-5-5':'Claude Sonnet 5.5', 'claude-opus-5-5':'Claude Opus 5.5'};
+const kiOpt = { get model(){ const m=store.get('ki.model'); return KI_MODELS[m]?m:'claude-sonnet-5-5'; }, get act(){ return store.get('ki.act')!=='0'; },
+  get gps(){ return store.get('ki.gps')==='1'; }, get openSent(){ return store.get('ki.open')==='1'; } };
+let SDKWEB=null;
+async function webClient(key){
+  SDKWEB = SDKWEB || await import('https://cdn.jsdelivr.net/npm/@anthropic-ai/sdk@0.130.0/+esm');
+  const A=SDKWEB.Anthropic||SDKWEB.default; return {A, c:new A({apiKey:key, dangerouslyAllowBrowser:true, maxRetries:2})};
+}
+function webErr(e, A){
+  const kind = !A ? 'offline' : e instanceof A.AuthenticationError ? 'auth' : e instanceof A.PermissionDeniedError ? 'permission' : e instanceof A.RateLimitError ? 'rate'
+    : e instanceof A.APIConnectionError ? 'offline' : e instanceof A.BadRequestError && /credit balance/i.test(e.message) ? 'credit' : e instanceof A.APIError ? 'api' : 'other';
+  return {error:{kind, status:e?.status??null, message:String(e?.error?.error?.message||e?.message||e)}};
+}
+const KI = {
+  async state(){ if (DESK?.aiKeyState) return DESK.aiKeyState(); const k=store.get('ki.key'); return k ? {set:true, hint:'sk-ant-…'+k.slice(-4)} : {set:false}; },
+  async setKey(k){ if (DESK?.aiSetKey) return DESK.aiSetKey(k||null); k ? store.set('ki.key',k) : store.del('ki.key'); return this.state(); },
+  async test(k){ if (DESK?.aiTest) return DESK.aiTest(k||null); k=k||store.get('ki.key'); if (!k) return {error:{kind:'nokey'}};
+    let A; try{ const w=await webClient(k); A=w.A; await w.c.models.list({limit:1}); return {ok:true}; }catch(e){ return webErr(e,A); } },
+  async create(body){ if (DESK?.aiCreate) return DESK.aiCreate(body); const k=store.get('ki.key'); if (!k) return {error:{kind:'nokey'}};
+    let A; try{ const w=await webClient(k); A=w.A; const {betas, ...p}=body; return {message: betas?.length ? await w.c.beta.messages.create({...p, betas}) : await w.c.messages.create(p)}; }catch(e){ return webErr(e,A); } },
+};
+let KEYSET=false;
+async function kiKeyRefresh(fresh){ try{ KEYSET=!!(await KI.state()).set; }catch(e){ KEYSET=false; } const b=$('#kiOpen'); b.hidden=!KEYSET; b.classList.toggle('fresh', !!fresh&&KEYSET); if (!KEYSET && KS.open) kiShow(false); }
+async function kiSettingsRow(){ const st=await KI.state(); $('#kStat').textContent=st.set?T('Aktiv'):T('Aus'); $('#kStat').classList.toggle('on',!!st.set);
+  $('#kStatTxt').textContent=st.set?T('Schlüssel hinterlegt'):T('Kein Schlüssel hinterlegt'); }
+async function kiDlgState(){ const st=await KI.state(); $('#keyState').classList.toggle('on',!!st.set);
+  $('#keyStateTxt').textContent = st.set ? T('Schlüssel {h} hinterlegt. Der Knopf KI-Auswertung ist im Tab Diagramme sichtbar.',{h:st.hint}) : T('Kein Schlüssel hinterlegt. Der Knopf KI-Auswertung ist ausgeblendet.'); return st; }
+const kiErrText = e => ({
+  nokey:[T('Noch kein API-Schlüssel'), T('Für die KI-Auswertung braucht die App einen Schlüssel von Anthropic. Du kannst ihn unter ⚙ Einstellungen → KI-Auswertung eintragen.')],
+  auth:[T('Der API-Schlüssel wurde abgelehnt'), T('Anthropic meldet: Schlüssel ungültig oder widerrufen (401). Prüf den Schlüssel in den Einstellungen oder erstelle in der Anthropic-Konsole einen neuen.')],
+  credit:[T('Guthaben aufgebraucht'), T('Lade unter console.anthropic.com → Billing Guthaben auf und versuch es nochmals.')],
+  rate:[T('Zu viele Anfragen'), T('Anthropic bremst gerade. In einer Minute nochmals versuchen.')],
+  offline:[T('Keine Verbindung zu Claude'), T('Die KI-Auswertung braucht Internet. Alles andere in der App funktioniert weiter. Deine Auswahl bleibt erhalten.')],
+  permission:[T('Kein Zugriff'), T('Der Schlüssel darf dieses Modell nicht benutzen ({m}).',{m:e.message||''})],
+}[e.kind] || [T('Claude meldet einen Fehler'), (e.status?e.status+': ':'')+(e.message||'')]);
+// Einstellungen → KI-Auswertung
+$('#openKi').addEventListener('click', async ()=>{ $('#settingsDlg').close(); $('#kiKey').value=''; $('#kiKey').type='password'; $('#kiShow').textContent=T('Anzeigen'); $('#kiMsg').textContent=''; kiDelPending=false;
+  $('#kiModel').value=kiOpt.model; $('#kiOpenSent').checked=kiOpt.openSent; $('#kiAct').checked=kiOpt.act; $('#kiGps').checked=kiOpt.gps;
+  $('#kiStoreHint').textContent = DESK?.aiKeyState ? T('Wird nur auf diesem Gerät gespeichert, verschlüsselt im Schlüsselbund des Systems. Nie im Log-Archiv.') : T('Wird nur auf diesem Gerät gespeichert, im Browser. Nie im Log-Archiv.');
+  await kiDlgState(); $('#kiDlg').showModal(); $('#kiKey').focus(); });
+let kiDelPending=false;
+const kiBack=()=>{ $('#kiDlg').close(); openSettings(); };
+$('#kiBack').addEventListener('click', kiBack); $('#kiCancel').addEventListener('click', kiBack);
+$('#kiShow').addEventListener('click', e=>{ const i=$('#kiKey'), sh=i.type==='password'; i.type=sh?'text':'password'; e.target.textContent=sh?T('Verbergen'):T('Anzeigen'); });
+$('#kiDel').addEventListener('click', ()=>{ $('#kiKey').value=''; kiDelPending=true; $('#kiMsg').innerHTML=`<span>${esc(T('Wird beim Speichern entfernt.'))}</span>`; });
+$('#kiTest').addEventListener('click', async e=>{ const v=$('#kiKey').value.trim(), m=$('#kiMsg'), st=await KI.state();
+  if (!v && !st.set){ m.innerHTML=`<span class="badline">${esc(T('Bitte zuerst einen Schlüssel einfügen.'))}</span>`; return; }
+  if (v && !v.startsWith('sk-ant-')){ m.innerHTML=`<span class="badline">${esc(T('Das sieht nicht nach einem Anthropic-Schlüssel aus (beginnt mit sk-ant-).'))}</span>`; return; }
+  e.target.disabled=true; m.textContent=T('Prüfe …');
+  const r=await KI.test(v||null); e.target.disabled=false;
+  m.innerHTML = r.ok ? `<span class="okline">${esc(T('Schlüssel gültig. Verbindung zu Claude steht.'))}</span>` : `<span class="badline">${esc(kiErrText(r.error).join(': '))}</span>`; });
+$('#kiForm').addEventListener('submit', async e=>{ e.preventDefault();
+  store.set('ki.model',$('#kiModel').value); store.set('ki.open',$('#kiOpenSent').checked?'1':'0'); store.set('ki.act',$('#kiAct').checked?'1':'0'); store.set('ki.gps',$('#kiGps').checked?'1':'0');
+  KS.extra.gps=kiOpt.gps;
+  const v=$('#kiKey').value.trim(), had=KEYSET;
+  try{ if (v) await KI.setKey(v); else if (kiDelPending) await KI.setKey(null); }
+  catch(err){ $('#kiMsg').innerHTML=`<span class="badline">${esc(String(err.message||err).replace(/^Error invoking remote method '[^']+': (Error: )?/,''))}</span>`; return; }
+  await kiKeyRefresh(v && !had);
+  if (KEYSET && !had) toast(T('Schlüssel gespeichert. KI-Auswertung ist jetzt im Tab Diagramme verfügbar.'));
+  else if (!KEYSET && had) toast(T('Schlüssel entfernt. KI-Auswertung ist ausgeblendet.'));
+  if (KS.open) kiRender();
+  kiBack(); });
+
+// ---------- MCP-Server (nur Desktop-App) ----------
+async function mcpSettingsRow(){ if (!DESK?.mcpInfo) return; const i=await DESK.mcpInfo();
+  $('#mStat').textContent = i.running ? T('Läuft') : i.on ? T('Fehler') : T('Aus'); $('#mStat').className='kstat'+(i.running?' on':i.on?' bad':'');
+  $('#mStatTxt').textContent = i.running ? `127.0.0.1:${i.port}` : i.error || T('Für Claude Desktop und andere KI-Programme'); }
+async function mcpDlgFill(){ const i=await DESK.mcpInfo();
+  $('#mcpOn').checked=i.on; $('#mcpPort').value=i.port;
+  $('#mcpState').classList.toggle('on', i.running);
+  $('#mcpStateTxt').textContent = i.running ? T('Läuft auf {u}',{u:i.url}) : i.error ? T('Startet nicht: {e}',{e:i.error}) : T('Ausgeschaltet.');
+  $('#mcpJson').textContent = JSON.stringify(i.desktop, null, 2);
+  $('#mcpCli').textContent = `claude mcp add --transport http ethos-log-viewer ${i.url}`; $('#mcpCopied').textContent=''; }
+if (DESK?.mcpInfo){
+  $('#openMcp').addEventListener('click', async ()=>{ $('#settingsDlg').close(); await mcpDlgFill(); $('#mcpDlg').showModal(); });
+  const back=()=>{ $('#mcpDlg').close(); openSettings(); };
+  $('#mcpBack').addEventListener('click', back); $('#mcpCancel').addEventListener('click', back);
+  $('#mcpCopy').addEventListener('click', async ()=>{ const t=$('#mcpJson').textContent; try{ await DESK.copyText(t); $('#mcpCopied').textContent=T('Kopiert'); }catch(e){ $('#mcpCopied').textContent=T('Kopieren nicht möglich'); } });
+  $('#mcpForm').addEventListener('submit', async e=>{ e.preventDefault(); const port=Math.round(+$('#mcpPort').value)||3917;
+    SETTINGS = await DESK.setSettings({ mcp:$('#mcpOn').checked, mcpPort:Math.max(1024,Math.min(65535,port)) });
+    await mcpDlgFill(); if (!$('#mcpOn').checked || (await DESK.mcpInfo()).running) back(); });
+}
+
+// ---------- KI-Auswertung: Seitenleiste im Tab Diagramme ----------
+var KS = { open:false, step:1, range:'zoom', q:'', extra:{kpi:true, events:true, glide:true, model:true, gps:kiOpt.gps}, conv:null, turns:[], busy:false, prog:[] };
+const KI_SUGGEST=[T('Erstelle eine Polare nur aus dem Gleitflug, ohne Thermik'), T('Wie gut habe ich die Thermik genutzt?'), T('Wie effizient waren die Motorläufe?'), T('Ist der Empfang in Ordnung?')];
+function kiShow(on){ KS.open=on; $('#kiPanel').hidden=!on; document.body.classList.toggle('kiopen',on); $('#kiOpen').setAttribute('aria-expanded',on);
+  if (on){ kiRender(); setTimeout(()=>($('#kiQ')||$('#kiFq'))?.focus(), 50); } }
+$('#kiOpen').addEventListener('click', ()=>kiShow(!KS.open));
+$('#kiClose').addEventListener('click', ()=>kiShow(false));
+document.querySelectorAll('#kiPanel .steps button').forEach(b=>b.addEventListener('click',()=>{ const n=+b.dataset.step; if (n===2 && !KS.turns.length) return kiSend(); KS.step=n; kiRender(); }));
+const kiOpts = () => ({ von:KS.range==='all'?0:VIEW.min, bis:KS.range==='all'?tEnd():VIEW.max, ganz:KS.range==='all', extra:KS.extra, kanaele:orderedSelected().map(c=>c.raw) });
+function kiSentBox(label, data){
+  const json=JSON.stringify(data,null,1).replace(/\[\n\s*([\s\S]*?)\n\s*\]/g,(m,a)=>'['+a.replace(/\s*\n\s*/g,' ')+']');
+  const kb=(new Blob([JSON.stringify(data)]).size/1024), n=Object.keys(data.kanaele||{}).length, x=KS.extra;
+  const parts=[T('{n} Kanäle',{n}), x.kpi&&T('Kennzahlen'), x.events&&T('Ereignisse'), x.glide&&T('Gleitzahl'), x.model&&T('Modellname'), data.frage&&T('Frage'), x.gps?T('mit GPS'):T('ohne GPS')].filter(Boolean);
+  return `<details class="sent"${kiOpt.openSent?' open':''}><summary><span class="sumt">${esc(label)}</span><span class="sumd">${esc(parts.join(' · '))} · ${fmt(kb,1)} KB</span></summary>
+    <div class="sentin"><ul class="sendlist">
+      <li>${esc(T('{n} Kanäle ({l}), je {k}ca. 60 Punkte aus {d}',{n, l:Object.keys(data.kanaele||{}).join(', '), k:x.kpi?T('Min / Ø / Max und '):'', d:data.ausschnitt.von+' – '+data.ausschnitt.bis}))}</li>
+      <li class="${x.events?'':'no'}">${T('Motorläufe, Steigflüge, Thermik')}</li><li class="${x.glide?'':'no'}">${T('Gleitzahl und Polare')}</li>
+      <li class="${x.model?'':'no'}">${T('Modellname')}</li><li class="${x.gps?'':'no'}">${T('GPS-Position')}</li><li class="${data.frage?'':'no'}">${T('Deine Frage oder Dein Auftrag')}</li></ul>
+      <div class="row"><b>${T('Genau so wird gesendet')}</b><span class="hint">${T('etwa {n} Tokens',{n:Math.round(kb*450+900).toLocaleString(LOC)})}</span><button type="button" class="linkbtn nolink" data-copy>${T('JSON kopieren')}</button></div>
+      <pre class="code">${esc(json)}</pre></div></details>`;
+}
+function kiStep1(){
+  if (!LOG) return `<p class="hint">${T('Öffne zuerst ein Log.')}</p>`;
+  const end=tEnd(), cols=LOG.cols.filter(c=>!c.rc).sort((a,b)=>selected.has(b.raw)-selected.has(a.raw)), x=KS.extra;
+  let data; try{ data=kiData({...kiOpts(), frage:KS.q||undefined}); }catch(e){ data=null; }
+  return `<fieldset><legend>${T('Ausschnitt')}</legend>
+    <label class="opt"><input type="radio" name="kiRng" value="zoom"${KS.range==='zoom'?' checked':''}> <span>${T('Aktueller Zoom')} <span class="mono" id="kiZoomLbl">${fmtT(VIEW.min)} – ${fmtT(VIEW.max)}</span><small>${T('Im Diagramm oder in der Zoomleiste ändern, das Panel folgt.')}</small></span></label>
+    <label class="opt"><input type="radio" name="kiRng" value="all"${KS.range==='all'?' checked':''}> <span>${T('Ganzer Flug')} <span class="mono">0:00 – ${fmtT(end)}</span></span></label></fieldset>
+  <fieldset><legend>${T('Diagramme')}</legend><div class="chanlist">${cols.map(c=>`<label class="opt" title="${esc(c.raw)}"><input type="checkbox" data-kc="${esc(c.raw)}"${selected.has(c.raw)?' checked':''}> <span><i class="sw" style="background:${c.color}"></i>${esc(c.raw)}</span></label>`).join('')}</div>
+    <span class="hint">${T('Vorgewählt sind die Kanäle, die gerade als Diagramm offen sind.')}</span></fieldset>
+  <fieldset><legend>${T('Zusätzlich mitgeben')}</legend>
+    ${[['kpi',T('Kennzahlen (Min / Ø / Max)')],['events',T('Erkannte Motorläufe, Steigflüge und Thermik')],['glide',T('Gleitzahl und Polare des Modells')],['model',T('Modellname „{m}“',{m:FILES[CUR]?.model||''})]].map(([k,l])=>`<label class="opt"><input type="checkbox" data-kx="${k}"${x[k]?' checked':''}> <span>${esc(l)}</span></label>`).join('')}
+    <label class="opt"><input type="checkbox" data-kx="gps"${x.gps?' checked':''}${LOG.gps?'':' disabled'}> <span>${T('GPS-Position')}<small>${T('Standard aus. Dann weiss die KI nicht, wo Du fliegst.')}</small></span></label></fieldset>
+  <fieldset><legend>${T('Frage oder Auftrag')} <span class="hint">(${T('optional')})</span></legend>
+    <textarea id="kiQ" placeholder="${esc(T('Leer lassen für eine allgemeine Auswertung. Oder z. B.: Erstelle eine Polare ohne Thermik.'))}">${esc(KS.q)}</textarea>
+    <span class="hint">${kiOpt.act?T('Die KI kann antworten und die App bedienen: Filter setzen, Zeitbereich wählen, Diagramme ein- und ausblenden, eine Polare erstellen.'):T('Die KI darf die App nicht bedienen (Einstellungen → KI-Auswertung), sie antwortet nur.')}</span>
+    <div class="qchips">${KI_SUGGEST.map(q=>`<button type="button" class="qchip">${esc(q)}</button>`).join('')}</div></fieldset>
+  <div id="kiSentWrap">${data?kiSentBox(T('Was gesendet wird'), data):''}</div>
+  <p class="hint">${T('Die Daten gehen an Claude (Anthropic). Die CSV-Datei bleibt auf Deinem Gerät.')}</p>`;
+}
+function kiStep2(){
+  const h=KS.turns.map((t,n)=>{
+    let o=n?`<div class="bubble">${esc(t.q)}</div>`:'';
+    if (t.data && !n) o+=kiSentBox(T('Gesendete Daten'), t.data);
+    if (t.done?.length) o+=`<div class="note info"><b>${t.undone?T('Rückgängig gemacht'):T('Ausgeführt')}</b>${t.undone?`<span>${T('Die App ist wieder wie vorher.')}</span>`:`<ul class="acts">${t.done.map(d=>`<li>✓ ${esc(d)}</li>`).join('')}</ul>
+      <div class="row">${t.polar?`<button type="button" class="btn ghost" data-topolar>${T('Im Tab Polare ansehen')}</button>`:''}<button type="button" class="btn ghost" data-undo="${n}">${T('Rückgängig')}</button></div>`}</div>`;
+    if (t.error){ const [a,b]=kiErrText(t.error); o+=`<div class="note bad"><b>${esc(a)}</b><span>${esc(b)}</span><div class="row">${t.error.kind==='nokey'||t.error.kind==='auth'?`<button type="button" class="btn" data-toset>${T('Einstellungen öffnen')}</button>`:''}${n===KS.turns.length-1?`<button type="button" class="btn ghost" data-retry>${T('Nochmals versuchen')}</button>`:''}</div></div>`; }
+    if (t.text!=null) o+=`<div class="ana">${n?'':`<div class="meta"><span>${esc(t.meta)}</span><span>${esc(KI_MODELS[t.model]||t.model||'')}</span></div>`}${kiMd(t.text)}</div>`;
+    return o; }).join('');
+  const busy = KS.busy ? `<div class="prog">${KS.prog.map((p,i)=>`<div><span class="dot ${i<KS.prog.length-1?'ok':'run'}">${i<KS.prog.length-1?'✓':''}</span> ${esc(p)}</div>`).join('')}</div>` : '';
+  return `<div class="ana">${h}${busy}</div>`+(KS.busy?'':`<p class="hint">${T('Geschwindigkeiten über Grund, Wind nicht herausgerechnet, ausser die KI sagt es. KI-Auswertungen können danebenliegen; prüf wichtige Aussagen im Diagramm.')}</p>
+    <div class="followup"><label class="hint" for="kiFq">${T('Weitere Frage oder Auftrag')}</label><div class="row"><input type="text" id="kiFq" placeholder="${esc(T('z. B. Zeig dazu die Geschwindigkeit als Diagramm'))}"><button type="button" class="btn" id="kiFsend">${T('Senden')}</button></div></div>`);
+}
+function kiRender(){
+  if (!KS.open) return;
+  $('#kiModelLbl').textContent=KI_MODELS[kiOpt.model];
+  document.querySelectorAll('#kiPanel .steps button').forEach(b=>b.classList.toggle('on', +b.dataset.step===KS.step));
+  const body=$('#kiBody'), foot=$('#kiFoot');
+  if (KS.step===1){ body.innerHTML=kiStep1();
+    foot.innerHTML = KEYSET ? `<button type="button" class="btn" id="kiGo"${LOG&&!KS.busy?'':' disabled'}>${T('Senden und auswerten')}</button>` : `<span class="hint" style="margin-right:auto">${T('Kein Schlüssel hinterlegt')}</span><button type="button" class="btn" data-toset>${T('Einstellungen öffnen')}</button>`; }
+  else { body.innerHTML=kiStep2(); body.scrollTop=body.scrollHeight;
+    foot.innerHTML = KS.busy ? `<span class="hint" style="margin-right:auto">${T('Du kannst in der Zwischenzeit weiter in den Diagrammen arbeiten.')}</span>` : `<button type="button" class="btn ghost" id="kiBackSel">${T('Auswahl ändern')}</button><button type="button" class="btn ghost" id="kiCopy">${T('Text kopieren')}</button>`; }
+}
+// Zoom, Diagramme oder Log geändert: Auswahl im Panel nachführen, ohne das Eingabefeld neu aufzubauen
+let kiPingT=0;
+function kiPing(full){ if (!KS?.open || KS.step!==1) return; clearTimeout(kiPingT); kiPingT=setTimeout(()=>{
+  if (full || !$('#kiZoomLbl')) return kiRender();
+  $('#kiZoomLbl').textContent=`${fmtT(VIEW.min)} – ${fmtT(VIEW.max)}`;
+  document.querySelectorAll('#kiBody [data-kc]').forEach(c=>c.checked=selected.has(c.dataset.kc));
+  try{ const w=$('#kiSentWrap'), op=w.querySelector('details')?.open; w.innerHTML=kiSentBox(T('Was gesendet wird'), kiData({...kiOpts(), frage:KS.q||undefined})); if (op) w.querySelector('details').open=true; }catch(e){} }, 120); }
+$('#kiPanel').addEventListener('change', e=>{ const t=e.target;
+  if (t.name==='kiRng'){ KS.range=t.value; kiPing(); }
+  else if (t.dataset.kc!=null) toggleSel(t.dataset.kc);
+  else if (t.dataset.kx){ KS.extra[t.dataset.kx]=t.checked; kiPing(); } });
+$('#kiPanel').addEventListener('input', e=>{ if (e.target.id==='kiQ'){ KS.q=e.target.value; kiPing(); } });
+$('#kiPanel').addEventListener('keydown', e=>{ if (e.key==='Enter' && e.target.id==='kiFq'){ e.preventDefault(); $('#kiFsend').click(); }
+  if (e.key==='Enter' && (e.metaKey||e.ctrlKey) && e.target.id==='kiQ'){ e.preventDefault(); kiSend(); } });
+$('#kiPanel').addEventListener('click', async e=>{ const t=e.target.closest('button'); if (!t) return;
+  if (t.classList.contains('qchip')){ KS.q=t.textContent; $('#kiQ').value=KS.q; kiPing(); return; }
+  if (t.id==='kiGo') return kiSend();
+  if (t.id==='kiBackSel'){ KS.step=1; return kiRender(); }
+  if (t.id==='kiFsend'){ const v=$('#kiFq').value.trim(); if (v) kiSend(v); return; }
+  if (t.id==='kiCopy'){ const txt=[...$('#kiBody').querySelectorAll('.ana .ana')].map(x=>x.innerText).join('\n\n'); kiCopyText(txt, t); return; }
+  if (t.hasAttribute('data-copy')){ kiCopyText(t.closest('.sentin').querySelector('pre').textContent, t); return; }
+  if (t.hasAttribute('data-toset')){ openSettings(); return; }
+  if (t.hasAttribute('data-retry')){ const last=KS.turns.pop(); kiSend(KS.turns.length?last.q:undefined, true); return; }
+  if (t.hasAttribute('data-topolar')){ showTab('polare'); return; }
+  if (t.dataset.undo!=null){ const tr=KS.turns[+t.dataset.undo]; if (!tr||tr.undone) return; await appRestore(tr.snap); UNDO.length=Math.min(UNDO.length, tr.undoLen); tr.undone=true; kiRender(); return; }
+  if (t.classList.contains('tl')){ const a=+t.dataset.a, b=+t.dataset.b, pad=Math.max(10,(b-a)*.3); showTab('diagramme'); setView(a-pad, b+pad); setCursor(idxAt(a)); } });
+async function kiCopyText(txt, btn){ try{ if (DESK?.copyText) await DESK.copyText(txt); else await navigator.clipboard.writeText(txt); btn.textContent=T('Kopiert'); }catch(e){ btn.textContent=T('Kopieren nicht möglich'); } }
+// Antwort als einfaches Markdown; [[m:ss]] und [[m:ss-m:ss]] werden zu Zeitmarken
+function kiMd(s){
+  const TM='(\\d{1,2}:\\d{2}(?::\\d{2})?)', re=new RegExp(`\\[\\[${TM}(?:\\s*[–-]\\s*${TM})?\\]\\]`,'g');
+  const inl=t=>esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`([^`]+)`/g,'<code>$1</code>')
+    .replace(re,(m,a,b)=>`<button type="button" class="tl" data-a="${tSec(a)}" data-b="${tSec(b||a)}">${a}${b?'–'+b:''}</button>`);
+  let out='', list=null, para=[];
+  const flush=()=>{ if (para.length){ out+=`<p>${para.map(inl).join('<br>')}</p>`; para=[]; } if (list){ out+=`<${list.t}>${list.i.map(x=>`<li>${inl(x)}</li>`).join('')}</${list.t}>`; list=null; } };
+  for (const raw of String(s||'').split('\n')){ const l=raw.trimEnd(); let m;
+    if (!l.trim()){ flush(); continue; }
+    if ((m=/^#{1,4}\s+(.*)/.exec(l))){ flush(); out+=`<h3>${inl(m[1])}</h3>`; continue; }
+    if ((m=/^\s*[-*•]\s+(.*)/.exec(l)) || (m=/^\s*\d+[.)]\s+(.*)/.exec(l))){ const t=/^\s*\d/.test(l)?'ol':'ul'; if (para.length||(list&&list.t!==t)) flush(); list=list||{t,i:[]}; list.i.push(m[1]); continue; }
+    if (list){ list.i[list.i.length-1]+=' '+l.trim(); continue; }
+    para.push(l); }
+  flush(); return out;
+}
+const KI_SYSTEM = act => `Du bist die KI-Auswertung im Ethos Log Viewer, einer App für Telemetrie-Logs von FrSky-Ethos-Fernsteuerungen im Modellflug (Segler, Elektrosegler, Schlepp). Du bekommst eine Zusammenfassung des gewählten Ausschnitts als JSON und eine Frage oder einen Auftrag des Piloten.
+
+So antwortest du:
+- ${LANG==='de'?'Auf Deutsch in Schweizer Schreibweise (ss statt ß), per Du.':'In English.'} Knapp und konkret, wie ein erfahrener Fluglehrer, der das Log mit dem Piloten anschaut.
+- Beginne mit **Kurz:** und ein bis zwei Sätzen. Danach höchstens sechs Punkte als Liste; jeder Punkt nennt eine Zeit und Zahlen.
+- Zeiten immer als Flugzeit ab Logbeginn in doppelten eckigen Klammern: [[12:34]] oder [[12:34-13:10]]. Die App macht daraus klickbare Marken. Keine Uhrzeiten, keine Tabellen.
+- Erfinde keine Werte. Reichen die Daten nicht, hol dir mit daten_lesen mehr (andere Kanäle, anderer Zeitbereich, mehr Punkte) oder sag, was fehlt.
+- GPS-Geschwindigkeit ist über Grund; Wind ist nicht herausgerechnet, ausser TAS ist vorhanden.
+${act?`- Will der Pilot etwas in der App sehen oder eingestellt haben (Filter, Zeitbereich, Diagramme, Log, Tab, Polare), benutze die Werkzeuge und sag danach in einem Satz, was du gemacht hast. Ändere die Ansicht nicht ungefragt. Für eine Polare ohne Thermik oder Motor: zuerst passende Filter setzen (z. B. Vario-Höchstwert, Thermik-Schalter, Strom), dann polare_erstellen mit filter_anwenden=true.`:`- Die App bedienen ist ausgeschaltet; du kannst nur lesen. Gibt der Pilot einen Auftrag, sag ihm, dass er es unter Einstellungen → KI-Auswertung → „KI darf die App bedienen“ erlauben kann.`}`;
+async function kiSend(follow, retry){
+  if (KS.busy || !LOG) return;
+  const q = follow ?? KS.q.trim(), first = follow==null;
+  let data=null;
+  if (first){ try{ data=kiData({...kiOpts(), frage:q||undefined}); }catch(e){ toast(e.message); return; }
+    KS.conv={messages:[], model:kiOpt.model}; KS.turns=[]; }
+  const act=kiOpt.act, turn={q, data, done:[], snap:act?appSnap():null, undoLen:UNDO.length,
+    meta:`${FILES[CUR]?.model||''} · ${first?data.ausschnitt.von+'–'+data.ausschnitt.bis:''} · ${first?Object.keys(data.kanaele).join(', '):''}`};
+  KS.turns.push(turn); KS.step=2; KS.busy=true;
+  KS.prog = first ? [T('Daten zusammengestellt ({k} KB)',{k:fmt(new Blob([JSON.stringify(data)]).size/1024,1)}), T('An Claude gesendet, Claude wertet aus …')] : [T('An Claude gesendet, Claude wertet aus …')];
+  kiRender();
+  const conv=KS.conv, base=conv.messages.length;
+  conv.messages.push({role:'user', content: first ? `Daten (JSON):\n${JSON.stringify(data)}\n\nFrage oder Auftrag: ${q || 'Keine Frage. Werte den Ausschnitt allgemein aus: was ist passiert, was war gut, was fällt auf.'}` : q});
+  const tools=ETHOS_API.tools(act?'all':'read').filter(t=>t.name!=='rueckgaengig').map(t=>({name:t.name, description:t.description, input_schema:t.inputSchema}));
+  try{
+    for (let round=0; round<10; round++){
+      const r=await KI.create({ model:conv.model, max_tokens:16000, system:KI_SYSTEM(act), tools, messages:conv.messages,
+        output_config:{effort:'medium'}, cache_control:{type:'ephemeral'}, betas:['server-side-fallback-2026-07-01'], fallbacks:'default' });
+      if (r.error) throw r.error;
+      const m=r.message; conv.messages.push({role:'assistant', content:m.content}); turn.model=m.model;
+      const text=m.content.filter(b=>b.type==='text').map(b=>b.text).join('\n\n');
+      if (m.stop_reason==='refusal'){ turn.text=text || T('Claude hat diese Anfrage abgelehnt.'); break; }
+      if (m.stop_reason!=='tool_use'){ turn.text=text || (turn.done.length?T('Erledigt.'):''); if (m.stop_reason==='max_tokens') turn.text+='\n\n'+T('(Antwort gekürzt)'); break; }
+      const results=[];
+      for (const b of m.content.filter(b=>b.type==='tool_use')){
+        const x=ACTIONS.find(a=>a.name===b.name);
+        KS.prog.push(x&&!x.read ? T('Führt aus: {n}',{n:b.name}) : T('Liest Daten: {n}',{n:b.name})); kiRender();
+        const res = (!act && x && !x.read) ? {ok:false, error:'Die App bedienen ist ausgeschaltet.'} : await ETHOS_API.call(b.name, b.input, 'ki');
+        if (res.ok && res.action){ turn.done.push(res.action); if (res.polar) turn.polar=true; }
+        results.push({type:'tool_result', tool_use_id:b.id, content:JSON.stringify(res.ok?res.result:{fehler:res.error}), ...(res.ok?{}:{is_error:true})});
+      }
+      conv.messages.push({role:'user', content:results});
+      if (round===9) turn.text=text||T('Abgebrochen: zu viele Schritte.');
+    }
+  }catch(err){
+    turn.error=err.kind?err:{kind:'other', message:String(err.message||err)};
+    conv.messages.length=base;   // die fehlgeschlagene Runde zählt nicht; Nochmals versuchen schickt sie neu
+  }
+  KS.busy=false; kiRender();
+}
+kiKeyRefresh();
 </script>

@@ -1,13 +1,15 @@
 // Desktop-Hülle: zeigt den Ethos Log Viewer und synchronisiert Logs vom Sender ins Archiv
-const { app, BrowserWindow, ipcMain, dialog, shell, net } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, shell, net, safeStorage } = require('electron');
 const fs = require('fs');
 const path = require('path');
 const S = require('./sync');
 const U = require('./update');
 const E = require('./eject');
+const M = require('./mcp');
+const AI = require('./ai');
 
 const SETTINGS_FILE = () => path.join(app.getPath('userData'), 'settings.json');
-const DEFAULTS = () => ({ senderPath: 'Radio/logs', archiveDir: S.defaultArchive(), autoSync: true, archiveManual: false });
+const DEFAULTS = () => ({ senderPath: 'Radio/logs', archiveDir: S.defaultArchive(), autoSync: true, archiveManual: false, mcp: false, mcpPort: M.DEFAULT_PORT });
 let settings;
 function loadSettings() {
   try { settings = { ...DEFAULTS(), ...JSON.parse(fs.readFileSync(SETTINGS_FILE(), 'utf8')) }; }
@@ -40,7 +42,12 @@ function allowed(p) {
 }
 
 ipcMain.handle('settings:get', () => settings);
-ipcMain.handle('settings:set', (_, s) => { const r = saveSettings(s); watcher.synced.clear(); watcher.poll(); return r; });
+ipcMain.handle('settings:set', async (_, s) => {
+  const before = mcpWanted();
+  const r = saveSettings(s); watcher.synced.clear(); watcher.poll();
+  if (mcpWanted() !== before) await restartMcp();
+  return r;
+});
 ipcMain.handle('dialog:folder', async (_, current) => {
   const r = await dialog.showOpenDialog(win, { defaultPath: current || undefined, properties: ['openDirectory', 'createDirectory'] });
   return r.canceled ? null : r.filePaths[0];
@@ -92,8 +99,51 @@ ipcMain.handle('file:peek', async (_, p, n) => {
   } finally { await fh.close(); }
 });
 
+// ---------- KI-Auswertung: Schlüssel im Schlüsselbund des Systems (safeStorage), Aufruf über das Anthropic-SDK ----------
+const KEY_FILE = () => path.join(app.getPath('userData'), 'ai-key.bin');
+function readKey() {
+  try { const b = fs.readFileSync(KEY_FILE()); return safeStorage.isEncryptionAvailable() ? safeStorage.decryptString(b) : null; }
+  catch { return null; }
+}
+ipcMain.handle('ai:keyState', () => AI.keyState(readKey()));
+ipcMain.handle('ai:setKey', (_, key) => {
+  if (!key) { try { fs.unlinkSync(KEY_FILE()); } catch {} return AI.keyState(null); }
+  if (!safeStorage.isEncryptionAvailable()) throw new Error('Der Schlüsselbund des Systems ist nicht verfügbar.');
+  fs.mkdirSync(path.dirname(KEY_FILE()), { recursive: true });
+  fs.writeFileSync(KEY_FILE(), safeStorage.encryptString(String(key).trim()));
+  return AI.keyState(readKey());
+});
+ipcMain.handle('ai:test', (_, key) => AI.test(key || readKey()));
+ipcMain.handle('ai:create', (_, body) => AI.create(readKey(), body));
+
+// ---------- MCP-Server: nur auf diesem Rechner (127.0.0.1), in den Einstellungen ein- und ausschaltbar ----------
+let mcp = null, mcpError = '';
+const mcpWanted = () => settings.mcp ? (+settings.mcpPort || M.DEFAULT_PORT) : 0;
+const inWindow = js => win && !win.isDestroyed() ? win.webContents.executeJavaScript(js, true) : Promise.reject(new Error('Das Fenster der App ist geschlossen.'));
+async function restartMcp() {
+  if (mcp) { await mcp.close(); mcp = null; }
+  mcpError = '';
+  const port = mcpWanted(); if (!port) return;
+  const srv = M.createServer({ port, version: app.getVersion(),
+    getTools: () => inWindow('window.ETHOS_API ? window.ETHOS_API.tools() : []'),
+    callTool: (name, args) => inWindow(`window.ETHOS_API ? window.ETHOS_API.call(${JSON.stringify(name)}, ${JSON.stringify(args)}, 'mcp') : {ok:false,error:'Die App startet noch.'}`)
+      .catch(e => ({ ok: false, error: e.message })) });
+  try { await srv.listen(); mcp = srv; }
+  catch (e) { mcpError = e.code === 'EADDRINUSE' ? `Port ${port} ist schon belegt.` : e.message; }
+}
+function mcpInfo() {
+  const port = +settings.mcpPort || M.DEFAULT_PORT;
+  const bridge = app.isPackaged ? path.join(process.resourcesPath, 'mcp-stdio.js') : path.join(__dirname, 'mcp-stdio.js');
+  const args = port === M.DEFAULT_PORT ? [bridge] : [bridge, '--port=' + port];
+  return { on: !!settings.mcp, running: !!mcp, port, error: mcpError, url: `http://127.0.0.1:${port}/mcp`,
+    desktop: { mcpServers: { 'ethos-log-viewer': { command: process.execPath, args, env: { ELECTRON_RUN_AS_NODE: '1' } } } } };
+}
+ipcMain.handle('mcp:info', () => mcpInfo());
+ipcMain.handle('clipboard:write', (_, t) => { require('electron').clipboard.writeText(String(t)); });
+
 app.whenReady().then(() => {
   loadSettings();
+  restartMcp();
   watcher = new S.SyncWatcher(() => settings);
   watcher.on('status', s => win && !win.isDestroyed() && win.webContents.send('sync:status', s));
   createWindow();

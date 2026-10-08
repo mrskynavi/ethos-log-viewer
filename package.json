@@ -1,7 +1,7 @@
 {
   "name": "ethos-log-viewer",
   "productName": "Ethos Log Viewer",
-  "version": "2026.10.0",
+  "version": "2026.10.1",
   "description": "Telemetrie-Logs vom Ethos-Sender auswerten und automatisch vom Sender ins Archiv synchronisieren",
   "author": "Christoph Mächler",
   "license": "UNLICENSED",
@@ -10,11 +10,14 @@
   "scripts": {
     "prepare-app": "node scripts/prepare.js",
     "start": "npm run prepare-app && electron .",
-    "test": "node --test test/sync.test.js test/update.test.js test/eject.test.js",
+    "test": "node --test test/sync.test.js test/update.test.js test/eject.test.js test/mcp.test.js",
     "dist": "npm run prepare-app && electron-builder --publish never",
     "handbuch": "node scripts/handbuch.js",
     "build-pwa": "node scripts/build-pwa.js",
     "build-android": "node scripts/build-pwa.js --beispiel-verschoben && cap sync android"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "0.130.0"
   },
   "devDependencies": {
     "@azure/msal-browser": "4.30.0",
@@ -69,6 +72,12 @@
       "artifactName": "Ethos-Log-Viewer-${version}.${ext}",
       "hardenedRuntime": false
     },
-    "publish": null
+    "publish": null,
+    "extraResources": [
+      {
+        "from": "src/mcp-stdio.js",
+        "to": "mcp-stdio.js"
+      }
+    ]
   }
 }
