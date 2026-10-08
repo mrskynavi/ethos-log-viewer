@@ -6,6 +6,7 @@
 - Logs mit springender Uhrzeit laden wieder schnell und richtig: Manche Sender stellen die Uhr während dem Flug laufend vom GPS, dabei springt die Stunde wild hin und her (Minuten und Sekunden laufen sauber weiter). Die App hat das als Tageswechsel gelesen, die Zeitachse wurde Wochen lang, die App hing beim Laden, und die Diagramme waren unlesbar. Jetzt zählt nur der Abstand ohne die vollen Stunden, die Uhrzeit läuft ab der ersten Zeile weiter, und über dem Log steht ein Hinweis.
 - Sensor „Flughöhe“ wird als Höhe erkannt (statt der GPS-Höhe über Meer), damit stimmen Flugzeit, Max. Höhe, Thermik und Steigflüge.
 - Geschwindigkeitseinheit wählbar: unter ⚙ Einstellungen „Geschwindigkeit“ mit km/h (Standard), kn, m/s oder mph. Alle Geschwindigkeiten werden in diese Einheit umgerechnet, egal in welcher Einheit der Sensor loggt (z. B. GPS-Geschwindigkeit in kn beim Lak-17): Diagramme, Kennzahlen, Min/Ø/Max, Zeitpunkt-Werte, Filter, berechnete Werte wie TAS, Wind und Gegenwind, Wind nach Höhe und die Polare. Die Wahl gilt für alle Modelle; Vario bleibt in m/s, die Rohdaten zeigen die Werte wie im Log.
+- Diagramm direkt schliessen: Jedes Diagramm hat rechts in der Kopfzeile ein ✕, bei „Überlagert“ steht es in der Legende hinter jedem Kanal. Es wirkt genau wie ein Klick auf den Sensor-Knopf oben: Der Kanal ist danach abgewählt, der Knopf nicht mehr umrandet, und die Auswahl bleibt pro Modell gespeichert.
 
 ## 2026.10.0 – 2026-10-07
 
