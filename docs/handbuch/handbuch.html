@@ -298,7 +298,7 @@ a { color: var(--acc); }
 <tr><td class="c"><span class="num">6</span></td><td>Rot markieren</td><td>Färbt die Zeit rot, in der ein gewählter Schalter in einem gewählten Zustand stand (siehe unten).</td></tr>
 <tr><td class="c"><span class="num">7</span></td><td>Übersichtsleiste</td><td>Höhenprofil des ganzen Fluges. Das helle Fenster ist der sichtbare Ausschnitt: ziehen verschiebt, an den Rändern ziehen macht ihn grösser oder kleiner, Doppelklick zeigt alles.</td></tr>
 <tr><td class="c"><span class="num">8</span></td><td>Zeitpunkt</td><td>Zeitstrahl wie in <a href="#k7">Kapitel 7</a>.</td></tr>
-<tr><td class="c"><span class="num">9</span></td><td>Griff ⋮⋮ und ▲ ▼</td><td>Diagramm am Griff ziehen oder mit den Pfeilen verschieben, um die Reihenfolge zu ändern. Die Reihenfolge bleibt gespeichert.</td></tr>
+<tr><td class="c"><span class="num">9</span></td><td>Griff ⋮⋮, ▲ ▼ und ✕</td><td>Diagramm am Griff ziehen oder mit den Pfeilen verschieben, um die Reihenfolge zu ändern. Die Reihenfolge bleibt gespeichert. ✕ schliesst das Diagramm; das wirkt genau wie ein Klick auf den Sensor oben, der Knopf ist danach nicht mehr umrandet.</td></tr>
 </table>
 <h2>Zoomen und Verschieben</h2>
 <ul>
@@ -314,7 +314,7 @@ a { color: var(--acc); }
 <p>Wähle einen Schalter (SA …) oder logischen Schalter (LS …) und den Zustand, zum Beispiel <b>SB</b> und <b>oben (−1)</b>. Ohne eigene Wahl stellt die App das automatisch ein: derselbe Schalter wie für die Thermik, aber in der Gegenstellung. Ist SB unten = Thermik, wird SB oben rot markiert. Dann steht „automatisch“ daneben. Deine Wahl merkt sich die App pro Modell; der Link „automatisch“ setzt sie zurück.</p>
 <h2>Überlagert</h2>
 <figure><img src="bilder/10-ueberlagert.png" alt=""><figcaption>Höhe, Vario und ESC-Strom überlagert</figcaption></figure>
-<p>Jeder Kanal hat seine eigene Skala und nutzt die ganze Höhe. Die ersten zwei Skalen stehen links und rechts in der Farbe des Kanals. Die Legende oben zeigt bei jedem Kanal Min, Ø und Max des sichtbaren Ausschnitts; das Schild am Zeitpunkt listet alle Kanäle untereinander. Am übersichtlichsten ist „Überlagert“ mit zwei bis vier Kanälen.</p>
+<p>Jeder Kanal hat seine eigene Skala und nutzt die ganze Höhe. Die ersten zwei Skalen stehen links und rechts in der Farbe des Kanals. Die Legende oben zeigt bei jedem Kanal Min, Ø und Max des sichtbaren Ausschnitts, das ✕ dahinter blendet den Kanal aus; das Schild am Zeitpunkt listet alle Kanäle untereinander. Am übersichtlichsten ist „Überlagert“ mit zwei bis vier Kanälen.</p>
 <h2>Berechnete Werte (ƒ)</h2>
 <ul>
 <li><b>Leistung</b> = Strom × Spannung für jedes Paar mit gleichem Präfix (ESC, BEC, SRV1 …), <b>Energie</b> = Leistung über die Zeit aufsummiert.</li>
@@ -470,7 +470,7 @@ a { color: var(--acc); }
 <h3>Wo sind meine Schalter und Kanäle?</h3>
 <p>Im Tab Diagramme „Sender-Kanäle, Schalter und logische Schalter anzeigen“ einschalten. In den Rohdaten sind sie immer da.</p>
 <h3>Die Diagramme sind zu eng oder es sind zu viele.</h3>
-<p>Schalte nicht benötigte Kanäle oben aus, oder nutze „Überlagert“ für einen schnellen Vergleich weniger Kanäle. Mit <span class="btn">Alles</span> oder Doppelklick kommst Du jederzeit zur ganzen Flugdauer zurück.</p>
+<p>Schalte nicht benötigte Kanäle oben oder mit ✕ am Diagramm aus, oder nutze „Überlagert“ für einen schnellen Vergleich weniger Kanäle. Mit <span class="btn">Alles</span> oder Doppelklick kommst Du jederzeit zur ganzen Flugdauer zurück.</p>
 <h3>Werte am Zeitpunkt sind leer.</h3>
 <p>Es ist kein Zeitpunkt gesetzt. Zeitstrahl ziehen oder in ein Diagramm klicken.</p>
 <h3>Die Diagramme zeigen „Die Diagramm-Bibliothek konnte nicht geladen werden“.</h3>
@@ -495,6 +495,7 @@ a { color: var(--acc); }
 <tr><td>Diagramm, Übersichtsleiste</td><td>Doppelklick</td><td>Ganzes Log zeigen</td></tr>
 <tr><td>Übersichtsleiste</td><td>Fenster ziehen, Rand ziehen</td><td>Ausschnitt verschieben, vergrössern, verkleinern</td></tr>
 <tr><td>Diagramm-Kopf</td><td>⋮⋮ ziehen, ▲ ▼</td><td>Reihenfolge ändern</td></tr>
+<tr><td>Diagramm-Kopf, Legende (Überlagert)</td><td>✕</td><td>Diagramm schliessen bzw. Kanal ausblenden</td></tr>
 <tr><td>Zeitstrahl</td><td>Ziehen, Klick</td><td>Zeitpunkt setzen</td></tr>
 <tr><td>Zeitstrahl (Fokus)</td><td><span class="key">←</span> <span class="key">→</span> / mit <span class="key">Shift</span> / <span class="key">Bild ↑</span> <span class="key">Bild ↓</span></td><td>1 / 10 / 100 Datensätze</td></tr>
 <tr><td>Rohdaten</td><td>Klick auf Zeile</td><td>Zeitpunkt setzen</td></tr>
