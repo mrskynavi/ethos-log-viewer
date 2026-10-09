@@ -507,7 +507,14 @@ a { color: var(--acc); }
 <h2>3. Schlüssel erzeugen</h2>
 <ol>
 <li>Links <b>API Keys</b> öffnen und <b>Create Key</b> wählen.</li>
-<li>Einen Namen eingeben, z. B. „MM Flight Analyzer“, und bestätigen.</li>
+<li>Das Formular ausfüllen:
+<table>
+<tr><th>Feld</th><th>Was Du wählst</th></tr>
+<tr><td><b>Name</b></td><td>Ein Name, an dem Du den Schlüssel später erkennst, z. B. <code>mm-flight-analyzer</code>.</td></tr>
+<tr><td><b>Geltungsbereich</b> (Organisation oder Arbeitsbereich)</td><td><b>Organisation</b>, wie vorgeschlagen. Die App schickt ihre Anfragen nur an die normale Claude-API, dafür reicht ein Schlüssel mit diesem Bereich. Admin-Rechte braucht es nicht. Den Hinweis auf den Header <code>anthropic-workspace-id</code> musst Du nicht beachten; er betrifft nur Programme, die ihn selbst setzen. Hast Du einen eigenen Arbeitsbereich (Workspace) angelegt, kannst Du stattdessen diesen wählen. Das ist etwas sicherer, weil der Schlüssel dann nur dort gilt, aber nicht nötig.</td></tr>
+<tr><td><b>Ablauf</b></td><td>Ein Ablaufdatum ist eine gute Idee, z. B. 30 Tage. Läuft der Schlüssel ab, meldet die KI-Auswertung „Der API-Schlüssel wurde abgelehnt“. Dann erzeugst Du auf der Plattform einen neuen Schlüssel und trägst ihn in der App unter <span class="btn">⚙</span> → <span class="btn">KI-Auswertung …</span> ein. Ohne Ablaufdatum gilt der Schlüssel, bis Du ihn löschst.</td></tr>
+<tr><td><b>Konto</b></td><td>Der Schlüssel gehört zu dem Konto, mit dem Du angemeldet bist; die Kosten gehen auf dessen Guthaben.</td></tr>
+</table></li>
 <li>Den Schlüssel sofort kopieren. Er wird nur dieses eine Mal ganz angezeigt. Geht er verloren, erzeugst Du einfach einen neuen.</li>
 </ol>
 <h2>4. In der App eintragen</h2>
