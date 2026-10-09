@@ -78,23 +78,26 @@ a { color: var(--acc); }
   <li><a href="#k3">Erster Start und Einstellungen</a></li>
   <li><a href="#k4">Das Hauptfenster auf einen Blick</a></li>
   <li><a href="#k5">Logs in die App bringen</a>
-    <ol><li>Automatischer Sync vom Sender</li><li>Import von Dateien und Ordnern</li><li>Das Archiv</li><li>Modell und Log wählen</li></ol></li>
+    <ol><li>Automatischer Sync vom Sender</li><li>Import von Dateien und Ordnern</li><li>Das Archiv</li><li>Modell und Log wählen</li><li>Jeti-Logs</li></ol></li>
   <li><a href="#k6">Die Sync-Zeile</a></li>
   <li><a href="#k7">Der Zeitpunkt</a></li>
-  <li><a href="#k8">Tab „Übersicht“</a></li>
-  <li><a href="#k9">Tab „Diagramme“</a></li>
-  <li><a href="#k10">Tab „Thermik &amp; Steigflüge“</a></li>
-  <li><a href="#k11">Tab „Polare“</a></li>
-  <li><a href="#k12">Tab „Karte &amp; Wind“</a></li>
-  <li><a href="#k13">Tab „Alle Werte“</a></li>
-  <li><a href="#k14">Tab „Rohdaten“</a></li>
-  <li><a href="#k15">KI-Auswertung</a></li>
-  <li><a href="#k16">MCP-Server: die App aus Claude bedienen</a></li>
-  <li><a href="#k17">Darstellung, Sprache und Web-Version</a></li>
-  <li><a href="#k18">Was die App speichert</a></li>
-  <li><a href="#k19">Troubleshooting und FAQ</a></li>
-  <li><a href="#k20">Kurzreferenz Maus und Tastatur</a></li>
-  <li><a href="#k21">Änderungen pro Version</a></li>
+  <li><a href="#k8">Welche Sensoren braucht es für eine sinnvolle Auswertung?</a></li>
+  <li><a href="#k9">Tab „Übersicht“</a></li>
+  <li><a href="#k10">Tab „Diagramme“</a></li>
+  <li><a href="#k11">Tab „Thermik &amp; Steigflüge“</a></li>
+  <li><a href="#k12">Tab „Polare“</a></li>
+  <li><a href="#k13">Tab „Karte &amp; Wind“</a></li>
+  <li><a href="#k14">Tab „Alle Werte“</a></li>
+  <li><a href="#k15">Tab „Rohdaten“</a></li>
+  <li><a href="#k16">KI-Auswertung</a></li>
+  <li><a href="#k17">So kommst Du zu einem Anthropic-API-Schlüssel</a></li>
+  <li><a href="#k18">Beispielfragen für die KI</a></li>
+  <li><a href="#k19">MCP-Server: die App aus Claude bedienen</a></li>
+  <li><a href="#k20">Darstellung, Sprache und Web-Version</a></li>
+  <li><a href="#k21">Was die App speichert</a></li>
+  <li><a href="#k22">Troubleshooting und FAQ</a></li>
+  <li><a href="#k23">Kurzreferenz Maus und Tastatur</a></li>
+  <li><a href="#k24">Änderungen pro Version</a></li>
 </ol>
 </div>
 
@@ -109,7 +112,7 @@ a { color: var(--acc); }
 </table>
 <p>Die Logs bleiben immer auf Deinem Gerät bzw. in Deinem eigenen Archivordner. Die App schickt keine Logdaten ins Internet.</p>
 <div class="note"><b>Hinweis</b>Der Ethos Log Viewer ist ein inoffizielles Werkzeug und nicht mit dem Hersteller von Ethos verbunden. Ethos ist eine Marke ihres Inhabers.</div>
-<p>Diese Anleitung beschreibt Version {{VERSION}}. Was sich in welcher Version geändert hat, steht in <a href="#k21">Kapitel 21</a>. Die Screenshots zeigen die Desktop-App in der dunklen Darstellung mit dem Beispiel-Log eines Elektroseglers (SB-10).</p>
+<p>Diese Anleitung beschreibt Version {{VERSION}}. Was sich in welcher Version geändert hat, steht in <a href="#k24">Kapitel 24</a>. Die Screenshots zeigen die Desktop-App in der dunklen Darstellung mit dem Beispiel-Log eines Elektroseglers (SB-10).</p>
 
 <!-- 2 -->
 <h1 id="k2"><span class="n">2</span>Installation</h1>
@@ -137,7 +140,7 @@ a { color: var(--acc); }
 <li>Lade <code>Ethos-Log-Viewer-{{VERSION}}.dmg</code> herunter und öffne die Datei per Doppelklick.</li>
 <li>Ziehe <b>Ethos Log Viewer</b> in den Ordner <b>Programme</b>.</li>
 <li>Beim ersten Start blockiert macOS die App, weil sie nicht von einem registrierten Entwickler stammt. Öffne <b>Systemeinstellungen → Datenschutz &amp; Sicherheit</b>, scrolle nach unten und klicke bei „Ethos Log Viewer wurde blockiert“ auf <b>Dennoch öffnen</b>. Bestätige danach noch einmal mit „Öffnen“.</li>
-<li>Wenn Du den Sender zum ersten Mal anschliesst, fragt macOS, ob die App auf <b>Wechselmedien</b> zugreifen darf. Wähle <b>Erlauben</b>. Ohne diese Erlaubnis kann die App keine Logs vom Sender holen (siehe <a href="#k19">Troubleshooting</a>).</li>
+<li>Wenn Du den Sender zum ersten Mal anschliesst, fragt macOS, ob die App auf <b>Wechselmedien</b> zugreifen darf. Wähle <b>Erlauben</b>. Ohne diese Erlaubnis kann die App keine Logs vom Sender holen (siehe <a href="#k22">Troubleshooting</a>).</li>
 </ol>
 <div class="tip"><b>Tipp</b>macOS merkt sich die Erlaubnis. Die Frage kommt nur einmal, nicht für jede Datei.</div>
 
@@ -170,8 +173,8 @@ a { color: var(--acc); }
 <tr><td><b>Archiv-Ordner</b></td><td>Wohin die Logs kopiert werden. <span class="btn">Wählen …</span> öffnet die Ordnerauswahl. Am besten ein Ordner in Google Drive oder OneDrive, dann hast Du die Logs auf allen Geräten. Pro Modell entsteht ein Unterordner.</td></tr>
 <tr><td><b>Automatisch synchronisieren …</b></td><td>Ein: Sobald der Sender angeschlossen ist, holt die App neue Logs. Aus: Die Sync-Zeile zeigt „Automatischer Sync aus“.</td></tr>
 <tr><td><b>Importierte Logs immer ins Archiv kopieren</b></td><td>Logs, die Du über „Import …“ öffnest, landen dann automatisch auch im Archiv.</td></tr>
-<tr><td><b>KI-Auswertung …</b></td><td>API-Schlüssel, Modell und Optionen für die KI-Auswertung (<a href="#k15">Kapitel 15</a>). Daneben steht, ob ein Schlüssel hinterlegt ist.</td></tr>
-<tr><td><b>MCP …</b></td><td>Nur Desktop-App: MCP-Server ein- und ausschalten, damit Claude Desktop die App bedienen kann (<a href="#k16">Kapitel 16</a>). Standard aus.</td></tr>
+<tr><td><b>KI-Auswertung …</b></td><td>API-Schlüssel, Modell und Optionen für die KI-Auswertung (<a href="#k16">Kapitel 16</a>). Daneben steht, ob ein Schlüssel hinterlegt ist.</td></tr>
+<tr><td><b>MCP …</b></td><td>Nur Desktop-App: MCP-Server ein- und ausschalten, damit Claude Desktop die App bedienen kann (<a href="#k19">Kapitel 19</a>). Standard aus.</td></tr>
 <tr><td><b>Version</b> und <b>Nach Updates suchen</b></td><td>Zeigt die installierte Version und sucht auf Knopfdruck nach einer neueren (siehe <a href="#k2">Kapitel 2.4</a>).</td></tr>
 </table>
 <p><span class="btn">Speichern</span> übernimmt die Änderungen, <span class="btn">Abbrechen</span> verwirft sie. Wechselst Du den Archiv-Ordner, lädt die App die Liste der Modelle und Logs neu.</p>
@@ -284,8 +287,43 @@ a { color: var(--acc); }
 <p>Wo die Leiste steht, hängt vom Tab ab: In der Übersicht steht sie unter „Werte am Zeitpunkt“, im Tab Diagramme direkt unter der Übersichtsleiste, in den anderen Tabs oben über den Tabs.</p>
 <div class="note"><b>Gut zu wissen</b>Der Zeitpunkt verschiebt nie den sichtbaren Ausschnitt der Diagramme. Liegt er ausserhalb des Ausschnitts, siehst Du ihn nur auf dem Zeitstrahl und in der Übersichtsleiste.</div>
 
+<!-- Sensoren -->
+<h1 id="k8"><span class="n">8</span>Welche Sensoren braucht es für eine sinnvolle Auswertung?</h1>
+<p>Die App zeigt jeden Sensor, der im Log steht. Für die Auswertungen (Kennzahlen, Thermik, Steigflüge, Wind, Gleitzahl, Polare …) muss sie aber wissen, welcher Sensor was misst. Bei Ethos-Logs erkennt sie das am Sensornamen, bei Jeti-Logs über die Zuordnung im Dialog „Sensoren …“ (siehe <a href="#k5">Kapitel 5.5</a>). Je mehr der folgenden Sensoren mitloggen, desto mehr kann die App rechnen.</p>
+<h2>Die Sensoren im Einzelnen</h2>
+<table>
+<tr><th>Sensor</th><th>Erkannt an (Ethos)</th><th>Wofür die App ihn braucht</th></tr>
+<tr><td><b>Höhe</b> (Barometer)</td><td>Altitude, Alt, Höhe, Flughöhe; sonst GPS-Höhe</td><td>Flugzeit (Höhe über 5 m), Max. Höhe, Höhengewinn bei Thermik und Steigflügen, Gleitzahl, Polare ohne Vario, Effektive Distanz, Wind nach Höhe. Die wichtigste Grösse überhaupt. Die GPS-Höhe geht zur Not, ist aber deutlich ungenauer.</td></tr>
+<tr><td><b>Vario</b></td><td>Vario, VSpd, Steig…</td><td>Kennzahl Vario, genaueres Sinken für die Polare (ohne Vario rechnet die App das Sinken aus der Höhe), Analysen der KI zu Thermik und Steigen.</td></tr>
+<tr><td><b>GPS</b> (Position und Geschwindigkeit)</td><td>GPS-Spalte mit Koordinaten, GPS-Geschw., GSpd, GPS Speed</td><td>GPS-Spur, GPS Kurs, Distanz zum Start, Winkel zum Start, Wind und TAS, Steuerkurs, Drift, Gegenwind, Max. Tempo, Gleitzahl und Polare (über die TAS). Ohne Fix (z. B. vor dem Start) gibt es diese Werte nicht.</td></tr>
+<tr><td><b>Fahrt</b> (Staurohr, Airspeed)</td><td>bei Jeti über die Zuordnung „Fahrt“</td><td>Ersetzt die aus GPS und Wind berechnete TAS bei Gleitzahl und Polare. Damit gehen Gleitzahl und Polare auch ohne GPS und sind bei böigem Wind genauer.</td></tr>
+<tr><td><b>Motor-Drehzahl</b></td><td>U/min, RPM, Drehzahl</td><td>Erkennt Motorläufe (über 300 U/min). Gleitzahl und Polare zählen nur, wenn der Motor aus ist.</td></tr>
+<tr><td><b>Motor-Strom</b> (ESC)</td><td>ESC Strom, Current, Curr</td><td>Motorläufe, wenn die Drehzahl fehlt (über 3 A); Steigflüge ohne Schalter („ESC Strom (automatisch)“); Leistung und Energie zusammen mit der Spannung.</td></tr>
+<tr><td><b>Motor-Spannung</b> (ESC, Akku)</td><td>ESC Spannung, VFAS, Volt, Akku</td><td>Akku-Verlauf, Leistung und Energie pro Motorlauf.</td></tr>
+<tr><td><b>Verbrauch</b></td><td>Verb…, Consumption, mAh</td><td>Verbrauchte Kapazität als Kennzahl.</td></tr>
+<tr><td><b>Empfänger</b> (LQ/VFR, RSSI, Empfängerakku)</td><td>VFR, LQ, RQly, RSSI, RxBatt, Empf. Bat</td><td>Kennzahlen zur Empfangsqualität und zum Empfängerakku.</td></tr>
+<tr><td><b>Schalter</b></td><td>Spalten der Sender-Schalter (SA …, logische Schalter LS …)</td><td>Thermik-Phasen und Steigflüge per Schalter, „Rot markieren“. Nur bei Ethos, Jeti speichert keine Schalter.</td></tr>
+</table>
+<h2>Was mit und was ohne GPS geht</h2>
+<p>Die Tabelle zeigt, welche Auswertung welche Sensoren braucht. „Höhe“ heisst Barometer-Höhe (oder zur Not GPS-Höhe), „Motor“ heisst Drehzahl oder Strom.</p>
+<table>
+<tr><th>Auswertung</th><th>Mit GPS</th><th>Ohne GPS</th><th>Braucht ausserdem</th></tr>
+<tr><td>Flugzeit, Max. Höhe</td><td>ja</td><td>ja</td><td>Höhe</td></tr>
+<tr><td>Motorläufe, Leistung, Energie</td><td>ja</td><td>ja</td><td>Motor (für Leistung Strom und Spannung)</td></tr>
+<tr><td>Thermik</td><td>ja</td><td>ja</td><td>Höhe und Thermik-Schalter (nur Ethos)</td></tr>
+<tr><td>Steigflüge</td><td>ja</td><td>ja</td><td>Höhe und Steigflug-Schalter oder Motor-Strom</td></tr>
+<tr><td>GPS-Spur, Distanz zum Start, Effektive Distanz</td><td>ja</td><td>nein</td><td>für die Effektive Distanz auch Höhe</td></tr>
+<tr><td>Wind, Windrichtung, TAS, Steuerkurs, Drift, Gegenwind, Wind nach Höhe</td><td>ja</td><td>nein</td><td>GPS-Geschwindigkeit und Kreise oder Kurven im Flug</td></tr>
+<tr><td>Winkel zum Start</td><td>ja</td><td>nein</td><td>–</td></tr>
+<tr><td>Gleitzahl</td><td>ja</td><td>nur mit Fahrt-Sensor</td><td>Höhe; Motor, damit Motorläufe ausgeschlossen werden</td></tr>
+<tr><td>Polare</td><td>ja</td><td>nur mit Fahrt-Sensor</td><td>Vario oder Höhe; Motor wie bei der Gleitzahl. Mit GPS filtert die App zusätzlich Kurven heraus.</td></tr>
+<tr><td>KI-Auswertung</td><td>ja</td><td>ja</td><td>Die KI sieht die Kanäle, die im Log sind; je mehr, desto aussagekräftiger.</td></tr>
+</table>
+<div class="tip"><b>Empfehlung</b>Für ein Segelflugmodell lohnen sich ein Vario mit Barometer-Höhe und ein GPS. Mit Motor dazu Drehzahl oder ESC-Telemetrie mit Strom und Spannung. Ein Staurohr ist die Kür: Es macht Polare und Gleitzahl auch bei Wind genauer.</div>
+<div class="note"><b>Wichtig</b>Logge die Sensoren am Sender mit einer genügend hohen Rate, z. B. 0,1 bis 0,2 s. Bei 1 s pro Zeile werden Wind, Gleitzahl und Polare deutlich ungenauer.</div>
+
 <!-- 8 -->
-<h1 id="k8"><span class="n">8</span>Tab „Übersicht“</h1>
+<h1 id="k9"><span class="n">9</span>Tab „Übersicht“</h1>
 <figure><img src="bilder/02-uebersicht.png" alt="" style="width:80%;margin:0 auto"><figcaption>Tab Übersicht mit Kennzahlen</figcaption></figure>
 <h2>Kennzahlen</h2>
 <p>Die Kacheln fassen das ganze Log zusammen. Welche erscheinen, hängt von den Sensoren im Log ab.</p>
@@ -297,7 +335,7 @@ a { color: var(--acc); }
 <tr><td>Max. Höhe, Max. Tempo, Vario</td><td>Höchstwerte; darunter Höhenquelle, Durchschnitt bzw. stärkstes Sinken.</td></tr>
 <tr><td>VFR / RSSI min</td><td>Schlechtester Empfang und Durchschnitt. <span style="color:#d29922"><b>Orange</b></span> und <span style="color:#cf222e"><b>rot</b></span> warnen: VFR unter 70 % bzw. 40 %, RSSI unter 40 bzw. 25 dB.</td></tr>
 <tr><td>Spannung min, Strom max, Verbraucht</td><td>Antriebsakku: tiefste Spannung (mit Start- und Endwert), höchster Strom, verbrauchte Kapazität.</td></tr>
-<tr><td>Wind Ø, TAS Ø</td><td>Berechneter Durchschnittswind mit Richtung und Höchstwert sowie Geschwindigkeit gegenüber der Luft (siehe <a href="#k12">Kapitel 12</a>).</td></tr>
+<tr><td>Wind Ø, TAS Ø</td><td>Berechneter Durchschnittswind mit Richtung und Höchstwert sowie Geschwindigkeit gegenüber der Luft (siehe <a href="#k13">Kapitel 13</a>).</td></tr>
 <tr><td>… Leistung max</td><td>Höchste Leistung (Strom × Spannung) mit gesamter Energie in Wh, für jedes Paar wie ESC, SRV1, SRV2.</td></tr>
 <tr><td>Temp. max, Empf.Bat. min, Senderakku min</td><td>Höchste Temperatur, tiefste Empfänger- und Senderspannung.</td></tr>
 </table>
@@ -305,7 +343,7 @@ a { color: var(--acc); }
 <p>Ist ein Zeitpunkt gesetzt, zeigen die Kacheln darunter alle wichtigen Werte genau in diesem Moment: Uhrzeit, Phase (Thermik, Steigflug oder kein Schalter aktiv), Höhe, Vario, Geschwindigkeit, Wind, Empfang, Akku und mehr. Ohne Zeitpunkt steht dort „Kein Zeitpunkt gewählt“.</p>
 
 <!-- 9 -->
-<h1 id="k9"><span class="n">9</span>Tab „Diagramme“</h1>
+<h1 id="k10"><span class="n">10</span>Tab „Diagramme“</h1>
 <figure><img src="bilder/08-diagramme.png" alt="" style="width:88%;margin:0 auto"><figcaption>Tab Diagramme</figcaption></figure>
 <table>
 <tr><th></th><th>Element</th><th>Funktion</th></tr>
@@ -357,7 +395,7 @@ a { color: var(--acc); }
 </ul>
 
 <!-- 10 -->
-<h1 id="k10"><span class="n">10</span>Tab „Thermik &amp; Steigflüge“</h1>
+<h1 id="k11"><span class="n">11</span>Tab „Thermik &amp; Steigflüge“</h1>
 <figure><img src="bilder/12-thermik.png" alt=""><figcaption>Thermik links, Steigflüge rechts</figcaption></figure>
 <p>Der Tab rechnet wie die Sender-Widgets „Thermik“ und „Steigfluege“: Eine Phase läuft, solange der gewählte Schalter EIN ist (Wert über 0).</p>
 <h2>Einstellungen</h2>
@@ -381,7 +419,7 @@ a { color: var(--acc); }
 <div class="tip"><b>Tipp</b>Steht „Kein Steigflug. Prüfe, ob der richtige Schalter gewählt ist.“, stimmt meist der Schalter nicht. Probiere den logischen Schalter, den Du am Sender für „Motor an“ nutzt, oder „ESC Strom (automatisch)“.</div>
 
 <!-- 11 -->
-<h1 id="k11"><span class="n">11</span>Tab „Polare“</h1>
+<h1 id="k12"><span class="n">12</span>Tab „Polare“</h1>
 <p>Die Polare zeigt, wie schnell Dein Modell bei welcher Fahrt sinkt. Sie wird nicht aus einem einzelnen Log gerechnet, sondern aus allen Logs des gewählten Modells.</p>
 <h2>Logs wählen</h2>
 <p>Links stehen alle Logs des Modells zum An- und Abhaken, mit <span class="btn">Alle</span> und <span class="btn">Keine</span>. Die Auswahl bleibt pro Modell gespeichert; neue Logs sind automatisch dabei. Logs, deren beste Gleitzahl mehr als 20 % von den übrigen abweicht, sind mit <b>„weicht ab“</b> markiert. Oft steckt ein Flug mit Ballast, anderer Wölbklappe oder viel Wind dahinter.</p>
@@ -391,13 +429,13 @@ a { color: var(--acc); }
 <li><b>Ansicht:</b> „Sinken“ zeigt das Sinken in m/s über der Fahrt, „Gleitzahl“ die Gleitzahl über der Fahrt.</li>
 <li><b>Glättung:</b> „Physikalisch“ legt die Kurve Sinken = A·v³ + B/v durch die Mediane, „Median“ zeigt die geglätteten Mediane pro 4-km/h-Klasse, „Aus“ zeichnet keine Kurve.</li>
 <li><b>Punkte</b> zeigt jede gezählte Sekunde, <b>Streuung</b> das Band der mittleren Hälfte der Punkte, <b>Einzel-Logs</b> die Polare jedes Logs zum Vergleich.</li>
-<li><b>Filter anwenden:</b> Es zählen nur Einträge, die bei allen Filtern im Tab Diagramme im Bereich liegen (<a href="#k9">Kapitel 9</a>), und zwar in allen gewählten Logs des Modells. So entsteht z. B. eine Polare nur aus ruhiger Luft oder nur aus einem Höhenbereich. Ändern sich die Filter, rechnet die Polare neu.</li>
+<li><b>Filter anwenden:</b> Es zählen nur Einträge, die bei allen Filtern im Tab Diagramme im Bereich liegen (<a href="#k10">Kapitel 10</a>), und zwar in allen gewählten Logs des Modells. So entsteht z. B. eine Polare nur aus ruhiger Luft oder nur aus einem Höhenbereich. Ändern sich die Filter, rechnet die Polare neu.</li>
 </ul>
 <h2>So wird gerechnet</h2>
 <p>Jeder Punkt ist eine Sekunde Gleitflug: Motor aus (und 15 s danach), geradeaus (Kursänderung unter 8°/s) und ohne starkes Beschleunigen. Die Fahrt ist die TAS, ohne Wind die GPS-Geschwindigkeit; das Sinken kommt vom Vario, korrigiert um Fahrtänderungen. Pro 4-km/h-Klasse zählt der Median. Details stehen im ⓘ neben „Polare“.</p>
 
 <!-- 12 -->
-<h1 id="k12"><span class="n">12</span>Tab „Karte &amp; Wind“</h1>
+<h1 id="k13"><span class="n">13</span>Tab „Karte &amp; Wind“</h1>
 <figure><img src="bilder/13-karte.png" alt=""><figcaption>GPS-Spur und Wind nach Höhe</figcaption></figure>
 <h2>GPS-Spur</h2>
 <ul>
@@ -412,24 +450,20 @@ a { color: var(--acc); }
 <p>Für den Wind braucht es GPS-Position, GPS-Geschwindigkeit und Kurven im Flug. Gerade Strecken liefern keinen Wind.</p>
 
 <!-- 13 -->
-<h1 id="k13"><span class="n">13</span>Tab „Alle Werte“</h1>
+<h1 id="k14"><span class="n">14</span>Tab „Alle Werte“</h1>
 <figure><img src="bilder/14-werte.png" alt=""><figcaption>Alle Sensoren mit Minimum, Durchschnitt und Maximum</figcaption></figure>
 <p>Die Tabelle listet jeden Sensor des Logs mit Einheit, Wert am Zeitpunkt, Minimum, Durchschnitt, Maximum und Anzahl Werte. Berechnete Werte tragen das Zeichen <b>berechnet</b>. Sender-Kanäle und Schalter sind hier nicht aufgeführt; sie siehst Du in den Rohdaten.</p>
 
 <!-- 14 -->
-<h1 id="k14"><span class="n">14</span>Tab „Rohdaten“</h1>
+<h1 id="k15"><span class="n">15</span>Tab „Rohdaten“</h1>
 <figure><img src="bilder/15-rohdaten.png" alt=""><figcaption>Rohdaten mit hervorgehobener Zeile des Zeitpunkts</figcaption></figure>
 <p>Alle Zeilen und Spalten so, wie sie im Log stehen, auch bei grossen Logs flüssig. Oben steht die Anzahl Zeilen und Spalten. Ein Klick auf eine Zeile setzt den Zeitpunkt; die Zeile des gewählten Zeitpunkts ist hervorgehoben und wird beim Öffnen des Tabs ins Bild geholt. Zum Lesen breiter Logs scrollst Du in der Tabelle seitwärts.</p>
 
 <!-- 15 -->
-<h1 id="k15"><span class="n">15</span>KI-Auswertung</h1>
+<h1 id="k16"><span class="n">16</span>KI-Auswertung</h1>
 <p>Die KI-Auswertung schickt einen Ausschnitt des offenen Logs an Claude (von Anthropic) und zeigt die Analyse in einem Panel rechts, neben dem Tab, den Du gerade ansiehst. Auf Wunsch bedient die KI auch die App: Sie setzt Filter, wählt einen Zeitbereich, blendet Diagramme ein und erstellt eine Polare. Die Funktion ist freiwillig und braucht einen eigenen API-Schlüssel.</p>
 <h2>Einrichten</h2>
-<ol>
-<li>Auf <code>console.anthropic.com</code> ein Konto anlegen (unabhängig von einem Claude-Abo) und unter <b>Billing</b> ein Guthaben aufladen, z. B. 5 $.</li>
-<li>Unter <b>API Keys</b> „Create Key“ wählen und den Schlüssel kopieren. Er wird nur einmal angezeigt.</li>
-<li>In der App <span class="btn">⚙</span> → <span class="btn">KI-Auswertung …</span> öffnen, den Schlüssel einfügen, <span class="btn">Prüfen</span> und <span class="btn">Speichern</span>.</li>
-</ol>
+<p>Zuerst brauchst Du einen API-Schlüssel von Anthropic. Wie Du ihn bekommst, was er kostet und wie Du ihn sicher aufbewahrst, steht Schritt für Schritt in <a href="#k17">Kapitel 17</a>. Den Schlüssel trägst Du unter <span class="btn">⚙</span> → <span class="btn">KI-Auswertung …</span> ein, mit <span class="btn">Prüfen</span> und <span class="btn">Speichern</span>.</p>
 <p>Erst wenn ein Schlüssel hinterlegt ist, erscheint rechts neben den Tabs der Knopf <span class="btn">✦ KI-Auswertung</span>. Er steht in jedem Tab an derselben Stelle; auf dem Handy zeigt er nur das ✦. Die Desktop-App legt den Schlüssel verschlüsselt im Schlüsselbund des Betriebssystems ab; auf dem Mac fragt macOS beim ersten Mal, ob die App darauf zugreifen darf. Die Web-Version speichert ihn im Speicher des Browsers auf diesem Gerät. <span class="btn">Schlüssel entfernen</span> löscht ihn.</p>
 <table>
 <tr><th>Feld</th><th>Bedeutung</th></tr>
@@ -444,17 +478,107 @@ a { color: var(--acc); }
 <div class="note"><b>Datenschutz</b>Gesendet werden die gewählten Kanäle als zusammengefasste Zahlenreihen, Kennzahlen, Modellname und Deine Frage. Die CSV-Datei selbst wird nie hochgeladen. Was genau gesendet wurde, zeigt die Zeile „Gesendete Daten“. Ohne Internet ist die Auswertung nicht verfügbar, alles andere läuft weiter.</div>
 <div class="tip"><b>Kosten</b>Jede Anfrage kostet je nach Datenmenge und Modell meist wenige Rappen und wird über Dein Anthropic-Konto abgerechnet. Ist das Guthaben leer, meldet das Panel das.</div>
 
-<!-- 16 -->
-<h1 id="k16"><span class="n">16</span>MCP-Server: die App aus Claude bedienen</h1>
-<p>Die Desktop-App kann sich über MCP (Model Context Protocol) mit <b>Claude Desktop</b>, <b>Claude Code</b> oder einem anderen KI-Programm verbinden. Claude kann dann dieselben Aktionen ausführen wie die KI-Auswertung: Zustand lesen, Daten lesen, Logs auflisten und öffnen, Filter und Zeitbereich setzen, Diagramme zeigen, den Tab wechseln, eine Polare erstellen und alles rückgängig machen. Einen API-Schlüssel braucht es dafür nicht, die KI läuft über Dein Claude-Abo.</p>
-<h2>Einschalten</h2>
-<p><span class="btn">⚙</span> → <span class="btn">MCP …</span> öffnen, <b>MCP-Server einschalten</b> anhaken und speichern. Standard ist aus. Der Server läuft nur, solange die App offen ist, und ist nur auf diesem Computer erreichbar (<code>http://127.0.0.1:3917/mcp</code>). Ist Port 3917 belegt, stellst Du im Feld <b>Port</b> einen anderen ein.</p>
-<h2>In Claude Desktop eintragen</h2>
+<!-- API-Schlüssel -->
+<h1 id="k17"><span class="n">17</span>So kommst Du zu einem Anthropic-API-Schlüssel</h1>
+<p>Für die KI-Auswertung braucht die App einen eigenen <b>API-Schlüssel</b> von Anthropic, der Firma hinter Claude. Der Schlüssel ist eine lange Zeichenfolge, die mit <code>sk-ant-</code> beginnt. Mit ihm bezahlt die App jede Anfrage aus Deinem eigenen Guthaben. Ein Claude-Abo (Pro, Max) ist dafür weder nötig noch reicht es: Abo und API-Guthaben sind zwei getrennte Dinge.</p>
+<div class="note"><b>Ohne Schlüssel</b>Hast Du ein Claude-Abo und nutzt Claude Desktop, brauchst Du keinen Schlüssel: Über den MCP-Server bedient Claude Desktop die App direkt (<a href="#k19">Kapitel 19</a>).</div>
+<h2>1. Konto anlegen</h2>
 <ol>
-<li>Im MCP-Dialog <span class="btn">Eintrag kopieren</span> klicken. Der Eintrag enthält den Pfad zur App auf Deinem Computer.</li>
-<li>In Claude Desktop <b>Einstellungen → Entwickler → Konfiguration bearbeiten</b> öffnen. Das öffnet die Datei <code>claude_desktop_config.json</code>.</li>
-<li>Ist die Datei leer, den Eintrag so einfügen. Steht dort schon <code>"mcpServers"</code>, nur den Teil <code>"ethos-log-viewer": {…}</code> darin ergänzen.</li>
-<li>Claude Desktop neu starten. Unter den Werkzeugen erscheint „ethos-log-viewer“.</li>
+<li>Im Browser <code>platform.claude.com</code> öffnen (die Claude-Plattform für Entwickler, früher <code>console.anthropic.com</code>).</li>
+<li>Mit E-Mail-Adresse oder Google-Konto registrieren und die E-Mail bestätigen. Hast Du schon ein Konto für claude.ai, kannst Du Dich mit derselben Adresse anmelden; das API-Konto ist trotzdem ein eigenes.</li>
+<li>Beim ersten Anmelden fragt die Seite nach einem Namen für die Organisation, z. B. Dein Name, und nach dem Verwendungszweck. Das kannst Du kurz ausfüllen.</li>
+</ol>
+<h2>2. Guthaben aufladen</h2>
+<ol>
+<li>Links <b>Billing</b> (Abrechnung) öffnen.</li>
+<li>Eine Kreditkarte hinterlegen und Guthaben kaufen, z. B. 5 $ (das ist meist das Minimum). Das Guthaben ist vorausbezahlt; es wird nichts automatisch nachbelastet, solange Du „Auto reload“ nicht einschaltest.</li>
+<li>Optional unter <b>Limits</b> eine monatliche Obergrenze setzen. Dann kann auch bei einem Fehler nie mehr ausgegeben werden.</li>
+</ol>
+<h2>3. Schlüssel erzeugen</h2>
+<ol>
+<li>Links <b>API Keys</b> öffnen und <b>Create Key</b> wählen.</li>
+<li>Einen Namen eingeben, z. B. „Ethos Log Viewer“, und bestätigen.</li>
+<li>Den Schlüssel sofort kopieren. Er wird nur dieses eine Mal ganz angezeigt. Geht er verloren, erzeugst Du einfach einen neuen.</li>
+</ol>
+<h2>4. In der App eintragen</h2>
+<ol>
+<li><span class="btn">⚙</span> → <span class="btn">KI-Auswertung …</span> öffnen.</li>
+<li>Den Schlüssel ins Feld einfügen und <span class="btn">Prüfen</span> klicken. Die App fragt bei Anthropic nach, ob der Schlüssel gilt; das kostet nichts.</li>
+<li><span class="btn">Speichern</span>. Jetzt ist der Knopf <span class="btn">✦ KI-Auswertung</span> da.</li>
+</ol>
+<h2>Was es kostet</h2>
+<p>Abgerechnet wird nach Menge der Daten („Tokens“), die zur KI und zurück gehen, mit unterschiedlichen Preisen pro Modell. Die aktuellen Preise stehen auf <code>claude.com/pricing</code> im Abschnitt API. Als Richtwert: Eine Auswertung mit einigen Kanälen kostet mit Claude Sonnet 5.5 meist wenige Rappen, mit Claude Opus 5.5 etwa das Mehrfache. Mit 5 $ kommst Du für viele Auswertungen aus. Was Du verbraucht hast, zeigt die Plattform unter <b>Usage</b>.</p>
+<table>
+<tr><th>Damit es günstig bleibt</th><th></th></tr>
+<tr><td>Modell</td><td>Für die meisten Fragen reicht Claude Sonnet 5.5 (Standard).</td></tr>
+<tr><td>Kanäle</td><td>Nur die Kanäle mitschicken, um die es geht.</td></tr>
+<tr><td>Ausschnitt</td><td>Auf den interessanten Teil zoomen und „Aktueller Zoom“ wählen.</td></tr>
+<tr><td>Nachfragen</td><td>Jede Nachfrage schickt den bisherigen Verlauf mit. Für ein neues Thema lieber neu beginnen.</td></tr>
+</table>
+<h2>Den Schlüssel sicher aufbewahren</h2>
+<ul>
+<li>Wer Deinen Schlüssel hat, kann auf Deine Kosten Anfragen stellen. Gib ihn nicht weiter, schick ihn nicht per Mail oder Chat und lade ihn nirgends hoch.</li>
+<li>Die Desktop-App speichert ihn verschlüsselt mit dem Schlüsselbund von Windows bzw. macOS. Eine Kopie brauchst Du nicht; zur Sicherheit kannst Du ihn in einem Passwort-Manager ablegen.</li>
+<li>In der Web-Version liegt er im Speicher des Browsers. Nutze sie auf fremden oder geteilten Geräten nicht mit Deinem Schlüssel, oder entferne ihn danach mit <span class="btn">Schlüssel entfernen</span>.</li>
+<li>Hast Du den Verdacht, dass jemand den Schlüssel kennt, lösche ihn auf der Plattform unter API Keys und erzeuge einen neuen. Der alte gilt dann sofort nicht mehr.</li>
+<li>Eine Obergrenze unter Limits begrenzt den Schaden in jedem Fall.</li>
+</ul>
+
+<!-- Beispielfragen -->
+<h1 id="k18"><span class="n">18</span>Beispielfragen für die KI</h1>
+<p>Ins Feld <b>Frage oder Auftrag</b> darfst Du schreiben wie zu einem erfahrenen Fliegerkollegen. Die folgenden Beispiele sind zum Ausprobieren gedacht. Sie funktionieren in der KI-Auswertung und genauso in Claude Desktop über MCP. Am besten wählst Du vorher das passende Log und die Kanäle, um die es geht.</p>
+<h2>Analyse</h2>
+<table>
+<tr><th>Frage</th><th>Was dabei herauskommt</th></tr>
+<tr><td>„Fasse den Flug zusammen: Dauer, Motorläufe, beste Thermik, Auffälligkeiten.“</td><td>Kurzbericht mit anklickbaren Zeitmarken.</td></tr>
+<tr><td>„Wie gut war die Thermik? Wo habe ich am meisten Höhe gewonnen?“</td><td>Bewertung der Thermik-Phasen mit Steigwerten und Zeiten.</td></tr>
+<tr><td>„Vergleiche die Steigflüge: Strom, Steigen pro Ampere, Höhengewinn.“</td><td>Tabelle der Motorläufe und welcher am effizientesten war.</td></tr>
+<tr><td>„Ist der Akku am Ende des Fluges eingebrochen? Wie viel Reserve hatte ich?“</td><td>Spannung unter Last, Verbrauch, Einschätzung der Reserve.</td></tr>
+<tr><td>„Gab es Empfangsprobleme? Wann war die LQ am tiefsten und wie weit war das Modell weg?“</td><td>Tiefpunkte der Empfangsqualität mit Distanz und Höhe.</td></tr>
+<tr><td>„Woher kam der Wind und hat er mit der Höhe gedreht?“</td><td>Wind nach Höhe in Worten (braucht GPS).</td></tr>
+<tr><td>„Bei welcher Fahrt gleitet das Modell am besten, und wie schnell sollte ich gegen den Wind fliegen?“</td><td>Beste Gleitzahl und Sollfahrt aus Gleitzahl und Gegenwind.</td></tr>
+<tr><td>„Was fällt Dir an diesem Ausschnitt auf?“ (vorher auf eine Stelle zoomen)</td><td>Erklärung eines auffälligen Moments, z. B. Spitze im Strom oder Höhenverlust.</td></tr>
+</table>
+<h2>Die App bedienen lassen</h2>
+<p>Ist <b>KI darf die App bedienen</b> eingeschaltet, setzt die KI selbst Filter, Zeitbereich, Diagramme, Tab und Log. Was sie gemacht hat, steht im Kasten „Ausgeführt“, und <span class="btn">Rückgängig</span> nimmt alles zurück.</p>
+<table>
+<tr><th>Auftrag</th><th>Was die KI dafür tut</th></tr>
+<tr><td>„Erstelle eine Polare ohne Thermik.“</td><td>Filter auf den Thermik-Schalter (Thermik aus), dann Polare mit „Filter anwenden“.</td></tr>
+<tr><td>„Zeig mir eine Polare nur aus Flügen über 100 m Höhe.“</td><td>Filter auf die Höhe, dann Polare.</td></tr>
+<tr><td>„Zoome auf den zweiten Steigflug und zeig Höhe, Vario und Strom.“</td><td>Zeitbereich setzen, Diagramme ein- und ausblenden.</td></tr>
+<tr><td>„Blende nur die Werte ein, bei denen der Motor aus ist und das Vario steigt.“</td><td>Zwei Filter kombiniert.</td></tr>
+<tr><td>„Öffne das letzte Log dieses Modells und vergleiche die Gleitzahl mit diesem Flug.“</td><td>Log wechseln, Daten lesen, Vergleich in Worten.</td></tr>
+<tr><td>„Wechsle in den Tab Karte &amp; Wind.“</td><td>Tab wechseln.</td></tr>
+<tr><td>„Setz alles zurück.“</td><td>Filter entfernen und ganzen Flug zeigen.</td></tr>
+</table>
+<div class="tip"><b>Tipp</b>Kommt eine Antwort ungenau zurück, frag nach: „Rechne das nur für die Zeit mit Motor aus“ oder „Erklär mir, wie Du auf die Gleitzahl kommst“. Die KI kennt nur die Daten, die mitgeschickt wurden; was fehlt, kannst Du in der Zeile „Gesendete Daten“ dazuwählen.</div>
+
+<!-- 16 -->
+<h1 id="k19"><span class="n">19</span>MCP-Server: die App aus Claude bedienen</h1>
+<p>MCP (Model Context Protocol) ist ein offener Standard, über den KI-Programme mit anderen Programmen sprechen. Die Desktop-App hat einen eingebauten MCP-Server. Ist er eingeschaltet, kann <b>Claude Desktop</b>, <b>Claude Code</b> oder ein anderes MCP-fähiges Programm die offene App bedienen: Zustand lesen, Daten lesen, Logs auflisten und öffnen, Filter und Zeitbereich setzen, Diagramme zeigen, den Tab wechseln, eine Polare erstellen und alles rückgängig machen. Das sind dieselben Aktionen wie bei der KI-Auswertung.</p>
+<p>Der Unterschied zur KI-Auswertung: Du schreibst nicht in der App, sondern im Chat von Claude Desktop, und es braucht <b>keinen API-Schlüssel</b>. Die KI läuft über Dein Claude-Konto (in Claude Desktop ist dafür ein Abo wie Pro oder Max sinnvoll). Die Web-Version hat keinen MCP-Server.</p>
+<h2>So hängt alles zusammen</h2>
+<pre>Claude Desktop  ──startet──▶  Brücke (mcp-stdio.js, in der App enthalten)
+                                   │
+                                   ▼  http://127.0.0.1:3917/mcp
+                         Ethos Log Viewer (muss offen sein, MCP-Server ein)</pre>
+<p>Claude Desktop startet beim Öffnen eine kleine Brücke, die in der App mitgeliefert wird. Sie reicht jede Nachricht an die laufende App weiter. Der Server nimmt nur Verbindungen vom eigenen Computer an (127.0.0.1); aus dem Netz ist er nicht erreichbar.</p>
+<h2>Schritt 1: Claude Desktop installieren</h2>
+<p>Claude Desktop gibt es für Windows und Mac auf <code>claude.com/download</code>. Installieren, öffnen und mit Deinem Claude-Konto anmelden.</p>
+<h2>Schritt 2: MCP-Server in der App einschalten</h2>
+<ol>
+<li>Im Ethos Log Viewer <span class="btn">⚙</span> → <span class="btn">MCP …</span> öffnen.</li>
+<li><b>MCP-Server einschalten</b> anhaken und <span class="btn">Speichern</span>. Standard ist aus.</li>
+<li>Öffne den Dialog nochmals: Oben steht jetzt „Läuft auf http://127.0.0.1:3917/mcp“ mit grünem Punkt. In den Einstellungen steht in der Zeile MCP „Läuft“.</li>
+</ol>
+<p>Ist Port 3917 schon von einem anderen Programm belegt, steht dort „Startet nicht: Port 3917 ist schon belegt.“ Dann im Feld <b>Port</b> eine andere Zahl eintragen, z. B. 3918, speichern, und im nächsten Schritt den neuen Eintrag kopieren.</p>
+<h2>Schritt 3: Eintrag in Claude Desktop</h2>
+<ol>
+<li>Im MCP-Dialog <span class="btn">Eintrag kopieren</span> klicken. Der Eintrag enthält den genauen Pfad zur App auf Deinem Computer; abtippen ist nicht nötig.</li>
+<li>In Claude Desktop <b>Einstellungen → Entwickler</b> (englisch Settings → Developer) öffnen und <b>Konfiguration bearbeiten</b> (Edit Config) klicken. Es öffnet sich ein Ordner mit der Datei <code>claude_desktop_config.json</code>. Öffne sie mit einem Texteditor (Mac: TextEdit, Windows: Editor).</li>
+<li>Ist die Datei leer oder steht nur <code>{}</code> darin: alles ersetzen durch den kopierten Eintrag.</li>
+<li>Steht dort schon <code>"mcpServers": { … }</code> mit anderen Servern: nur den Teil <code>"ethos-log-viewer": { … }</code> innerhalb von <code>mcpServers</code> ergänzen, mit einem Komma zum vorherigen Eintrag.</li>
+<li>Datei speichern und Claude Desktop <b>ganz beenden</b> (Mac: ⌘Q, Windows: im Infobereich rechts unten mit Rechtsklick → Beenden) und neu starten. Nur das Fenster zu schliessen reicht nicht.</li>
 </ol>
 <p>Der Eintrag sieht auf dem Mac etwa so aus:</p>
 <pre>{
@@ -466,13 +590,30 @@ a { color: var(--acc); }
     }
   }
 }</pre>
-<p>Claude Desktop startet damit eine kleine Brücke, die Nachrichten an die offene App weiterreicht. Ist die App zu oder der Server aus, meldet Claude „Ethos Log Viewer ist nicht geöffnet“.</p>
+<p>Unter Windows stehen dort die Pfade zur <code>Ethos Log Viewer.exe</code> und zu <code>resources\mcp-stdio.js</code>, mit doppelten Backslashes. Hast Du einen anderen Port gewählt, steht in <code>args</code> zusätzlich <code>--port=…</code>.</p>
+<h2>Schritt 4: Prüfen</h2>
+<ol>
+<li>In Claude Desktop einen neuen Chat öffnen. Unter dem Werkzeug-Symbol (bzw. „+“ → Connectors) erscheint <b>ethos-log-viewer</b> mit seinen Werkzeugen.</li>
+<li>Den Ethos Log Viewer offen lassen und z. B. fragen: „Welches Log ist im Ethos Log Viewer offen?“</li>
+<li>Beim ersten Werkzeug fragt Claude, ob es <b>ethos-log-viewer</b> benutzen darf. Mit „Immer erlauben“ fragt es künftig nicht mehr.</li>
+</ol>
+<p>Jede Aktion siehst Du sofort in der App. Beispiele zum Ausprobieren stehen in <a href="#k18">Kapitel 18</a>.</p>
 <h2>Claude Code</h2>
-<p>In einem Terminal genügt: <code>claude mcp add --transport http ethos-log-viewer http://127.0.0.1:3917/mcp</code></p>
-<div class="tip"><b>Tipp</b>Frag Claude z. B. „Öffne das letzte Log und zeig mir Höhe und Vario des zweiten Steigflugs“ oder „Wie war die Gleitzahl im Vergleich zum letzten Flug?“. Jede Aktion siehst Du sofort in der App.</div>
+<p>In einem Terminal genügt: <code>claude mcp add --transport http ethos-log-viewer http://127.0.0.1:3917/mcp</code>. Den passenden Befehl mit dem eingestellten Port zeigt auch der MCP-Dialog. Hier gibt es keine Brücke, Claude Code spricht direkt mit der App.</p>
+<h2>Fehlersuche</h2>
+<table>
+<tr><th>Was Du siehst</th><th>Was zu tun ist</th></tr>
+<tr><td>„ethos-log-viewer“ erscheint in Claude Desktop gar nicht.</td><td>Claude Desktop ganz beenden und neu starten. Unter Einstellungen → Entwickler steht bei jedem Server, ob er läuft; steht dort ein Fehler, ist meist die Datei <code>claude_desktop_config.json</code> fehlerhaft: Fehlt ein Komma oder eine Klammer, liest Claude Desktop keinen einzigen Server. Den Inhalt z. B. auf <code>jsonlint.com</code> prüfen lassen.</td></tr>
+<tr><td>Claude meldet „Ethos Log Viewer ist nicht geöffnet, oder der MCP-Server ist in den Einstellungen der App ausgeschaltet“.</td><td>Die Brücke läuft, erreicht aber die App nicht. App öffnen und unter ⚙ → MCP prüfen, ob „Läuft“ steht. Stimmt der Port im Eintrag (<code>--port=…</code>) mit dem in der App überein?</td></tr>
+<tr><td>Im MCP-Dialog steht „Startet nicht: Port … ist schon belegt“.</td><td>Ein anderes Programm (oder eine zweite Instanz der App) nutzt den Port. Anderen Port wählen, speichern, Eintrag neu kopieren und in Claude Desktop ersetzen.</td></tr>
+<tr><td>Nach einem Update oder Verschieben der App geht nichts mehr.</td><td>Der Pfad zur App im Eintrag stimmt nicht mehr, z. B. wenn die App auf dem Mac nicht im Ordner Programme liegt. Eintrag im MCP-Dialog neu kopieren und in der Konfiguration ersetzen.</td></tr>
+<tr><td>Mac: „Ethos Log Viewer kann nicht geöffnet werden“ beim Start von Claude Desktop.</td><td>Die App zuerst einmal selbst öffnen und unter Datenschutz &amp; Sicherheit erlauben (siehe <a href="#k2">Kapitel 2.3</a>). Danach Claude Desktop neu starten.</td></tr>
+<tr><td>Claude sagt, es habe keinen Zugriff auf Werkzeuge.</td><td>Im Chat unter dem Werkzeug-Symbol prüfen, ob ethos-log-viewer eingeschaltet ist, und bei der Rückfrage „Erlauben“ wählen.</td></tr>
+<tr><td>Claude öffnet ein falsches Log oder findet keines.</td><td>Claude sieht nur die Logs, die die App kennt (Archiv und Importe). Den Namen des Modells oder das Datum nennen, z. B. „Öffne das Log der SB-10 vom 2. Oktober“.</td></tr>
+</table>
 
 <!-- 17 -->
-<h1 id="k17"><span class="n">17</span>Darstellung, Sprache und Web-Version</h1>
+<h1 id="k20"><span class="n">20</span>Darstellung, Sprache und Web-Version</h1>
 <h2>Hell und dunkel</h2>
 <p>Unter <span class="btn">⚙</span> → <b>Darstellung</b> wählst Du „Wie System“, „Hell“ oder „Dunkel“. „Wie System“ folgt der Einstellung von Windows bzw. macOS.</p>
 <figure><img src="bilder/16-hell.png" alt=""><figcaption>Helle Darstellung</figcaption></figure>
@@ -489,7 +630,7 @@ a { color: var(--acc); }
 </div>
 
 <!-- 18 -->
-<h1 id="k18"><span class="n">18</span>Was die App speichert</h1>
+<h1 id="k21"><span class="n">21</span>Was die App speichert</h1>
 <table>
 <tr><th>Was</th><th>Wo</th></tr>
 <tr><td>Logs</td><td>Im Archiv-Ordner, ein Unterordner pro Modell. Die App löscht dort nie etwas.</td></tr>
@@ -504,7 +645,7 @@ a { color: var(--acc); }
 <p>Sprache, Darstellung, Geschwindigkeitseinheit und der zuletzt offene Tab gelten für alle Modelle.</p>
 
 <!-- 19 -->
-<h1 id="k19"><span class="n">19</span>Troubleshooting und FAQ</h1>
+<h1 id="k22"><span class="n">22</span>Troubleshooting und FAQ</h1>
 <div class="faq">
 <h2>Installation und Start</h2>
 <h3>Windows meldet „Der Computer wurde durch Windows geschützt“.</h3>
@@ -576,7 +717,7 @@ a { color: var(--acc); }
 </div>
 
 <!-- 20 -->
-<h1 id="k20"><span class="n">20</span>Kurzreferenz Maus und Tastatur</h1>
+<h1 id="k23"><span class="n">23</span>Kurzreferenz Maus und Tastatur</h1>
 <table>
 <tr><th>Wo</th><th>Aktion</th><th>Wirkung</th></tr>
 <tr><td>Diagramm</td><td>Ziehen</td><td>Ausschnitt verschieben</td></tr>
@@ -595,7 +736,7 @@ a { color: var(--acc); }
 <tr><td>Fenster</td><td>CSV-Dateien hineinziehen</td><td>Logs öffnen</td></tr>
 </table>
 <!-- 21 -->
-<h1 id="k21"><span class="n">21</span>Änderungen pro Version</h1>
+<h1 id="k24"><span class="n">24</span>Änderungen pro Version</h1>
 <p>Dieses Kapitel ist das Changelog der App, die neueste Version zuerst.</p>
 <div class="changelog">
 {{CHANGELOG}}
