@@ -204,8 +204,9 @@ a { color: var(--acc); }
 <tr><td class="c"><span class="num">8</span></td><td>Sync-Zeile</td><td>Zustand des Senders und des letzten Syncs. Der Punkt ist grün, wenn alles gut ist, orange bei Warnungen und rot bei Fehlern (<a href="#k6">Kapitel 6</a>). Nur in der Desktop-App.</td></tr>
 <tr><td class="c"><span class="num">9</span></td><td>⏏ Auswerfen</td><td>Wirft den Sender sicher aus, damit Du das USB-Kabel ziehen kannst. Erscheint nur, solange der Sender angeschlossen und der Sync fertig ist.</td></tr>
 <tr><td class="c"><span class="num">10</span></td><td>Archiv öffnen</td><td>Öffnet den Archivordner im Explorer bzw. Finder.</td></tr>
-<tr><td class="c"><span class="num">11</span></td><td>Tabs</td><td>Übersicht, Diagramme, Thermik &amp; Steigflüge, Karte &amp; Wind, Alle Werte, Rohdaten. Die App merkt sich den zuletzt offenen Tab.</td></tr>
+<tr><td class="c"><span class="num">11</span></td><td>Tabs</td><td>Übersicht, Diagramme, Thermik &amp; Steigflüge, Polare, Karte &amp; Wind, Alle Werte, Rohdaten. Die App merkt sich den zuletzt offenen Tab.</td></tr>
 <tr><td class="c"><span class="num">12</span></td><td>Dateizeile</td><td>Herkunft (<b>Archiv</b>, <b>Geladen</b> oder <b>Beispiel: Dein Log</b>), Dateiname, Zeitraum und Anzahl Sensoren. Bei importierten Logs steht hier der Knopf „Im Archiv sichern“.</td></tr>
+<tr><td class="c"><span class="num">13</span></td><td>✦ KI-Auswertung</td><td>Öffnet rechts das Panel der KI-Auswertung, in jedem Tab. Erscheint nur, wenn ein API-Schlüssel hinterlegt ist (<a href="#k16">Kapitel 16</a>).</td></tr>
 </table>
 <div class="tip"><b>Tipp</b>Ist noch kein Log vorhanden, öffnet die App ein Beispiel-Log. Daran kannst Du alles ausprobieren. Sobald Logs im Archiv liegen, verschwindet das Beispiel.</div>
 
@@ -475,6 +476,7 @@ a { color: var(--acc); }
 <h2>Einrichten</h2>
 <p>Zuerst brauchst Du einen API-Schlüssel von Anthropic. Wie Du ihn bekommst, was er kostet und wie Du ihn sicher aufbewahrst, steht Schritt für Schritt in <a href="#k17">Kapitel 17</a>. Den Schlüssel trägst Du unter <span class="btn">⚙</span> → <span class="btn">KI-Auswertung …</span> ein, mit <span class="btn">Prüfen</span> und <span class="btn">Speichern</span>.</p>
 <p>Erst wenn ein Schlüssel hinterlegt ist, erscheint rechts neben den Tabs der Knopf <span class="btn">✦ KI-Auswertung</span>. Er steht in jedem Tab an derselben Stelle; auf dem Handy zeigt er nur das ✦. Die Desktop-App legt den Schlüssel verschlüsselt im Schlüsselbund des Betriebssystems ab; auf dem Mac fragt macOS beim ersten Mal, ob die App darauf zugreifen darf. Die Web-Version speichert ihn im Speicher des Browsers auf diesem Gerät. <span class="btn">Schlüssel entfernen</span> löscht ihn.</p>
+<figure class="half"><img src="bilder/22-ki-einstellungen.png" alt=""><figcaption>Einstellungen der KI-Auswertung</figcaption></figure>
 <table>
 <tr><th>Feld</th><th>Bedeutung</th></tr>
 <tr><td><b>Modell</b></td><td>„Claude Sonnet 5.5“ (schnell, günstig, Standard) oder „Claude Opus 5.5“ (gründlicher, teurer).</td></tr>
@@ -483,6 +485,7 @@ a { color: var(--acc); }
 <tr><td><b>GPS-Position standardmässig mitsenden</b></td><td>Aus (Standard): Die KI bekommt Geschwindigkeit und Höhe, aber nicht, wo Du fliegst.</td></tr>
 </table>
 <h2>Fragen und Aufträge</h2>
+<figure><img src="bilder/24-ki-panel.png" alt=""><figcaption>Panel der KI-Auswertung rechts neben dem offenen Tab</figcaption></figure>
 <p>Der Knopf öffnet rechts ein Panel, egal in welchem Tab Du gerade bist; der Tab bleibt daneben sichtbar und lässt sich weiter bedienen. Die KI bekommt mit, welchen Tab Du offen hast und was dort zu sehen ist, im Tab Polare z. B. die gezeigte Polare mit Glättung und Ansicht. So versteht sie Fragen wie „Was sagt mir diese Polare?“. Im ersten Schritt wählst Du den Ausschnitt (aktueller Zoom oder ganzer Flug), die Kanäle (vorgewählt sind die offenen Diagramme) und was zusätzlich mitgeht: Kennzahlen, erkannte Motorläufe und Thermik, Gleitzahl und Polare, Modellname, GPS-Position. Ins Feld <b>Frage oder Auftrag</b> schreibst Du, was Du wissen willst, z. B. „Wie gut war die Thermik?“ oder „Erstelle eine Polare ohne Thermik“. Leer gelassen gibt es eine allgemeine Auswertung.</p>
 <p>Die Antwort erscheint im Panel. Zeitangaben wie <b>3:12</b> sind anklickbar, wechseln in den Tab Diagramme und zoomen dorthin. Hat die KI etwas an der App geändert, steht das im Kasten <b>„Ausgeführt“</b>; <span class="btn">Rückgängig</span> stellt den Zustand vor der Antwort wieder her. Darunter kannst Du nachfragen oder einen weiteren Auftrag geben.</p>
 <div class="note"><b>Datenschutz</b>Gesendet werden die gewählten Kanäle als zusammengefasste Zahlenreihen, Kennzahlen, Modellname und Deine Frage. Die CSV-Datei selbst wird nie hochgeladen. Was genau gesendet wurde, zeigt die Zeile „Gesendete Daten“. Ohne Internet ist die Auswertung nicht verfügbar, alles andere läuft weiter.</div>
@@ -597,6 +600,7 @@ a { color: var(--acc); }
 <li><b>MCP-Server einschalten</b> anhaken und <span class="btn">Speichern</span>. Standard ist aus.</li>
 <li>Öffne den Dialog nochmals: Oben steht jetzt „Läuft auf http://127.0.0.1:3917/mcp“ mit grünem Punkt. In den Einstellungen steht in der Zeile MCP „Läuft“.</li>
 </ol>
+<figure class="half"><img src="bilder/23-mcp.png" alt=""><figcaption>MCP-Dialog mit laufendem Server und dem Eintrag für Claude Desktop</figcaption></figure>
 <p>Ist Port 3917 schon von einem anderen Programm belegt, steht dort „Startet nicht: Port 3917 ist schon belegt.“ Dann im Feld <b>Port</b> eine andere Zahl eintragen, z. B. 3918, speichern, und im nächsten Schritt den neuen Eintrag kopieren.</p>
 <h2>Schritt 3: Eintrag in Claude Desktop</h2>
 <ol>

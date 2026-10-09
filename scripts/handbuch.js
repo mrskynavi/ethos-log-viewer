@@ -99,7 +99,7 @@ const setCursor = async (p, f) => { const b = await p.locator('#curTrack').bound
 async function screenshots() {
   let p = await open({ mock: D });
   // 1 Hauptfenster mit Nummern
-  await badges(p, [['.brand h1', 1, 'l'], ['#infoBtn', 2, 'br'], ['#selModel', 3, 'b'], ['#logBtn', 4, 'b'], ['.logpick .zbtns', 5, 'br'], ['#importBtn', 6, 'b'], ['#openSettings', 7, 'br'], ['#syncDot', 8, 'l'], ['#ejectBtn', 9, 'b'], ['#openArchive', 10, 'br'], ['#tab-uebersicht', 11, 'l'], ['#fileinfo .tag', 12, 'l']]);
+  await badges(p, [['.brand h1', 1, 'l'], ['#infoBtn', 2, 'br'], ['#selModel', 3, 'b'], ['#logBtn', 4, 'b'], ['.logpick .zbtns', 5, 'br'], ['#importBtn', 6, 'b'], ['#openSettings', 7, 'br'], ['#syncDot', 8, 'l'], ['#ejectBtn', 9, 'b'], ['#openArchive', 10, 'br'], ['#tab-uebersicht', 11, 'l'], ['#fileinfo .tag', 12, 'l'], ['#kiOpen', 13, 'b']]);
   await shot(p, '01-hauptfenster', { x: 0, y: 0, width: 1280, height: 420 });
   await badges(p, []);
   await shot(p, '02-uebersicht', 'full');
@@ -119,7 +119,15 @@ async function screenshots() {
   // Einstellungen
   await p.click('#openSettings'); await p.waitForTimeout(300); await p.evaluate(() => document.activeElement.blur());
   await shot(p, '06-einstellungen', await clipOf(p, '#settingsDlg', 20));
-  await p.click('#setCancel');
+  // KI-Einstellungen und MCP-Dialog
+  await p.click('#openKi'); await p.waitForTimeout(400); await p.evaluate(() => document.activeElement.blur());
+  await shot(p, '22-ki-einstellungen', await clipOf(p, '#kiDlg', 20));
+  await p.keyboard.press('Escape'); await p.waitForTimeout(200);
+  await p.evaluate(() => { const d = document.querySelector('#settingsDlg'); if (!d.open) d.showModal(); });
+  await p.click('#openMcp'); await p.waitForTimeout(400); await p.evaluate(() => document.activeElement.blur());
+  await shot(p, '23-mcp', await clipOf(p, '#mcpDlg', 20));
+  await p.keyboard.press('Escape'); await p.waitForTimeout(200);
+  await p.evaluate(() => { for (const d of document.querySelectorAll('dialog[open]')) d.close(); });
   // Zeitpunkt in der Übersicht
   await setCursor(p, 0.4);
   await badges(p, [['#curTrack', 1, 'l'], ['#curPrev', 2, 'b'], ['#curNext', 3, 'br'], ['#curTime', 4, 'br'], ['#curOff', 5, 'br']]);
@@ -130,6 +138,10 @@ async function screenshots() {
   await badges(p, [['#chips', 1, 'l'], ['.seg', 2, 'l'], ['.toggle', 3, 'br'], ['#zOut', 4, 'l'], ['#zRange', 5, 'b'], ['.markpick', 6, 'l'], ['#nav', 7, 'l'], ['#curTrack', 8, 'l'], ['.cbox .grip', 9, 'l']]);
   await shot(p, '08-diagramme', { ...(await from(p, '.tabs')), height: 1150 });
   await badges(p, []);
+  // KI-Panel neben dem Tab Diagramme
+  await p.click('#kiOpen'); await p.waitForTimeout(800); await p.evaluate(() => document.activeElement.blur());
+  await shot(p, '24-ki-panel', { x: 0, y: 0, width: 1280, height: 900 });
+  await p.click('#kiOpen'); await p.waitForTimeout(300);
   await p.click('[data-info="info-diag"]'); await p.waitForTimeout(200);
   await shot(p, '09-diagramme-info', await clipOf(p, '#info-diag', 12));
   await p.click('[data-info="info-diag"]');
