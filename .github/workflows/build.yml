@@ -32,7 +32,7 @@ jobs:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
       - uses: actions/upload-artifact@v4
         with:
-          name: Ethos-Log-Viewer-${{ runner.os }}
+          name: MM-Flight-Analyzer-${{ runner.os }}
           path: |
             dist/*.exe
             dist/*.dmg
@@ -55,8 +55,8 @@ jobs:
       - run: npm run handbuch
       - uses: actions/upload-artifact@v4
         with:
-          name: Ethos-Log-Viewer-Handbuch
-          path: dist/Ethos-Log-Viewer-Bedienanleitung.pdf
+          name: MM-Flight-Analyzer-Handbuch
+          path: dist/MM-Flight-Analyzer-Bedienanleitung.pdf
           if-no-files-found: error
 
   # Jeder Stand auf main wird als Release v<version> veröffentlicht (gleiche Version wird überschrieben)
@@ -79,16 +79,16 @@ jobs:
 
           ### Installation
 
-          - Windows: Ethos-Log-Viewer-Setup-$V.exe herunterladen und ausführen.
-          - Mac: Ethos-Log-Viewer-$V.dmg öffnen und die App in „Programme“ ziehen. Die App ist nicht signiert: beim ersten Start unter Systemeinstellungen → Datenschutz & Sicherheit „Dennoch öffnen“ wählen.
-          - Handbuch: Ethos-Log-Viewer-Bedienanleitung.pdf (Installation, alle Tabs und Knöpfe, Troubleshooting/FAQ).
+          - Windows: MM-Flight-Analyzer-Setup-$V.exe herunterladen und ausführen.
+          - Mac: MM-Flight-Analyzer-$V.dmg öffnen und die App in „Programme“ ziehen. Die App ist nicht signiert: beim ersten Start unter Systemeinstellungen → Datenschutz & Sicherheit „Dennoch öffnen“ wählen.
+          - Handbuch: MM-Flight-Analyzer-Bedienanleitung.pdf (Installation, alle Tabs und Knöpfe, Troubleshooting/FAQ).
           EOT
       - uses: actions/download-artifact@v4
         with: { path: out, merge-multiple: true }
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.v.outputs.version }}
-          name: Ethos Log Viewer ${{ steps.v.outputs.version }}
+          name: MM Flight Analyzer ${{ steps.v.outputs.version }}
           target_commitish: ${{ github.sha }}
           files: out/*
           body_path: notes.md

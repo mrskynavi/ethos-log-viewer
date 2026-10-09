@@ -1,12 +1,12 @@
 // Brücke für Claude Desktop: spricht MCP über stdin/stdout und reicht jede Nachricht an den
 // MCP-Server der laufenden App weiter (http://127.0.0.1:<port>/mcp). Läuft mit dem Node der App:
-//   "command": ".../Ethos Log Viewer", "args": [".../mcp-stdio.js"], "env": {"ELECTRON_RUN_AS_NODE": "1"}
+//   "command": ".../MM Flight Analyzer", "args": [".../mcp-stdio.js"], "env": {"ELECTRON_RUN_AS_NODE": "1"}
 const http = require('http');
 const readline = require('readline');
 
 const arg = process.argv.find(a => a.startsWith('--port='));
 const PORT = +(arg ? arg.slice(7) : process.env.ETHOS_MCP_PORT) || 3917;
-const DOWN = 'Ethos Log Viewer ist nicht geöffnet, oder der MCP-Server ist in den Einstellungen der App ausgeschaltet.';
+const DOWN = 'MM Flight Analyzer ist nicht geöffnet, oder der MCP-Server ist in den Einstellungen der App ausgeschaltet.';
 
 function post(body) {
   return new Promise((ok, ko) => {
@@ -32,7 +32,7 @@ readline.createInterface({ input: process.stdin }).on('line', async line => {
     // Ohne App trotzdem verbinden, damit Claude den Server anzeigt; Werkzeuge melden dann, was fehlt
     if (msg.method === 'initialize') return out({ jsonrpc: '2.0', id: msg.id, result: {
       protocolVersion: msg.params?.protocolVersion || '2025-06-18', capabilities: { tools: {} },
-      serverInfo: { name: 'ethos-log-viewer', version: '0' }, instructions: DOWN } });
+      serverInfo: { name: 'mm-flight-analyzer', version: '0' }, instructions: DOWN } });
     if (msg.method === 'ping') return out({ jsonrpc: '2.0', id: msg.id, result: {} });
     out({ jsonrpc: '2.0', id: msg.id, error: { code: -32000, message: DOWN } });
   }

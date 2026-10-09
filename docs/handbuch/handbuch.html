@@ -3,7 +3,7 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<title>Ethos Log Viewer – Bedienanleitung</title>
+<title>MM Flight Analyzer – Bedienanleitung</title>
 <style>
 @page { size: A4; margin: 18mm 16mm 18mm 16mm; }
 :root { --acc:#1f6feb; --acc2:#e8590c; --ink:#1d232b; --mut:#5b6673; --line:#d7dde4; --soft:#f3f6f9; }
@@ -63,7 +63,7 @@ a { color: var(--acc); }
 
 <section class="cover">
   <img src="bilder/icon.png" alt="">
-  <h1>Ethos Log Viewer</h1>
+  <h1>MM Flight Analyzer</h1>
   <div class="sub">Bedienanleitung</div>
   <img class="shot" src="bilder/02-uebersicht.png" alt="">
   <div class="meta">Version {{VERSION}} · Windows, macOS und Web-Version<br>Stand {{STAND}}</div>
@@ -72,9 +72,9 @@ a { color: var(--acc); }
 <h1 style="border:0">Inhalt</h1>
 <div class="toc">
 <ol>
-  <li><a href="#k1">Was der Ethos Log Viewer macht</a></li>
+  <li><a href="#k1">Was der MM Flight Analyzer macht</a></li>
   <li><a href="#k2">Installation</a>
-    <ol><li>Download</li><li>Windows</li><li>macOS</li><li>Updates</li><li>Deinstallieren</li></ol></li>
+    <ol><li>Download</li><li>Windows</li><li>macOS</li><li>Updates</li><li>Deinstallieren</li><li>Umstieg vom „Ethos Log Viewer“</li></ol></li>
   <li><a href="#k3">Erster Start und Einstellungen</a></li>
   <li><a href="#k4">Das Hauptfenster auf einen Blick</a></li>
   <li><a href="#k5">Logs in die App bringen</a>
@@ -102,8 +102,8 @@ a { color: var(--acc); }
 </div>
 
 <!-- 1 -->
-<h1 id="k1"><span class="n">1</span>Was der Ethos Log Viewer macht</h1>
-<p>Der Ethos Log Viewer wertet die Telemetrie-Logs aus, die Dein Ethos-Sender als CSV-Dateien speichert. Du siehst auf einen Blick Flugzeit, Motorläufe, Empfangsqualität, Akkus, Höhe, GPS-Spur, Thermik, Steigflüge und Wind, und Du kannst jeden Sensor im Diagramm, als Tabelle oder Zeile für Zeile anschauen.</p>
+<h1 id="k1"><span class="n">1</span>Was der MM Flight Analyzer macht</h1>
+<p>Der MM Flight Analyzer wertet die Telemetrie-Logs aus, die Dein Ethos-Sender (CSV) oder Jeti-Sender (.log) speichert. Du siehst auf einen Blick Flugzeit, Motorläufe, Empfangsqualität, Akkus, Höhe, GPS-Spur, Thermik, Steigflüge und Wind, und Du kannst jeden Sensor im Diagramm, als Tabelle oder Zeile für Zeile anschauen.</p>
 <p>Die App gibt es in zwei Formen:</p>
 <table>
 <tr><th>Form</th><th>Was sie kann</th></tr>
@@ -111,7 +111,7 @@ a { color: var(--acc); }
 <tr><td><b>Web-Version</b> im Browser</td><td>Dieselbe Oberfläche mit allen Auswertungen. Logs lädst Du von Hand über „Import …“ oder per Ziehen ins Fenster. Kein Sync, kein Archiv.</td></tr>
 </table>
 <p>Die Logs bleiben immer auf Deinem Gerät bzw. in Deinem eigenen Archivordner. Die App schickt keine Logdaten ins Internet.</p>
-<div class="note"><b>Hinweis</b>Der Ethos Log Viewer ist ein inoffizielles Werkzeug und nicht mit dem Hersteller von Ethos verbunden. Ethos ist eine Marke ihres Inhabers.</div>
+<div class="note"><b>Hinweis</b>Der MM Flight Analyzer ist ein Werkzeug von Mächler Modelle. Er ist nicht mit den Herstellern von Ethos oder Jeti verbunden. Ethos ist eine Marke ihres Inhabers.</div>
 <p>Diese Anleitung beschreibt Version {{VERSION}}. Was sich in welcher Version geändert hat, steht in <a href="#k24">Kapitel 24</a>. Die Screenshots zeigen die Desktop-App in der dunklen Darstellung mit dem Beispiel-Log eines Elektroseglers (SB-10).</p>
 
 <!-- 2 -->
@@ -122,24 +122,24 @@ a { color: var(--acc); }
 <p>Unter „Assets“ findest Du die Installationsdateien und dieses Handbuch:</p>
 <table>
 <tr><th>System</th><th>Datei</th></tr>
-<tr><td>Windows 10/11 (64 Bit)</td><td><code>Ethos-Log-Viewer-Setup-{{VERSION}}.exe</code></td></tr>
-<tr><td>macOS (Intel und Apple Silicon)</td><td><code>Ethos-Log-Viewer-{{VERSION}}.dmg</code></td></tr>
-<tr><td>Handbuch</td><td><code>Ethos-Log-Viewer-Bedienanleitung.pdf</code></td></tr>
+<tr><td>Windows 10/11 (64 Bit)</td><td><code>MM-Flight-Analyzer-Setup-{{VERSION}}.exe</code></td></tr>
+<tr><td>macOS (Intel und Apple Silicon)</td><td><code>MM-Flight-Analyzer-{{VERSION}}.dmg</code></td></tr>
+<tr><td>Handbuch</td><td><code>MM-Flight-Analyzer-Bedienanleitung.pdf</code></td></tr>
 </table>
 
 <h2>2.2 Windows</h2>
 <ol>
-<li>Lade <code>Ethos-Log-Viewer-Setup-{{VERSION}}.exe</code> herunter und starte die Datei.</li>
+<li>Lade <code>MM-Flight-Analyzer-Setup-{{VERSION}}.exe</code> herunter und starte die Datei.</li>
 <li>Die App ist nicht mit einem Herausgeber-Zertifikat signiert. Windows zeigt deshalb eventuell „Der Computer wurde durch Windows geschützt“. Klicke auf <b>Weitere Informationen</b> und dann auf <b>Trotzdem ausführen</b>.</li>
 <li>Der Installer fragt nach dem Installationsordner. Den vorgeschlagenen Ordner kannst Du übernehmen oder ändern.</li>
-<li>Nach der Installation startest Du die App über das Startmenü oder die Verknüpfung „Ethos Log Viewer“.</li>
+<li>Nach der Installation startest Du die App über das Startmenü oder die Verknüpfung „MM Flight Analyzer“.</li>
 </ol>
 
 <h2>2.3 macOS</h2>
 <ol>
-<li>Lade <code>Ethos-Log-Viewer-{{VERSION}}.dmg</code> herunter und öffne die Datei per Doppelklick.</li>
-<li>Ziehe <b>Ethos Log Viewer</b> in den Ordner <b>Programme</b>.</li>
-<li>Beim ersten Start blockiert macOS die App, weil sie nicht von einem registrierten Entwickler stammt. Öffne <b>Systemeinstellungen → Datenschutz &amp; Sicherheit</b>, scrolle nach unten und klicke bei „Ethos Log Viewer wurde blockiert“ auf <b>Dennoch öffnen</b>. Bestätige danach noch einmal mit „Öffnen“.</li>
+<li>Lade <code>MM-Flight-Analyzer-{{VERSION}}.dmg</code> herunter und öffne die Datei per Doppelklick.</li>
+<li>Ziehe <b>MM Flight Analyzer</b> in den Ordner <b>Programme</b>.</li>
+<li>Beim ersten Start blockiert macOS die App, weil sie nicht von einem registrierten Entwickler stammt. Öffne <b>Systemeinstellungen → Datenschutz &amp; Sicherheit</b>, scrolle nach unten und klicke bei „MM Flight Analyzer wurde blockiert“ auf <b>Dennoch öffnen</b>. Bestätige danach noch einmal mit „Öffnen“.</li>
 <li>Wenn Du den Sender zum ersten Mal anschliesst, fragt macOS, ob die App auf <b>Wechselmedien</b> zugreifen darf. Wähle <b>Erlauben</b>. Ohne diese Erlaubnis kann die App keine Logs vom Sender holen (siehe <a href="#k22">Troubleshooting</a>).</li>
 </ol>
 <div class="tip"><b>Tipp</b>macOS merkt sich die Erlaubnis. Die Frage kommt nur einmal, nicht für jede Datei.</div>
@@ -153,10 +153,20 @@ a { color: var(--acc); }
 
 <h2>2.5 Deinstallieren</h2>
 <ul>
-<li><b>Windows:</b> Einstellungen → Apps → „Ethos Log Viewer“ → Deinstallieren.</li>
+<li><b>Windows:</b> Einstellungen → Apps → „MM Flight Analyzer“ → Deinstallieren.</li>
 <li><b>Mac:</b> Die App aus „Programme“ in den Papierkorb ziehen.</li>
 </ul>
 <p>Dein Archiv mit den Logs wird dabei nicht gelöscht.</p>
+
+<h2>2.6 Umstieg vom „Ethos Log Viewer“</h2>
+<p>Bis Version 2026.10.0 hiess die App „Ethos Log Viewer“. Die neue Version heisst <b>MM Flight Analyzer</b> und kann alles, was die alte konnte.</p>
+<ul>
+<li><b>Windows:</b> Den neuen Installer einfach ausführen. Er ersetzt die alte App; Verknüpfung und Eintrag im Startmenü heissen danach „MM Flight Analyzer“.</li>
+<li><b>Mac:</b> Die neue App in „Programme“ ziehen. Die alte App „Ethos Log Viewer“ bleibt dort liegen; Du kannst sie danach in den Papierkorb legen.</li>
+<li>Beim ersten Start übernimmt die neue App Deine Einstellungen: Archiv-Ordner, Sync, Sprache, Darstellung, die Einstellungen pro Modell, Modellnamen und den API-Schlüssel der KI-Auswertung. Das Archiv mit den Logs bleibt, wo es ist. Der alte Datenordner bleibt unverändert als Sicherung liegen.</li>
+<li>Auf dem Mac kann es sein, dass der API-Schlüssel nicht mitkommt, weil macOS ihn im Schlüsselbund unter dem alten App-Namen abgelegt hat. Dann steht unter <span class="btn">⚙</span> → <b>KI-Auswertung</b> „Schlüssel neu eintragen“: Schlüssel einfach nochmals einfügen.</li>
+<li>Nutzt Du den MCP-Server mit Claude Desktop, kopiere den Eintrag im MCP-Dialog neu und ersetze in <code>claude_desktop_config.json</code> den alten Eintrag „ethos-log-viewer“ (siehe <a href="#k19">Kapitel 19</a>).</li>
+</ul>
 
 <!-- 3 -->
 <h1 id="k3"><span class="n">3</span>Erster Start und Einstellungen</h1>
@@ -497,7 +507,7 @@ a { color: var(--acc); }
 <h2>3. Schlüssel erzeugen</h2>
 <ol>
 <li>Links <b>API Keys</b> öffnen und <b>Create Key</b> wählen.</li>
-<li>Einen Namen eingeben, z. B. „Ethos Log Viewer“, und bestätigen.</li>
+<li>Einen Namen eingeben, z. B. „MM Flight Analyzer“, und bestätigen.</li>
 <li>Den Schlüssel sofort kopieren. Er wird nur dieses eine Mal ganz angezeigt. Geht er verloren, erzeugst Du einfach einen neuen.</li>
 </ol>
 <h2>4. In der App eintragen</h2>
@@ -561,13 +571,13 @@ a { color: var(--acc); }
 <pre>Claude Desktop  ──startet──▶  Brücke (mcp-stdio.js, in der App enthalten)
                                    │
                                    ▼  http://127.0.0.1:3917/mcp
-                         Ethos Log Viewer (muss offen sein, MCP-Server ein)</pre>
+                         MM Flight Analyzer (muss offen sein, MCP-Server ein)</pre>
 <p>Claude Desktop startet beim Öffnen eine kleine Brücke, die in der App mitgeliefert wird. Sie reicht jede Nachricht an die laufende App weiter. Der Server nimmt nur Verbindungen vom eigenen Computer an (127.0.0.1); aus dem Netz ist er nicht erreichbar.</p>
 <h2>Schritt 1: Claude Desktop installieren</h2>
 <p>Claude Desktop gibt es für Windows und Mac auf <code>claude.com/download</code>. Installieren, öffnen und mit Deinem Claude-Konto anmelden.</p>
 <h2>Schritt 2: MCP-Server in der App einschalten</h2>
 <ol>
-<li>Im Ethos Log Viewer <span class="btn">⚙</span> → <span class="btn">MCP …</span> öffnen.</li>
+<li>Im MM Flight Analyzer <span class="btn">⚙</span> → <span class="btn">MCP …</span> öffnen.</li>
 <li><b>MCP-Server einschalten</b> anhaken und <span class="btn">Speichern</span>. Standard ist aus.</li>
 <li>Öffne den Dialog nochmals: Oben steht jetzt „Läuft auf http://127.0.0.1:3917/mcp“ mit grünem Punkt. In den Einstellungen steht in der Zeile MCP „Läuft“.</li>
 </ol>
@@ -577,38 +587,38 @@ a { color: var(--acc); }
 <li>Im MCP-Dialog <span class="btn">Eintrag kopieren</span> klicken. Der Eintrag enthält den genauen Pfad zur App auf Deinem Computer; abtippen ist nicht nötig.</li>
 <li>In Claude Desktop <b>Einstellungen → Entwickler</b> (englisch Settings → Developer) öffnen und <b>Konfiguration bearbeiten</b> (Edit Config) klicken. Es öffnet sich ein Ordner mit der Datei <code>claude_desktop_config.json</code>. Öffne sie mit einem Texteditor (Mac: TextEdit, Windows: Editor).</li>
 <li>Ist die Datei leer oder steht nur <code>{}</code> darin: alles ersetzen durch den kopierten Eintrag.</li>
-<li>Steht dort schon <code>"mcpServers": { … }</code> mit anderen Servern: nur den Teil <code>"ethos-log-viewer": { … }</code> innerhalb von <code>mcpServers</code> ergänzen, mit einem Komma zum vorherigen Eintrag.</li>
+<li>Steht dort schon <code>"mcpServers": { … }</code> mit anderen Servern: nur den Teil <code>"mm-flight-analyzer": { … }</code> innerhalb von <code>mcpServers</code> ergänzen, mit einem Komma zum vorherigen Eintrag.</li>
 <li>Datei speichern und Claude Desktop <b>ganz beenden</b> (Mac: ⌘Q, Windows: im Infobereich rechts unten mit Rechtsklick → Beenden) und neu starten. Nur das Fenster zu schliessen reicht nicht.</li>
 </ol>
 <p>Der Eintrag sieht auf dem Mac etwa so aus:</p>
 <pre>{
   "mcpServers": {
-    "ethos-log-viewer": {
-      "command": "/Applications/Ethos Log Viewer.app/Contents/MacOS/Ethos Log Viewer",
-      "args": ["/Applications/Ethos Log Viewer.app/Contents/Resources/mcp-stdio.js"],
+    "mm-flight-analyzer": {
+      "command": "/Applications/MM Flight Analyzer.app/Contents/MacOS/MM Flight Analyzer",
+      "args": ["/Applications/MM Flight Analyzer.app/Contents/Resources/mcp-stdio.js"],
       "env": { "ELECTRON_RUN_AS_NODE": "1" }
     }
   }
 }</pre>
-<p>Unter Windows stehen dort die Pfade zur <code>Ethos Log Viewer.exe</code> und zu <code>resources\mcp-stdio.js</code>, mit doppelten Backslashes. Hast Du einen anderen Port gewählt, steht in <code>args</code> zusätzlich <code>--port=…</code>.</p>
+<p>Unter Windows stehen dort die Pfade zur <code>MM Flight Analyzer.exe</code> und zu <code>resources\mcp-stdio.js</code>, mit doppelten Backslashes. Hast Du einen anderen Port gewählt, steht in <code>args</code> zusätzlich <code>--port=…</code>.</p>
 <h2>Schritt 4: Prüfen</h2>
 <ol>
-<li>In Claude Desktop einen neuen Chat öffnen. Unter dem Werkzeug-Symbol (bzw. „+“ → Connectors) erscheint <b>ethos-log-viewer</b> mit seinen Werkzeugen.</li>
-<li>Den Ethos Log Viewer offen lassen und z. B. fragen: „Welches Log ist im Ethos Log Viewer offen?“</li>
-<li>Beim ersten Werkzeug fragt Claude, ob es <b>ethos-log-viewer</b> benutzen darf. Mit „Immer erlauben“ fragt es künftig nicht mehr.</li>
+<li>In Claude Desktop einen neuen Chat öffnen. Unter dem Werkzeug-Symbol (bzw. „+“ → Connectors) erscheint <b>mm-flight-analyzer</b> mit seinen Werkzeugen.</li>
+<li>Den MM Flight Analyzer offen lassen und z. B. fragen: „Welches Log ist im MM Flight Analyzer offen?“</li>
+<li>Beim ersten Werkzeug fragt Claude, ob es <b>mm-flight-analyzer</b> benutzen darf. Mit „Immer erlauben“ fragt es künftig nicht mehr.</li>
 </ol>
 <p>Jede Aktion siehst Du sofort in der App. Beispiele zum Ausprobieren stehen in <a href="#k18">Kapitel 18</a>.</p>
 <h2>Claude Code</h2>
-<p>In einem Terminal genügt: <code>claude mcp add --transport http ethos-log-viewer http://127.0.0.1:3917/mcp</code>. Den passenden Befehl mit dem eingestellten Port zeigt auch der MCP-Dialog. Hier gibt es keine Brücke, Claude Code spricht direkt mit der App.</p>
+<p>In einem Terminal genügt: <code>claude mcp add --transport http mm-flight-analyzer http://127.0.0.1:3917/mcp</code>. Den passenden Befehl mit dem eingestellten Port zeigt auch der MCP-Dialog. Hier gibt es keine Brücke, Claude Code spricht direkt mit der App.</p>
 <h2>Fehlersuche</h2>
 <table>
 <tr><th>Was Du siehst</th><th>Was zu tun ist</th></tr>
-<tr><td>„ethos-log-viewer“ erscheint in Claude Desktop gar nicht.</td><td>Claude Desktop ganz beenden und neu starten. Unter Einstellungen → Entwickler steht bei jedem Server, ob er läuft; steht dort ein Fehler, ist meist die Datei <code>claude_desktop_config.json</code> fehlerhaft: Fehlt ein Komma oder eine Klammer, liest Claude Desktop keinen einzigen Server. Den Inhalt z. B. auf <code>jsonlint.com</code> prüfen lassen.</td></tr>
-<tr><td>Claude meldet „Ethos Log Viewer ist nicht geöffnet, oder der MCP-Server ist in den Einstellungen der App ausgeschaltet“.</td><td>Die Brücke läuft, erreicht aber die App nicht. App öffnen und unter ⚙ → MCP prüfen, ob „Läuft“ steht. Stimmt der Port im Eintrag (<code>--port=…</code>) mit dem in der App überein?</td></tr>
+<tr><td>„mm-flight-analyzer“ erscheint in Claude Desktop gar nicht.</td><td>Claude Desktop ganz beenden und neu starten. Unter Einstellungen → Entwickler steht bei jedem Server, ob er läuft; steht dort ein Fehler, ist meist die Datei <code>claude_desktop_config.json</code> fehlerhaft: Fehlt ein Komma oder eine Klammer, liest Claude Desktop keinen einzigen Server. Den Inhalt z. B. auf <code>jsonlint.com</code> prüfen lassen.</td></tr>
+<tr><td>Claude meldet „MM Flight Analyzer ist nicht geöffnet, oder der MCP-Server ist in den Einstellungen der App ausgeschaltet“.</td><td>Die Brücke läuft, erreicht aber die App nicht. App öffnen und unter ⚙ → MCP prüfen, ob „Läuft“ steht. Stimmt der Port im Eintrag (<code>--port=…</code>) mit dem in der App überein?</td></tr>
 <tr><td>Im MCP-Dialog steht „Startet nicht: Port … ist schon belegt“.</td><td>Ein anderes Programm (oder eine zweite Instanz der App) nutzt den Port. Anderen Port wählen, speichern, Eintrag neu kopieren und in Claude Desktop ersetzen.</td></tr>
 <tr><td>Nach einem Update oder Verschieben der App geht nichts mehr.</td><td>Der Pfad zur App im Eintrag stimmt nicht mehr, z. B. wenn die App auf dem Mac nicht im Ordner Programme liegt. Eintrag im MCP-Dialog neu kopieren und in der Konfiguration ersetzen.</td></tr>
-<tr><td>Mac: „Ethos Log Viewer kann nicht geöffnet werden“ beim Start von Claude Desktop.</td><td>Die App zuerst einmal selbst öffnen und unter Datenschutz &amp; Sicherheit erlauben (siehe <a href="#k2">Kapitel 2.3</a>). Danach Claude Desktop neu starten.</td></tr>
-<tr><td>Claude sagt, es habe keinen Zugriff auf Werkzeuge.</td><td>Im Chat unter dem Werkzeug-Symbol prüfen, ob ethos-log-viewer eingeschaltet ist, und bei der Rückfrage „Erlauben“ wählen.</td></tr>
+<tr><td>Mac: „MM Flight Analyzer kann nicht geöffnet werden“ beim Start von Claude Desktop.</td><td>Die App zuerst einmal selbst öffnen und unter Datenschutz &amp; Sicherheit erlauben (siehe <a href="#k2">Kapitel 2.3</a>). Danach Claude Desktop neu starten.</td></tr>
+<tr><td>Claude sagt, es habe keinen Zugriff auf Werkzeuge.</td><td>Im Chat unter dem Werkzeug-Symbol prüfen, ob mm-flight-analyzer eingeschaltet ist, und bei der Rückfrage „Erlauben“ wählen.</td></tr>
 <tr><td>Claude öffnet ein falsches Log oder findet keines.</td><td>Claude sieht nur die Logs, die die App kennt (Archiv und Importe). Den Namen des Modells oder das Datum nennen, z. B. „Öffne das Log der SB-10 vom 2. Oktober“.</td></tr>
 </table>
 
@@ -634,7 +644,7 @@ a { color: var(--acc); }
 <table>
 <tr><th>Was</th><th>Wo</th></tr>
 <tr><td>Logs</td><td>Im Archiv-Ordner, ein Unterordner pro Modell. Die App löscht dort nie etwas.</td></tr>
-<tr><td>Sync-Einstellungen (Log-Ordner auf dem Sender, Archiv-Ordner, automatischer Sync, Importe ins Archiv)</td><td>Datei <code>settings.json</code> im App-Datenordner:<br>Windows <code>%APPDATA%\Ethos Log Viewer</code><br>Mac <code>~/Library/Application Support/Ethos Log Viewer</code></td></tr>
+<tr><td>Sync-Einstellungen (Log-Ordner auf dem Sender, Archiv-Ordner, automatischer Sync, Importe ins Archiv)</td><td>Datei <code>settings.json</code> im App-Datenordner:<br>Windows <code>%APPDATA%\MM Flight Analyzer</code><br>Mac <code>~/Library/Application Support/MM Flight Analyzer</code></td></tr>
 <tr><td>Ansicht (Sprache, Darstellung, Geschwindigkeitseinheit, letzter Tab, gewählte Kanäle, Reihenfolge der Diagramme, Einzeln/Überlagert, Schalter und Höhenquellen, Schwelle, Stufe, Rot markieren pro Modell, zuletzt gewähltes Modell)</td><td>Im Speicher der App bzw. des Browsers (Web-Version). Bleibt bei Updates erhalten.</td></tr>
 <tr><td>API-Schlüssel der KI-Auswertung</td><td>Desktop-App: verschlüsselt mit dem Schlüsselbund des Betriebssystems in der Datei <code>ai-key.bin</code> im App-Datenordner. Web-Version: im Speicher des Browsers. Nie im Archiv.</td></tr>
 <tr><td>MCP-Server ein/aus und Port</td><td>In <code>settings.json</code> im App-Datenordner.</td></tr>
@@ -651,7 +661,7 @@ a { color: var(--acc); }
 <h3>Windows meldet „Der Computer wurde durch Windows geschützt“.</h3>
 <p>Die App ist nicht mit einem gekauften Zertifikat signiert. Klicke auf „Weitere Informationen“ und dann „Trotzdem ausführen“.</p>
 <h3>Der Mac sagt, die App kann nicht geöffnet werden.</h3>
-<p>Systemeinstellungen → Datenschutz &amp; Sicherheit → bei „Ethos Log Viewer wurde blockiert“ auf „Dennoch öffnen“ klicken. Das ist nur beim ersten Start nötig.</p>
+<p>Systemeinstellungen → Datenschutz &amp; Sicherheit → bei „MM Flight Analyzer wurde blockiert“ auf „Dennoch öffnen“ klicken. Das ist nur beim ersten Start nötig.</p>
 <h3>Es erscheint kein Hinweis auf neue Versionen.</h3>
 <p>Die App braucht dafür Internet. Öffne <span class="btn">⚙</span> und klicke unten auf <span class="btn">Nach Updates suchen</span>: Daneben steht, ob Du die neueste Version hast oder warum die Suche nicht geklappt hat (zum Beispiel keine Verbindung oder eine Firewall). Die aktuelle Version findest Du immer unter <a href="https://github.com/mrskynavi/ethos-log-viewer/releases/latest">Releases</a>.</p>
 
@@ -664,7 +674,7 @@ a { color: var(--acc); }
 <li>Ein anderes USB-Kabel probieren: Reine Ladekabel übertragen keine Daten.</li>
 </ul>
 <h3>Mac: „Zugriff auf den Sender erlauben“ bleibt stehen.</h3>
-<p>macOS wartet auf Deine Antwort. Wähle „Erlauben“. Hast Du einmal „Nicht erlauben“ gewählt, gib den Zugriff unter Systemeinstellungen → Datenschutz &amp; Sicherheit → <b>Dateien und Ordner</b> → Ethos Log Viewer → <b>Wechselmedien</b> frei. Danach den Sender neu anschliessen.</p>
+<p>macOS wartet auf Deine Antwort. Wähle „Erlauben“. Hast Du einmal „Nicht erlauben“ gewählt, gib den Zugriff unter Systemeinstellungen → Datenschutz &amp; Sicherheit → <b>Dateien und Ordner</b> → MM Flight Analyzer → <b>Wechselmedien</b> frei. Danach den Sender neu anschliessen.</p>
 <h3>„Sync unterbrochen, Sender getrennt“.</h3>
 <p>Der Sender wurde während dem Kopieren getrennt, zum Beispiel durch Abziehen oder einen Wackelkontakt. Einfach wieder anschliessen; die fehlenden Logs kommen dann. Angefangene Dateien bleiben nicht im Archiv liegen.</p>
 <h3>„Sync fehlgeschlagen“ oder Fehler bei einzelnen Dateien.</h3>
@@ -713,7 +723,7 @@ a { color: var(--acc); }
 <h3>Kann ich die App auf mehreren Computern nutzen?</h3>
 <p>Ja. Installiere sie überall und wähle denselben Archiv-Ordner in Google Drive oder OneDrive.</p>
 <h3>Funktioniert die App mit anderen Sendern?</h3>
-<p>Sie ist für Ethos-Telemetrie-Logs gebaut. Andere CSV-Logs mit Spalten „Date“ und „Time“ lassen sich teilweise öffnen, die Auswertung ist dann aber nicht garantiert.</p>
+<p>Sie ist für Telemetrie-Logs von Ethos- und Jeti-Sendern gebaut. Andere CSV-Logs mit Spalten „Date“ und „Time“ lassen sich teilweise öffnen, die Auswertung ist dann aber nicht garantiert.</p>
 </div>
 
 <!-- 20 -->
@@ -741,6 +751,6 @@ a { color: var(--acc); }
 <div class="changelog">
 {{CHANGELOG}}
 </div>
-<p style="margin-top:10mm;color:var(--mut);font-size:8.5pt">Ethos Log Viewer {{VERSION}} · Christoph Mächler · Inoffizielles Werkzeug, nicht mit dem Hersteller von Ethos verbunden. Ethos ist eine Marke ihres Inhabers.</p>
+<p style="margin-top:10mm;color:var(--mut);font-size:8.5pt">MM Flight Analyzer {{VERSION}} · Mächler Modelle, Christoph Mächler · Nicht mit den Herstellern von Ethos oder Jeti verbunden. Ethos ist eine Marke ihres Inhabers.</p>
 </body>
 </html>

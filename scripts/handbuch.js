@@ -1,6 +1,6 @@
 // Erzeugt das Handbuch als PDF: Screenshots aus web/index.html (mit nachgestellter Desktop-App und dem
 // Beispiel-Log), Version aus package.json, Changelog aus CHANGELOG.md, Vorlage docs/handbuch/handbuch.html.
-// Ergebnis: dist/Ethos-Log-Viewer-Bedienanleitung.pdf. Braucht Playwright mit Chromium und chart.js.
+// Ergebnis: dist/MM-Flight-Analyzer-Bedienanleitung.pdf. Braucht Playwright mit Chromium und chart.js.
 const fs = require('fs');
 const path = require('path');
 const { chromium } = require('playwright');
@@ -9,7 +9,7 @@ const ROOT = path.join(__dirname, '..');
 const SRC = path.join(ROOT, 'docs', 'handbuch');
 const OUTDIR = path.join(ROOT, 'dist', 'handbuch');
 const BILDER = path.join(OUTDIR, 'bilder');
-const PDF = path.join(ROOT, 'dist', 'Ethos-Log-Viewer-Bedienanleitung.pdf');
+const PDF = path.join(ROOT, 'dist', 'MM-Flight-Analyzer-Bedienanleitung.pdf');
 const WEB = path.join(ROOT, 'web');
 const VERSION = require(path.join(ROOT, 'package.json')).version;
 const NEXT = VERSION.split('.').map((n, i) => i === 1 ? +n + 1 : i === 2 ? 0 : n).join('.');
@@ -217,7 +217,7 @@ async function main() {
     await p.goto('file://' + file); await p.waitForLoadState('networkidle');
     await p.pdf({ path: PDF, format: 'A4', printBackground: true, displayHeaderFooter: true, margin: { top: '16mm', bottom: '18mm', left: '16mm', right: '16mm' },
       headerTemplate: '<div></div>',
-      footerTemplate: `<div style="width:100%;font-size:8px;color:#888;padding:0 16mm;display:flex;justify-content:space-between;font-family:sans-serif"><span>Ethos Log Viewer ${VERSION} · Bedienanleitung</span><span><span class="pageNumber"></span> / <span class="totalPages"></span></span></div>` });
+      footerTemplate: `<div style="width:100%;font-size:8px;color:#888;padding:0 16mm;display:flex;justify-content:space-between;font-family:sans-serif"><span>MM Flight Analyzer ${VERSION} · Bedienanleitung</span><span><span class="pageNumber"></span> / <span class="totalPages"></span></span></div>` });
   } finally { await browser.close(); }
   console.log('Handbuch erzeugt: ' + path.relative(ROOT, PDF));
 }

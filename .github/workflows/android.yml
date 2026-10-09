@@ -26,9 +26,9 @@ jobs:
         working-directory: android
       - id: v
         run: echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
-      - run: cp android/app/build/outputs/apk/release/app-release.apk "Ethos-Log-Viewer-${{ steps.v.outputs.version }}.apk"
+      - run: cp android/app/build/outputs/apk/release/app-release.apk "MM-Flight-Analyzer-${{ steps.v.outputs.version }}.apk"
       - uses: actions/upload-artifact@v4
         with:
-          name: Ethos-Log-Viewer-Android-${{ steps.v.outputs.version }}
-          path: Ethos-Log-Viewer-*.apk
+          name: MM-Flight-Analyzer-Android-${{ steps.v.outputs.version }}
+          path: MM-Flight-Analyzer-*.apk
           if-no-files-found: error

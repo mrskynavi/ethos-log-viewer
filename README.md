@@ -1,6 +1,8 @@
-# Ethos Log Viewer
+# MM Flight Analyzer
 
-> Inoffizielles Werkzeug, nicht mit dem Hersteller von Ethos verbunden. Ethos ist eine Marke ihres Inhabers.
+Flugauswertung von Mächler Modelle (bis Version 2026.10.0 „Ethos Log Viewer“).
+
+> Nicht mit den Herstellern von Ethos oder Jeti verbunden. Ethos ist eine Marke ihres Inhabers.
 
 Wertet Telemetrie-Logs von Ethos-Sendern (CSV) und Jeti-Sendern (.log) aus und holt neue Logs automatisch vom Sender, sobald er per USB angeschlossen ist.
 
@@ -30,7 +32,7 @@ npm run build-pwa  # Web-App (PWA) nach site/ bauen
 
 `web/index.html` ist dieselbe Seite wie die Web-Version. `npm run prepare-app` kopiert sie nach `app/` und bindet Chart.js lokal ein, damit die App offline läuft.
 
-Das Handbuch entsteht aus `docs/handbuch/handbuch.html`: `npm run handbuch` macht frische Screenshots aus `web/index.html` mit dem Beispiel-Log, setzt Version und Changelog ein und schreibt `dist/Ethos-Log-Viewer-Bedienanleitung.pdf` (braucht Playwright mit Chromium: `npm install --no-save playwright && npx playwright install chromium`). Ändert sich die Bedienung, den Text in der Vorlage nachführen.
+Das Handbuch entsteht aus `docs/handbuch/handbuch.html`: `npm run handbuch` macht frische Screenshots aus `web/index.html` mit dem Beispiel-Log, setzt Version und Changelog ein und schreibt `dist/MM-Flight-Analyzer-Bedienanleitung.pdf` (braucht Playwright mit Chromium: `npm install --no-save playwright && npx playwright install chromium`). Ändert sich die Bedienung, den Text in der Vorlage nachführen.
 
 ## Web-App (PWA)
 

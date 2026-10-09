@@ -1,4 +1,4 @@
-// Desktop-Hülle: zeigt den Ethos Log Viewer und synchronisiert Logs vom Sender ins Archiv
+// Desktop-Hülle: zeigt den MM Flight Analyzer und synchronisiert Logs vom Sender ins Archiv
 const { app, BrowserWindow, ipcMain, dialog, shell, net, safeStorage } = require('electron');
 const fs = require('fs');
 const path = require('path');
@@ -7,6 +7,10 @@ const U = require('./update');
 const E = require('./eject');
 const M = require('./mcp');
 const AI = require('./ai');
+const MG = require('./migrate');
+
+// Daten aus dem Ordner der früheren App „Ethos Log Viewer“ übernehmen, bevor irgendetwas den neuen Ordner benutzt
+const MIGRATED = MG.migrate(path.join(app.getPath('appData'), MG.OLD_NAME), app.getPath('userData'));
 
 const SETTINGS_FILE = () => path.join(app.getPath('userData'), 'settings.json');
 const DEFAULTS = () => ({ senderPath: 'Radio/logs', archiveDir: S.defaultArchive(), autoSync: true, archiveManual: false, mcp: false, mcpPort: M.DEFAULT_PORT });
@@ -26,7 +30,7 @@ function saveSettings(s) {
 let win, watcher;
 function createWindow() {
   win = new BrowserWindow({
-    width: 1280, height: 900, minWidth: 420, title: 'Ethos Log Viewer', backgroundColor: '#0f141a',
+    width: 1280, height: 900, minWidth: 420, title: 'MM Flight Analyzer', backgroundColor: '#0f141a',
     webPreferences: { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, nodeIntegration: false, sandbox: true },
   });
   win.removeMenu();
@@ -72,7 +76,7 @@ ipcMain.handle('archive:save', (_, name, bytes) => S.archiveFile(settings.archiv
 ipcMain.handle('archive:open', () => { fs.mkdirSync(settings.archiveDir, { recursive: true }); return shell.openPath(settings.archiveDir); });
 // Update-Suche über das Netz von Chromium: nutzt Proxy und Zertifikate des Systems
 async function netJson(url) {
-  const r = await net.fetch(url, { headers: { 'User-Agent': 'ethos-log-viewer', Accept: 'application/vnd.github+json' } });
+  const r = await net.fetch(url, { headers: { 'User-Agent': 'mm-flight-analyzer', Accept: 'application/vnd.github+json' } });
   if (!r.ok) throw new Error('HTTP ' + r.status);
   return r.json();
 }
@@ -86,7 +90,7 @@ async function checkUpdate() {
 }
 ipcMain.handle('update:check', () => checkUpdate());
 ipcMain.handle('app:version', () => app.getVersion());
-ipcMain.handle('update:open', (_, url) => { if (/^https:\/\/github\.com\/mrskynavi\/ethos-log-viewer\//.test(url)) shell.openExternal(url); });
+ipcMain.handle('update:open', (_, url) => { if (/^https:\/\/github\.com\/mrskynavi\/(ethos-log-viewer|mm-flight-analyzer)\//.test(url)) shell.openExternal(url); });
 ipcMain.handle('file:read', async (_, p) => { if (!allowed(p)) throw new Error('Kein Zugriff'); return S.decodeText(await fs.promises.readFile(p)); });
 ipcMain.handle('file:peek', async (_, p, n) => {
   if (!allowed(p)) throw new Error('Kein Zugriff');
@@ -105,7 +109,8 @@ function readKey() {
   try { const b = fs.readFileSync(KEY_FILE()); return safeStorage.isEncryptionAvailable() ? safeStorage.decryptString(b) : null; }
   catch { return null; }
 }
-ipcMain.handle('ai:keyState', () => AI.keyState(readKey()));
+// unreadable: Datei da, aber nicht zu entschlüsseln (z. B. Mac nach der Umbenennung: neuer Eintrag im Schlüsselbund)
+ipcMain.handle('ai:keyState', () => { const k = readKey(); return k || !fs.existsSync(KEY_FILE()) ? AI.keyState(k) : { set: false, unreadable: true }; });
 ipcMain.handle('ai:setKey', (_, key) => {
   if (!key) { try { fs.unlinkSync(KEY_FILE()); } catch {} return AI.keyState(null); }
   if (!safeStorage.isEncryptionAvailable()) throw new Error('Der Schlüsselbund des Systems ist nicht verfügbar.');
@@ -136,7 +141,7 @@ function mcpInfo() {
   const bridge = app.isPackaged ? path.join(process.resourcesPath, 'mcp-stdio.js') : path.join(__dirname, 'mcp-stdio.js');
   const args = port === M.DEFAULT_PORT ? [bridge] : [bridge, '--port=' + port];
   return { on: !!settings.mcp, running: !!mcp, port, error: mcpError, url: `http://127.0.0.1:${port}/mcp`,
-    desktop: { mcpServers: { 'ethos-log-viewer': { command: process.execPath, args, env: { ELECTRON_RUN_AS_NODE: '1' } } } } };
+    desktop: { mcpServers: { 'mm-flight-analyzer': { command: process.execPath, args, env: { ELECTRON_RUN_AS_NODE: '1' } } } } };
 }
 ipcMain.handle('mcp:info', () => mcpInfo());
 ipcMain.handle('clipboard:write', (_, t) => { require('electron').clipboard.writeText(String(t)); });

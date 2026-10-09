@@ -1,8 +1,8 @@
 {
-  "name": "ethos-log-viewer",
-  "productName": "Ethos Log Viewer",
+  "name": "mm-flight-analyzer",
+  "productName": "MM Flight Analyzer",
   "version": "2026.10.1",
-  "description": "Telemetrie-Logs vom Ethos-Sender auswerten und automatisch vom Sender ins Archiv synchronisieren",
+  "description": "Flugauswertung von Mächler Modelle: Telemetrie-Logs von Ethos- und Jeti-Sendern auswerten und automatisch vom Sender ins Archiv synchronisieren",
   "author": "Christoph Mächler",
   "license": "UNLICENSED",
   "private": true,
@@ -10,7 +10,7 @@
   "scripts": {
     "prepare-app": "node scripts/prepare.js",
     "start": "npm run prepare-app && electron .",
-    "test": "node --test test/sync.test.js test/update.test.js test/eject.test.js test/mcp.test.js",
+    "test": "node --test test/sync.test.js test/update.test.js test/eject.test.js test/mcp.test.js test/migrate.test.js",
     "dist": "npm run prepare-app && electron-builder --publish never",
     "handbuch": "node scripts/handbuch.js",
     "build-pwa": "node scripts/build-pwa.js",
@@ -34,7 +34,7 @@
   },
   "build": {
     "appId": "ch.maechler.ethoslogviewer",
-    "productName": "Ethos Log Viewer",
+    "productName": "MM Flight Analyzer",
     "files": [
       "src/**",
       "app/**",
@@ -56,7 +56,7 @@
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
-      "artifactName": "Ethos-Log-Viewer-Setup-${version}.${ext}"
+      "artifactName": "MM-Flight-Analyzer-Setup-${version}.${ext}"
     },
     "mac": {
       "target": [
@@ -69,7 +69,7 @@
       ],
       "category": "public.app-category.utilities",
       "identity": "-",
-      "artifactName": "Ethos-Log-Viewer-${version}.${ext}",
+      "artifactName": "MM-Flight-Analyzer-${version}.${ext}",
       "hardenedRuntime": false
     },
     "publish": null,

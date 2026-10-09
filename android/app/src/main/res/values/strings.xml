@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Ethos Log Viewer</string>
-    <string name="title_activity_main">Ethos Log Viewer</string>
+    <string name="app_name">MM Flight Analyzer</string>
+    <string name="title_activity_main">MM Flight Analyzer</string>
     <string name="package_name">ch.maechler.ethoslogviewer</string>
     <string name="custom_url_scheme">ch.maechler.ethoslogviewer</string>
 </resources>

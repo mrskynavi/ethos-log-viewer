@@ -21,8 +21,8 @@ async function handle(msg, { getTools, callTool, version }) {
         return rpcResult(id, {
           protocolVersion: VERSIONS.includes(want) ? want : VERSIONS[0],
           capabilities: { tools: { listChanged: false } },
-          serverInfo: { name: 'ethos-log-viewer', title: 'Ethos Log Viewer', version },
-          instructions: 'Ethos Log Viewer: Telemetrie-Logs von FrSky-Ethos-Sendern (Modellflug). Zuerst app_zustand aufrufen, dann daten_lesen für Zahlenreihen. Zeiten sind Flugzeit ab Logbeginn (m:ss). Aktionen ändern die Ansicht in der laufenden App und lassen sich mit rueckgaengig zurücknehmen.',
+          serverInfo: { name: 'mm-flight-analyzer', title: 'MM Flight Analyzer', version },
+          instructions: 'MM Flight Analyzer: Telemetrie-Logs von Ethos- und Jeti-Sendern (Modellflug). Zuerst app_zustand aufrufen, dann daten_lesen für Zahlenreihen. Zeiten sind Flugzeit ab Logbeginn (m:ss). Aktionen ändern die Ansicht in der laufenden App und lassen sich mit rueckgaengig zurücknehmen.',
         });
       }
       case 'ping': return rpcResult(id, {});
