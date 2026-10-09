@@ -10,9 +10,10 @@
   "scripts": {
     "prepare-app": "node scripts/prepare.js",
     "start": "npm run prepare-app && electron .",
-    "test": "node --test test/sync.test.js test/update.test.js test/eject.test.js test/mcp.test.js test/migrate.test.js",
+    "test": "node --test test/sync.test.js test/update.test.js test/eject.test.js test/mcp.test.js test/migrate.test.js test/hilfe.test.js",
     "dist": "npm run prepare-app && electron-builder --publish never",
     "handbuch": "node scripts/handbuch.js",
+    "hilfe": "node scripts/hilfe.js",
     "build-pwa": "node scripts/build-pwa.js",
     "build-android": "node scripts/build-pwa.js --beispiel-verschoben && cap sync android"
   },

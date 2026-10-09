@@ -492,6 +492,8 @@ a { color: var(--acc); }
 <figure><img src="bilder/24-ki-panel.png" alt=""><figcaption>Panel der KI-Auswertung rechts neben dem offenen Tab</figcaption></figure>
 <p>Der Knopf öffnet rechts ein Panel, egal in welchem Tab Du gerade bist; der Tab bleibt daneben sichtbar und lässt sich weiter bedienen. Die KI bekommt mit, welchen Tab Du offen hast und was dort zu sehen ist, im Tab Polare z. B. die gezeigte Polare mit Glättung und Ansicht. So versteht sie Fragen wie „Was sagt mir diese Polare?“. Im ersten Schritt wählst Du den Ausschnitt (aktueller Zoom oder ganzer Flug), die Kanäle (vorgewählt sind die offenen Diagramme) und was zusätzlich mitgeht: Kennzahlen, erkannte Motorläufe und Thermik, Gleitzahl und Polare, Modellname, GPS-Position. Ins Feld <b>Frage oder Auftrag</b> schreibst Du, was Du wissen willst, z. B. „Wie gut war die Thermik?“ oder „Erstelle eine Polare ohne Thermik“. Leer gelassen gibt es eine allgemeine Auswertung.</p>
 <p>Die Antwort erscheint im Panel. Zeitangaben wie <b>3:12</b> sind anklickbar, wechseln in den Tab Diagramme und zoomen dorthin. Hat die KI etwas an der App geändert, steht das im Kasten <b>„Ausgeführt“</b>; <span class="btn">Rückgängig</span> stellt den Zustand vor der Antwort wieder her. Darunter kannst Du nachfragen oder einen weiteren Auftrag geben.</p>
+<h2>Fragen zur App</h2>
+<p>Die KI hilft auch bei der Bedienung, wenn Du nicht im Handbuch suchen willst. Frag einfach, z. B. „Wie lege ich den Sensor für den Verbrauch fest?“ oder „Warum sehe ich keine Thermik?“. Claude schaut dafür in diesem Handbuch nach und antwortet mit dem Weg in der App und dem passenden Kapitel. Wählst Du beim Ausschnitt <b>Keine Logdaten, nur eine Frage zur App</b>, gehen nur Deine Frage und der Text aus dem Handbuch an Claude. Das geht auch, wenn noch kein Log offen ist.</p>
 <div class="note"><b>Datenschutz</b>Gesendet werden die gewählten Kanäle als zusammengefasste Zahlenreihen, Kennzahlen, Modellname und Deine Frage. Die CSV-Datei selbst wird nie hochgeladen. Was genau gesendet wurde, zeigt die Zeile „Gesendete Daten“. Ohne Internet ist die Auswertung nicht verfügbar, alles andere läuft weiter.</div>
 <div class="tip"><b>Kosten</b>Jede Anfrage kostet je nach Datenmenge und Modell meist wenige Rappen und wird über Dein Anthropic-Konto abgerechnet. Ist das Guthaben leer, meldet das Panel das.</div>
 
@@ -571,6 +573,14 @@ a { color: var(--acc); }
 <tr><td>„Woher kam der Wind und hat er mit der Höhe gedreht?“</td><td>Wind nach Höhe in Worten (braucht GPS).</td></tr>
 <tr><td>„Bei welcher Fahrt gleitet das Modell am besten, und wie schnell sollte ich gegen den Wind fliegen?“</td><td>Beste Gleitzahl und Sollfahrt aus Gleitzahl und Gegenwind.</td></tr>
 <tr><td>„Was fällt Dir an diesem Ausschnitt auf?“ (vorher auf eine Stelle zoomen)</td><td>Erklärung eines auffälligen Moments, z. B. Spitze im Strom oder Höhenverlust.</td></tr>
+</table>
+<h2>Fragen zur Bedienung</h2>
+<p>Für solche Fragen am besten beim Ausschnitt <b>Keine Logdaten, nur eine Frage zur App</b> wählen. Die KI schlägt im Handbuch nach.</p>
+<table>
+<tr><th>Frage</th><th>Was dabei herauskommt</th></tr>
+<tr><td>„Wie lege ich den Sensor für den Verbrauch fest?“</td><td>Der Weg: Tab Thermik &amp; Steigflüge → Einstellungen → Verbrauch, und was die Wahl bewirkt.</td></tr>
+<tr><td>„Wie kommen die Logs vom Sender in die App?“</td><td>Sync per USB oder Import, je nach Desktop- oder Web-Version.</td></tr>
+<tr><td>„Warum zeigt der Tab Thermik keine Steigflüge?“</td><td>Hinweise aus der Fehlersuche, meist der falsche Schalter.</td></tr>
 </table>
 <h2>Die App bedienen lassen</h2>
 <p>Ist <b>KI darf die App bedienen</b> eingeschaltet, setzt die KI selbst Filter, Zeitbereich, Diagramme, Tab und Log. Was sie gemacht hat, steht im Kasten „Ausgeführt“, und <span class="btn">Rückgängig</span> nimmt alles zurück.</p>
