@@ -423,14 +423,14 @@ a { color: var(--acc); }
 
 <!-- 15 -->
 <h1 id="k15"><span class="n">15</span>KI-Auswertung</h1>
-<p>Die KI-Auswertung schickt einen Ausschnitt des offenen Logs an Claude (von Anthropic) und zeigt die Analyse direkt neben den Diagrammen. Auf Wunsch bedient die KI auch die App: Sie setzt Filter, wählt einen Zeitbereich, blendet Diagramme ein und erstellt eine Polare. Die Funktion ist freiwillig und braucht einen eigenen API-Schlüssel.</p>
+<p>Die KI-Auswertung schickt einen Ausschnitt des offenen Logs an Claude (von Anthropic) und zeigt die Analyse in einem Panel rechts, neben dem Tab, den Du gerade ansiehst. Auf Wunsch bedient die KI auch die App: Sie setzt Filter, wählt einen Zeitbereich, blendet Diagramme ein und erstellt eine Polare. Die Funktion ist freiwillig und braucht einen eigenen API-Schlüssel.</p>
 <h2>Einrichten</h2>
 <ol>
 <li>Auf <code>console.anthropic.com</code> ein Konto anlegen (unabhängig von einem Claude-Abo) und unter <b>Billing</b> ein Guthaben aufladen, z. B. 5 $.</li>
 <li>Unter <b>API Keys</b> „Create Key“ wählen und den Schlüssel kopieren. Er wird nur einmal angezeigt.</li>
 <li>In der App <span class="btn">⚙</span> → <span class="btn">KI-Auswertung …</span> öffnen, den Schlüssel einfügen, <span class="btn">Prüfen</span> und <span class="btn">Speichern</span>.</li>
 </ol>
-<p>Erst wenn ein Schlüssel hinterlegt ist, erscheint im Tab Diagramme der Knopf <span class="btn">✦ KI-Auswertung</span>. Die Desktop-App legt den Schlüssel verschlüsselt im Schlüsselbund des Betriebssystems ab; auf dem Mac fragt macOS beim ersten Mal, ob die App darauf zugreifen darf. Die Web-Version speichert ihn im Speicher des Browsers auf diesem Gerät. <span class="btn">Schlüssel entfernen</span> löscht ihn.</p>
+<p>Erst wenn ein Schlüssel hinterlegt ist, erscheint rechts neben den Tabs der Knopf <span class="btn">✦ KI-Auswertung</span>. Er steht in jedem Tab an derselben Stelle; auf dem Handy zeigt er nur das ✦. Die Desktop-App legt den Schlüssel verschlüsselt im Schlüsselbund des Betriebssystems ab; auf dem Mac fragt macOS beim ersten Mal, ob die App darauf zugreifen darf. Die Web-Version speichert ihn im Speicher des Browsers auf diesem Gerät. <span class="btn">Schlüssel entfernen</span> löscht ihn.</p>
 <table>
 <tr><th>Feld</th><th>Bedeutung</th></tr>
 <tr><td><b>Modell</b></td><td>„Claude Sonnet 5.5“ (schnell, günstig, Standard) oder „Claude Opus 5.5“ (gründlicher, teurer).</td></tr>
@@ -439,8 +439,8 @@ a { color: var(--acc); }
 <tr><td><b>GPS-Position standardmässig mitsenden</b></td><td>Aus (Standard): Die KI bekommt Geschwindigkeit und Höhe, aber nicht, wo Du fliegst.</td></tr>
 </table>
 <h2>Fragen und Aufträge</h2>
-<p>Der Knopf öffnet rechts ein Panel. Im ersten Schritt wählst Du den Ausschnitt (aktueller Zoom oder ganzer Flug), die Kanäle (vorgewählt sind die offenen Diagramme) und was zusätzlich mitgeht: Kennzahlen, erkannte Motorläufe und Thermik, Gleitzahl und Polare, Modellname, GPS-Position. Ins Feld <b>Frage oder Auftrag</b> schreibst Du, was Du wissen willst, z. B. „Wie gut war die Thermik?“ oder „Erstelle eine Polare ohne Thermik“. Leer gelassen gibt es eine allgemeine Auswertung.</p>
-<p>Die Antwort erscheint im Panel. Zeitangaben wie <b>3:12</b> sind anklickbar und zoomen die Diagramme dorthin. Hat die KI etwas an der App geändert, steht das im Kasten <b>„Ausgeführt“</b>; <span class="btn">Rückgängig</span> stellt den Zustand vor der Antwort wieder her. Darunter kannst Du nachfragen oder einen weiteren Auftrag geben.</p>
+<p>Der Knopf öffnet rechts ein Panel, egal in welchem Tab Du gerade bist; der Tab bleibt daneben sichtbar und lässt sich weiter bedienen. Die KI bekommt mit, welchen Tab Du offen hast und was dort zu sehen ist, im Tab Polare z. B. die gezeigte Polare mit Glättung und Ansicht. So versteht sie Fragen wie „Was sagt mir diese Polare?“. Im ersten Schritt wählst Du den Ausschnitt (aktueller Zoom oder ganzer Flug), die Kanäle (vorgewählt sind die offenen Diagramme) und was zusätzlich mitgeht: Kennzahlen, erkannte Motorläufe und Thermik, Gleitzahl und Polare, Modellname, GPS-Position. Ins Feld <b>Frage oder Auftrag</b> schreibst Du, was Du wissen willst, z. B. „Wie gut war die Thermik?“ oder „Erstelle eine Polare ohne Thermik“. Leer gelassen gibt es eine allgemeine Auswertung.</p>
+<p>Die Antwort erscheint im Panel. Zeitangaben wie <b>3:12</b> sind anklickbar, wechseln in den Tab Diagramme und zoomen dorthin. Hat die KI etwas an der App geändert, steht das im Kasten <b>„Ausgeführt“</b>; <span class="btn">Rückgängig</span> stellt den Zustand vor der Antwort wieder her. Darunter kannst Du nachfragen oder einen weiteren Auftrag geben.</p>
 <div class="note"><b>Datenschutz</b>Gesendet werden die gewählten Kanäle als zusammengefasste Zahlenreihen, Kennzahlen, Modellname und Deine Frage. Die CSV-Datei selbst wird nie hochgeladen. Was genau gesendet wurde, zeigt die Zeile „Gesendete Daten“. Ohne Internet ist die Auswertung nicht verfügbar, alles andere läuft weiter.</div>
 <div class="tip"><b>Kosten</b>Jede Anfrage kostet je nach Datenmenge und Modell meist wenige Rappen und wird über Dein Anthropic-Konto abgerechnet. Ist das Guthaben leer, meldet das Panel das.</div>
 
