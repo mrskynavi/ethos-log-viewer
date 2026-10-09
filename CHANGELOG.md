@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026.10.2 – in Arbeit
+
+- Thermik ohne Motor: Im Tab Thermik & Steigflüge zählt eine Thermik-Phase nicht mehr, wenn der Motor darin lief (Drehzahl über 300 U/min, ohne Drehzahl-Sensor ESC-Strom über 3 A). Sie fehlt dann in Tabelle, Balken, Kennzahlen, in den Diagrammen und auf der Karte. Das Häkchen „Ohne Motor“ bei der Thermik schaltet das ab; daneben steht, wie viele Phasen ausgeblendet sind. Die Wahl wird pro Modell gespeichert. Ohne Motor-Sensor im Log ändert sich nichts.
+
 ## 2026.10.1 – 2026-10-09
 
 - Neuer Name: Die App heisst jetzt **MM Flight Analyzer** (Mächler Modelle), mit eigenem App-Symbol und dem MM-Zeichen in der Kopfzeile. Sie wertet Flüge aus, nicht nur Logs, und liest neben Ethos- auch Jeti-Logs.

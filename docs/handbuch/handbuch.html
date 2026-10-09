@@ -427,6 +427,7 @@ a { color: var(--acc); }
 <tr><td>Höhenquelle</td><td>Welcher Höhensensor gerechnet wird, zum Beispiel Altitude (Vario) oder GAlt (GPS).</td></tr>
 <tr><td>Verbrauch</td><td>Welcher Sensor den verbrauchten Akku in mAh misst. Die App schlägt einen vor („automatisch“); passt er nicht, wählst Du einen anderen Sensor mit mAh oder „– kein –“, wenn das Modell keinen Verbrauch misst. Die Wahl gilt auch für die Kennzahl „Verbraucht“ in der Übersicht und wird nur für dieses Modell gespeichert, ein neues Modell startet wieder mit dem Vorschlag.</td></tr>
 <tr><td>Balkenhöhe</td><td>Was die Balken der Thermik zeigen: Steiggeschwindigkeit, erreichte Höhe oder Steigdauer.</td></tr>
+<tr><td>Ohne Motor</td><td>Thermik-Phasen, in denen der Motor lief, zählen nicht (Standard: an). Als Motorlauf gilt Drehzahl über 300 U/min, ohne Drehzahl-Sensor ESC-Strom über 3 A. Daneben steht, wie viele Phasen ausgeblendet sind. Ohne Häkchen zählen alle Phasen, und dort steht, wie viele davon mit Motor waren. Das Feld erscheint nur, wenn das Log Drehzahl oder Strom des Motors enthält.</td></tr>
 </table>
 <p>Alle Einstellungen bleiben pro Modell gespeichert.</p>
 <h2>Kennzahlen, Balken und Tabelle</h2>
@@ -437,7 +438,7 @@ a { color: var(--acc); }
 <li>Die Phase, in der der Zeitpunkt liegt, ist in Balken und Tabelle hervorgehoben.</li>
 </ul>
 <h2>So wird gerechnet</h2>
-<p>Gewinn = höchste Höhe während der Phase minus Starthöhe. Thermik zählt ab 5 s Dauer, Steigflüge ab 1 s. Eine Phase, die beim Logende noch läuft, zählt wie im Widget nicht. Die Zeiten sind so genau wie das Log (etwa 0,5 s).</p>
+<p>Gewinn = höchste Höhe während der Phase minus Starthöhe. Thermik zählt ab 5 s Dauer, Steigflüge ab 1 s. Mit „Ohne Motor“ fällt eine Thermik-Phase weg, sobald darin ein Motorlauf liegt, auch wenn der Motor erst am Ende anläuft. Eine Phase, die beim Logende noch läuft, zählt wie im Widget nicht. Die Zeiten sind so genau wie das Log (etwa 0,5 s).</p>
 <div class="tip"><b>Tipp</b>Steht „Kein Steigflug. Prüfe, ob der richtige Schalter gewählt ist.“, stimmt meist der Schalter nicht. Probiere den logischen Schalter, den Du am Sender für „Motor an“ nutzt, oder „ESC Strom (automatisch)“.</div>
 
 <!-- 11 -->
