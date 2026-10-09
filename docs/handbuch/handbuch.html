@@ -110,7 +110,20 @@ a { color: var(--acc); }
 <tr><td><b>Desktop-App</b> für Windows und Mac</td><td>Alle Auswertungen und zusätzlich der <b>automatische Sync</b>: Sobald Du den Sender per USB anschliesst, kopiert die App neue Logs in Dein Archiv, ein Ordner pro Modell. Dazu kommen „Archiv öffnen“, „Auswerfen“ und der Update-Hinweis.</td></tr>
 <tr><td><b>Web-Version</b> im Browser</td><td>Dieselbe Oberfläche mit allen Auswertungen. Logs lädst Du von Hand über „Import …“ oder per Ziehen ins Fenster. Kein Sync, kein Archiv.</td></tr>
 </table>
-<p>Die Logs bleiben immer auf Deinem Gerät bzw. in Deinem eigenen Archivordner. Die App schickt keine Logdaten ins Internet.</p>
+<h2>Auswerten mit KI: einfach fragen</h2>
+<p>Das Besondere am MM Flight Analyzer ist die <b>KI-Auswertung</b>. Du musst keine Diagramme deuten und keine Sensoren kennen: Du stellst eine Frage in normaler Sprache, und Claude, die KI von Anthropic, schaut sich den Flug für Dich an. Die Antwort kommt als verständlicher Text, mit Zeitangaben, die Du anklicken kannst, um die Stelle im Diagramm zu sehen. So bekommen auch alle, die keine Datenprofis sind, eine fundierte Analyse ihres Fluges.</p>
+<table>
+<tr><th>Was die KI kann</th><th>Zum Beispiel</th></tr>
+<tr><td><b>Den Flug zusammenfassen</b></td><td>„Fasse den Flug zusammen und sag mir, was auffällt.“</td></tr>
+<tr><td><b>Thermik und Steigflüge bewerten</b></td><td>„Wie gut habe ich die Thermik genutzt?“, „Welcher Steigflug war am effizientesten?“</td></tr>
+<tr><td><b>Leistung und Akku prüfen</b></td><td>„Ist der Akku am Ende eingebrochen? Wie viel Reserve hatte ich?“</td></tr>
+<tr><td><b>Polare und Gleitzahl erklären</b></td><td>„Was sagt mir diese Polare? Bei welcher Fahrt gleitet das Modell am besten?“</td></tr>
+<tr><td><b>Empfang und Wind beurteilen</b></td><td>„Gab es Empfangsprobleme?“, „Woher kam der Wind?“</td></tr>
+<tr><td><b>Die App für Dich bedienen</b></td><td>„Erstelle eine Polare ohne Thermik“ oder „Zoome auf den zweiten Steigflug und zeig Höhe, Vario und Strom“. Die KI setzt Filter, Zeitbereich und Diagramme selbst, und alles lässt sich rückgängig machen.</td></tr>
+</table>
+<div class="tip"><b>Ein Beispiel</b>Du fragst: „Wie war meine Thermik heute?“ Die KI antwortet etwa: „Du hattest drei Thermik-Phasen. Die beste bei 12:40 brachte 140 m in 2 Minuten, im Schnitt 1,2 m/s. Bei 18:05 bist Du nach 30 s aus einem guten Bart geflogen, das Vario zeigte noch 1,5 m/s.“ Ein Klick auf 12:40 zeigt die Stelle in den Diagrammen.</div>
+<p>Die KI-Auswertung ist freiwillig und braucht einen eigenen API-Schlüssel von Anthropic; eine Auswertung kostet meist nur wenige Rappen. Wie Du zum Schlüssel kommst, steht Schritt für Schritt in <a href="#k17">Kapitel 17</a>, viele Fragen zum Ausprobieren in <a href="#k18">Kapitel 18</a>, alles zur Bedienung in <a href="#k16">Kapitel 16</a>. Nutzt Du Claude Desktop, kannst Du die App auch ohne Schlüssel direkt aus dem Chat bedienen, über den MCP-Server (<a href="#k19">Kapitel 19</a>).</p>
+<p>Die Logs bleiben immer auf Deinem Gerät bzw. in Deinem eigenen Archivordner. Die App schickt keine Logdaten ins Internet, ausser Du startest eine KI-Auswertung: Dann gehen nur die gewählten Kanäle als zusammengefasste Zahlenreihen an Claude, nie die Logdatei selbst.</p>
 <div class="note"><b>Hinweis</b>Der MM Flight Analyzer ist ein Werkzeug von Mächler Modelle. Er ist nicht mit den Herstellern von Ethos oder Jeti verbunden. Ethos ist eine Marke ihres Inhabers.</div>
 <p>Diese Anleitung beschreibt Version {{VERSION}}. Was sich in welcher Version geändert hat, steht in <a href="#k24">Kapitel 24</a>. Die Screenshots zeigen die Desktop-App in der dunklen Darstellung mit dem Beispiel-Log eines Elektroseglers (SB-10).</p>
 
