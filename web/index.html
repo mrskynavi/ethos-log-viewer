@@ -880,7 +880,7 @@ function parseJeti(text, map){
   const seen={}; H.sens.forEach(s=>{ seen[s.label]=(seen[s.label]||0)+1; s.key = seen[s.label]>1 ? s.label+' #'+seen[s.label] : s.label; s.devName=H.devs.get(s.dev)||s.dev; });
   const auto=jetiAuto(H.sens), byId=new Map(H.sens.map((s,i)=>[s.dev+';'+s.id,i]));
   const n=H.sens.length, cur=new Array(n).fill(NaN), seenAt=new Array(n).fill(-1e9), typ=new Array(n).fill(null), cnt=new Array(n).fill(0);
-  const vals=H.sens.map(()=>[]), t=[], events=[], HOLD=10;
+  const vals=H.sens.map(()=>[]), smp=H.sens.map(()=>[]), t=[], events=[], HOLD=10;
   let lastT=null;
   const commit=()=>{ t.push(lastT/1000); for (let i=0;i<n;i++) vals[i].push(lastT/1000-seenAt[i]<=HOLD ? cur[i] : NaN); };
   for (const l of lines){
@@ -897,6 +897,7 @@ function parseJeti(text, map){
       if (ty===9){ const deg=Math.floor(v/65536), min=(v%65536)/1000; cur[i]=(deg+min/60)*((dec&2)?-1:1); H.sens[i].gps=(dec&1)?'lon':'lat'; }
       else if (ty===5){ H.sens[i].dt=(dec&1)?'date':'time'; cur[i]=v; }
       else cur[i]=v/Math.pow(10,dec);
+      smp[i].push([ms/1000, cur[i]]);
     }
   }
   if (lastT!==null) commit();
@@ -915,6 +916,7 @@ function parseJeti(text, map){
     let unit=s.unit, v=vals[i];
     ({unit, vals:v} = toSpeedUnit(ch==='spd'||ch==='tas' ? 'Speed' : s.label, unit, v));
     const c={name:s.key, unit, raw:s.key+(unit?' ('+unit+')':''), vals:v, rc:false, ch:ch||null, dev:s.devName};
+    if (v===vals[i]) c.samples=smp[i];                                     // gesendete Werte mit Zeit, für Zähler wie Verbrauch
     if (ch==='tas') c.key='tas';                                            // gemessene Fahrt ersetzt die berechnete TAS
     cols.push(c);
   });
@@ -969,7 +971,7 @@ function motorRuns(log, ch){
     const sl=(col,a,b)=>col?col.vals.slice(a,b+1):[];
     let peak=r.e; if (ch.alt) for (let i=r.e;i<log.t.length && log.t[i]-log.t[r.e]<=20;i++) if (ch.alt.vals[i]>ch.alt.vals[peak]) peak=i;
     return { s:r.s, e:r.e, dur:log.t[r.e]-log.t[r.s],
-      curMax: stats(sl(ch.cur,r.s,r.e))?.max, mah: ch.mah ? ch.mah.vals[r.e]-ch.mah.vals[Math.max(0,r.s-1)] : NaN,
+      curMax: stats(sl(ch.cur,r.s,r.e))?.max, mah: ch.mah ? counterDiff(log,ch.mah,Math.max(0,r.s-1),r.e) : NaN,
       a0: ch.alt?.vals[r.s], a1: ch.alt?.vals[peak] };
   });
 }
@@ -1336,11 +1338,23 @@ function miniStats(t){
   return [[T('Ø Steigen'),fmt(t.avg,1),'m/s'],[T('Steigflüge'),t.n,''],[T('Gesamthöhe'),fmt(t.h,0),'m'],[T('Gesamtdauer'),Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0'),'']]
     .map(([l,v,u])=>`<div class="kpi"><span class="l">${l}</span><span class="v">${v}<small>${u}</small></span></div>`).join('');
 }
+// Stand eines Zählers (Verbrauch mAh) an Zeile i. Jeti sendet ihn nur alle paar Sekunden, oft mit Lücken über 10 s:
+// dort linear zwischen den gesendeten Werten, sonst der letzte gültige Wert (vor dem ersten der erste).
+function counterAt(log, col, i){
+  const S=col.samples;
+  if (S&&S.length){ const x=log.t[i]; if (x<=S[0][0]) return S[0][1]; if (x>=S[S.length-1][0]) return S[S.length-1][1];
+    let lo=0, hi=S.length-1; while (hi-lo>1){ const m=(lo+hi)>>1; if (S[m][0]<=x) lo=m; else hi=m; }
+    const [ta,va]=S[lo], [tb,vb]=S[hi]; return tb>ta ? va+(vb-va)*(x-ta)/(tb-ta) : vb; }
+  const v=col.vals; for (let j=i;j>=0;j--) if (!isNaN(v[j])) return v[j];
+  for (let j=i+1;j<v.length;j++) if (!isNaN(v[j])) return v[j];
+  return NaN;
+}
+const counterDiff = (log, col, a, b) => counterAt(log,col,b)-counterAt(log,col,a);
 function phaseTable(p, withMah){
   if (!p.length) return `<tr><td>${T('Kein Steigflug. Prüfe, ob der richtige Schalter gewählt ist.')}</td></tr>`;
   return `<tr><th>#</th><th>${T('Uhrzeit')}</th><th>${T('Dauer')}</th><th>Start</th><th>${T('Höchste')}</th><th>${T('Gewinn')}</th><th>${T('Ø Steigen')}</th>`+(withMah?`<th>${T('Verbrauch')}</th>`:'')+'</tr>'+
     p.map((r,i)=>`<tr data-s="${r.s}" data-e="${r.e}"><td>${i+1}</td><td>${esc(LOG.clock[r.s].slice(0,8))}</td><td>${fmtDur(r.dur)}</td><td>${fmt(r.h0,0)} m</td><td>${fmt(r.hi,0)} m</td><td>+${fmt(r.gain,0)} m</td><td>${fmt(r.rate,1)} m/s</td>`+
-      (withMah?`<td>${fmt(CH.mah.vals[r.e]-CH.mah.vals[r.s],0)} mAh</td>`:'')+'</tr>').join('');
+      (withMah?`<td>${fmt(counterDiff(LOG,CH.mah,r.s,r.e),0)} mAh</td>`:'')+'</tr>').join('');
 }
 function computeWidgets(){
   THERM = switchPhases(LOG, colBy($('#thermSw').value), colBy($('#thermH').value), W.therm.min);
