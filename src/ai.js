@@ -17,6 +17,7 @@ function errorOf(e, Anthropic) {
     e instanceof Anthropic.RateLimitError ? 'rate' :
     e instanceof Anthropic.APIConnectionError ? 'offline' :
     e instanceof Anthropic.BadRequestError && /credit balance/i.test(e.message) ? 'credit' :
+    e instanceof Anthropic.BadRequestError && /scoped to a workspace|anthropic-workspace-id/i.test(e.message) ? 'workspace' : 
     e instanceof Anthropic.APIError ? 'api' : 'other';
   return { error: { kind, status: e.status ?? null, message: String(e.error?.error?.message || e.message || e) } };
 }

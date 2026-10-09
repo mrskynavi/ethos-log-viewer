@@ -1,7 +1,7 @@
-// Sucht auf GitHub nach einer neueren Version (Releases von mrskynavi/ethos-log-viewer)
+// Sucht auf GitHub nach einer neueren Version (Releases von mrskynavi/mm-flight-analyzer)
 const https = require('https');
 
-const API = 'https://api.github.com/repos/mrskynavi/ethos-log-viewer/releases/latest';
+const API = 'https://api.github.com/repos/mrskynavi/mm-flight-analyzer/releases/latest';
 
 // "1.2.10" > "1.2.9"
 function newer(a, b) {

@@ -180,7 +180,7 @@ async function screenshots() {
   await shot(p, 's-details', await clipOf(p, '#syncDlg', 20));
   await p.context().close();
   // Update-Hinweis
-  p = await open({ mock: { desktop: true, update: { newer: true, latest: NEXT, url: 'https://github.com/mrskynavi/ethos-log-viewer/releases' } } });
+  p = await open({ mock: { desktop: true, update: { newer: true, latest: NEXT, url: 'https://github.com/mrskynavi/mm-flight-analyzer/releases' } } });
   await shot(p, 's-update', await clipOf(p, '#syncbar', 6));
   await p.context().close();
   // Hell

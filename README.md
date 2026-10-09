@@ -6,7 +6,7 @@ Flugauswertung von Mächler Modelle (bis Version 2026.10.0 „Ethos Log Viewer�
 
 Wertet Telemetrie-Logs von Ethos-Sendern (CSV) und Jeti-Sendern (.log) aus und holt neue Logs automatisch vom Sender, sobald er per USB angeschlossen ist.
 
-Download und Handbuch: unter [Releases](https://github.com/mrskynavi/ethos-log-viewer/releases/latest) liegen der Windows-Installer, das Mac-Image und die Bedienanleitung als PDF.
+Download und Handbuch: unter [Releases](https://github.com/mrskynavi/mm-flight-analyzer/releases/latest) liegen der Windows-Installer, das Mac-Image und die Bedienanleitung als PDF.
 
 ## Log-Sync
 

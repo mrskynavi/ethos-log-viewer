@@ -118,7 +118,7 @@ a { color: var(--acc); }
 <h1 id="k2"><span class="n">2</span>Installation</h1>
 <h2>2.1 Download</h2>
 <p>Die Installationsdateien liegen auf GitHub unter <b>Releases</b>:<br>
-<a href="https://github.com/mrskynavi/ethos-log-viewer/releases/latest">github.com/mrskynavi/ethos-log-viewer/releases/latest</a></p>
+<a href="https://github.com/mrskynavi/mm-flight-analyzer/releases/latest">github.com/mrskynavi/mm-flight-analyzer/releases/latest</a></p>
 <p>Unter „Assets“ findest Du die Installationsdateien und dieses Handbuch:</p>
 <table>
 <tr><th>System</th><th>Datei</th></tr>
@@ -511,7 +511,7 @@ a { color: var(--acc); }
 <table>
 <tr><th>Feld</th><th>Was Du wählst</th></tr>
 <tr><td><b>Name</b></td><td>Ein Name, an dem Du den Schlüssel später erkennst, z. B. <code>mm-flight-analyzer</code>.</td></tr>
-<tr><td><b>Geltungsbereich</b> (Organisation oder Arbeitsbereich)</td><td><b>Organisation</b>, wie vorgeschlagen. Die App schickt ihre Anfragen nur an die normale Claude-API, dafür reicht ein Schlüssel mit diesem Bereich. Admin-Rechte braucht es nicht. Den Hinweis auf den Header <code>anthropic-workspace-id</code> musst Du nicht beachten; er betrifft nur Programme, die ihn selbst setzen. Hast Du einen eigenen Arbeitsbereich (Workspace) angelegt, kannst Du stattdessen diesen wählen. Das ist etwas sicherer, weil der Schlüssel dann nur dort gilt, aber nicht nötig.</td></tr>
+<tr><td><b>Geltungsbereich</b> (Organisation oder Arbeitsbereich)</td><td>Einen <b>Arbeitsbereich</b> (Workspace) wählen, z. B. den Standard-Arbeitsbereich „Default“, <b>nicht „Organisation“</b>. Ein Schlüssel für die ganze Organisation gilt keinem Arbeitsbereich, und Claude lehnt dann jede Anfrage der App ab (siehe „Fehlersuche“ unten). Admin-Rechte braucht es nicht.</td></tr>
 <tr><td><b>Ablauf</b></td><td>Ein Ablaufdatum ist eine gute Idee, z. B. 30 Tage. Läuft der Schlüssel ab, meldet die KI-Auswertung „Der API-Schlüssel wurde abgelehnt“. Dann erzeugst Du auf der Plattform einen neuen Schlüssel und trägst ihn in der App unter <span class="btn">⚙</span> → <span class="btn">KI-Auswertung …</span> ein. Ohne Ablaufdatum gilt der Schlüssel, bis Du ihn löschst.</td></tr>
 <tr><td><b>Konto</b></td><td>Der Schlüssel gehört zu dem Konto, mit dem Du angemeldet bist; die Kosten gehen auf dessen Guthaben.</td></tr>
 </table></li>
@@ -540,6 +540,15 @@ a { color: var(--acc); }
 <li>Hast Du den Verdacht, dass jemand den Schlüssel kennt, lösche ihn auf der Plattform unter API Keys und erzeuge einen neuen. Der alte gilt dann sofort nicht mehr.</li>
 <li>Eine Obergrenze unter Limits begrenzt den Schaden in jedem Fall.</li>
 </ul>
+
+<h2>Fehlersuche</h2>
+<table>
+<tr><th>Meldung</th><th>Was zu tun ist</th></tr>
+<tr><td>„Schlüssel gehört zu keinem Arbeitsbereich“ bzw. „400: This API key is not scoped to a workspace, so this request must include the anthropic-workspace-id header …“</td><td>Der Schlüssel wurde mit dem Geltungsbereich „Organisation“ erstellt. Auf der Plattform unter API Keys einen neuen Schlüssel mit einem Arbeitsbereich (z. B. „Default“) erstellen, in der App eintragen und den alten Schlüssel löschen.</td></tr>
+<tr><td>„Der API-Schlüssel wurde abgelehnt“ (401)</td><td>Schlüssel abgelaufen, gelöscht oder falsch kopiert. Neuen Schlüssel erstellen und eintragen.</td></tr>
+<tr><td>„Guthaben aufgebraucht“</td><td>Unter Billing Guthaben aufladen.</td></tr>
+<tr><td>„Schlüssel neu eintragen“ in den Einstellungen</td><td>Die App kann den gespeicherten Schlüssel nicht mehr lesen, z. B. auf dem Mac nach dem Wechsel vom „Ethos Log Viewer“. Schlüssel nochmals einfügen.</td></tr>
+</table>
 
 <!-- Beispielfragen -->
 <h1 id="k18"><span class="n">18</span>Beispielfragen für die KI</h1>
@@ -670,7 +679,7 @@ a { color: var(--acc); }
 <h3>Der Mac sagt, die App kann nicht geöffnet werden.</h3>
 <p>Systemeinstellungen → Datenschutz &amp; Sicherheit → bei „MM Flight Analyzer wurde blockiert“ auf „Dennoch öffnen“ klicken. Das ist nur beim ersten Start nötig.</p>
 <h3>Es erscheint kein Hinweis auf neue Versionen.</h3>
-<p>Die App braucht dafür Internet. Öffne <span class="btn">⚙</span> und klicke unten auf <span class="btn">Nach Updates suchen</span>: Daneben steht, ob Du die neueste Version hast oder warum die Suche nicht geklappt hat (zum Beispiel keine Verbindung oder eine Firewall). Die aktuelle Version findest Du immer unter <a href="https://github.com/mrskynavi/ethos-log-viewer/releases/latest">Releases</a>.</p>
+<p>Die App braucht dafür Internet. Öffne <span class="btn">⚙</span> und klicke unten auf <span class="btn">Nach Updates suchen</span>: Daneben steht, ob Du die neueste Version hast oder warum die Suche nicht geklappt hat (zum Beispiel keine Verbindung oder eine Firewall). Die aktuelle Version findest Du immer unter <a href="https://github.com/mrskynavi/mm-flight-analyzer/releases/latest">Releases</a>.</p>
 
 <h2>Sender und Sync</h2>
 <h3>Die Sync-Zeile bleibt bei „Sender nicht angeschlossen“.</h3>
