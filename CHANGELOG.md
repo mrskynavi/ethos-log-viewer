@@ -2,7 +2,7 @@
 
 ## 2026.10.2 – in Arbeit
 
-- Thermik ohne Motor: Im Tab Thermik & Steigflüge zählt eine Thermik-Phase nicht mehr, wenn der Motor darin lief (Drehzahl über 300 U/min, ohne Drehzahl-Sensor ESC-Strom über 3 A). Sie fehlt dann in Tabelle, Balken, Kennzahlen, in den Diagrammen und auf der Karte. Das Häkchen „Ohne Motor“ bei der Thermik schaltet das ab; daneben steht, wie viele Phasen ausgeblendet sind. Die Wahl wird pro Modell gespeichert. Ohne Motor-Sensor im Log ändert sich nichts.
+- Thermik ohne Motor: Im Tab Thermik & Steigflüge zählt bei der Thermik nicht mehr, was mit Motor gestiegen ist. Läuft der Motor während einer Thermik-Phase (Drehzahl über 300 U/min, ohne Drehzahl-Sensor ESC-Strom über 3 A), endet die Phase beim Motorstart; nach dem Motor beginnt sie neu, aber erst 5 s nach Motor aus, damit das Ausschweben nicht als Thermik zählt. Reste unter 5 s fallen weg. Das gilt für Tabelle, Balken, Kennzahlen, Diagramme und Karte. Das Häkchen „Ohne Motor“ bei der Thermik schaltet das ab; daneben steht, wie viele Phasen gekürzt sind. Die Wahl wird pro Modell gespeichert. Ohne Motor-Sensor im Log ändert sich nichts.
 
 ## 2026.10.1 – 2026-10-09
 
