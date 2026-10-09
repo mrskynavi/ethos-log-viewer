@@ -18,4 +18,10 @@ contextBridge.exposeInMainWorld('ethosDesktop', {
   checkUpdate: () => ipcRenderer.invoke('update:check'),
   onUpdate: cb => ipcRenderer.on('update', (_, u) => cb(u)),
   openUpdate: url => ipcRenderer.invoke('update:open', url),
+  aiKeyState: () => ipcRenderer.invoke('ai:keyState'),
+  aiSetKey: key => ipcRenderer.invoke('ai:setKey', key),
+  aiTest: key => ipcRenderer.invoke('ai:test', key),
+  aiCreate: body => ipcRenderer.invoke('ai:create', body),
+  mcpInfo: () => ipcRenderer.invoke('mcp:info'),
+  copyText: t => ipcRenderer.invoke('clipboard:write', t),
 });

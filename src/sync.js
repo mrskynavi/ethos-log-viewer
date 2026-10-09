@@ -1,4 +1,4 @@
-// Log-Sync: findet den angeschlossenen Ethos-Sender, kopiert neue Logs ins Archiv (ein Ordner pro Modell).
+// Log-Sync: findet den angeschlossenen Ethos- oder Jeti-Sender, kopiert neue Logs ins Archiv (ein Ordner pro Modell).
 // Reines Node, ohne Electron, damit es sich ohne Oberfläche testen lässt.
 const fs = require('fs');
 const fsp = fs.promises;
@@ -7,7 +7,17 @@ const os = require('os');
 const { execFile } = require('child_process');
 const { EventEmitter } = require('events');
 
-const NAME_RE = /^(.*?)-(\d{4}-\d{2}-\d{2})-(\d{2})-(\d{2})-(\d{2})\.csv$/i;
+const NAME_RE = /^(.*?)-(\d{4}-\d{2}-\d{2})-(\d{2})-(\d{2})-(\d{2})\.(csv|log)$/i;
+// Jeti: Log/JJJJMMTT/hh-mm-ss.log; im Archiv heisst er Jeti-JJJJ-MM-TT-hh-mm-ss.log (Ordner "Jeti", das Modell erkennt die App am Inhalt)
+const JETI_DIR_RE = /^(\d{4})(\d{2})(\d{2})$/;
+const JETI_FILE_RE = /^(\d{2})-(\d{2})-(\d{2})\.log$/i;
+const isLogName = name => !name.startsWith('._') && (/\.csv$/i.test(name) || /^Jeti-.*\.log$/i.test(name));
+
+// UTF-8, sonst Latin-1 (Jeti schreibt °, ä … in Latin-1). Am Rand eines Ausschnitts darf ein Zeichen abgeschnitten sein.
+function decodeText(buf) {
+  const s = buf.toString('utf8');
+  return /\uFFFD/.test(s.slice(2, -2)) ? buf.toString('latin1') : s;
+}
 
 function modelOf(name) {
   const m = NAME_RE.exec(name);
@@ -100,7 +110,7 @@ async function listCsv(dir, strict = false) {
   try { names = await fsp.readdir(dir); } catch (e) { if (strict && isDenied(e)) throw e; return []; }
   const out = [];
   for (const name of names) {
-    if (!/\.csv$/i.test(name) || name.startsWith('._')) continue;
+    if (!isLogName(name)) continue;
     try {
       const st = await fsp.stat(path.join(dir, name));
       if (st.isFile()) out.push({ name, size: st.size, mtime: st.mtimeMs });
@@ -109,17 +119,53 @@ async function listCsv(dir, strict = false) {
   return out;
 }
 
+// Jeti-Logs aus Log/JJJJMMTT/hh-mm-ss.log, mit dem Namen fürs Archiv
+async function listJeti(dir, strict = false) {
+  let days = [];
+  try { days = await fsp.readdir(dir, { withFileTypes: true }); } catch (e) { if (strict && isDenied(e)) throw e; return []; }
+  const out = [];
+  for (const d of days) {
+    const dm = JETI_DIR_RE.exec(d.name);
+    if (!dm || !d.isDirectory()) continue;
+    let names = [];
+    try { names = await fsp.readdir(path.join(dir, d.name)); } catch (e) { if (strict && isDenied(e)) throw e; continue; }
+    for (const n of names) {
+      const fm = JETI_FILE_RE.exec(n);
+      if (!fm) continue;
+      const src = path.join(dir, d.name, n);
+      try {
+        const st = await fsp.stat(src);
+        if (st.isFile()) out.push({ name: `Jeti-${dm[1]}-${dm[2]}-${dm[3]}-${fm[1]}-${fm[2]}-${fm[3]}.log`, size: st.size, mtime: st.mtimeMs, src });
+      } catch (e) { if (strict && isDenied(e)) throw e; }
+    }
+  }
+  return out;
+}
+
 // Ein Log gilt als vorhanden, wenn es im Modell-Ordner mit gleicher Grösse liegt
-async function plan(src, archive) {
-  const files = await listCsv(src, true), todo = [];
+async function plan(src, archive, jeti = false) {
+  const files = jeti ? await listJeti(src, true) : await listCsv(src, true), todo = [];
   let skipped = 0;
   for (const f of files) {
     const dest = path.join(archive, safeDir(modelOf(f.name)), f.name);
     let same = false;
     try { same = (await fsp.stat(dest)).size === f.size; } catch {}
-    if (same) skipped++; else todo.push({ ...f, src: path.join(src, f.name), dest });
+    if (same) skipped++; else todo.push({ ...f, src: f.src || path.join(src, f.name), dest });
   }
   return { files, todo, skipped };
+}
+
+// Jeti-Sender: Ordner "Log" im Wurzelverzeichnis eines Laufwerks mit Tagesordnern JJJJMMTT
+async function findJetiDirs(vols, force = false) {
+  const found = [];
+  for (const v of vols) {
+    const d = path.join(v.root, 'Log');
+    if (!(await isDir(d)) || !(await probeDir(d, v.root, force))) continue;
+    let ents = [];
+    try { ents = await fsp.readdir(d, { withFileTypes: true }); } catch { continue; }
+    if (ents.some(e => e.isDirectory() && JETI_DIR_RE.test(e.name))) found.push(d);
+  }
+  return found;
 }
 
 async function copyOne(f) {
@@ -132,8 +178,8 @@ async function copyOne(f) {
   try { await fsp.utimes(f.dest, t, t); } catch {}
 }
 
-async function syncDir(src, archive, onProgress = () => {}) {
-  const { files, todo, skipped } = await plan(src, archive);
+async function syncDir(src, archive, onProgress = () => {}, jeti = false) {
+  const { files, todo, skipped } = await plan(src, archive, jeti);
   const bytes = todo.reduce((a, f) => a + f.size, 0);
   const res = { source: src, total: files.length, skipped, copied: [], errors: [], bytes };
   let doneBytes = 0;
@@ -227,7 +273,9 @@ class SyncWatcher extends EventEmitter {
     this.busy = true;
     try {
       const vols = await this.volumes();
-      const dirs = await findSenderDirs(st.senderPath, vols, force);
+      const ethos = await findSenderDirs(st.senderPath, vols, force);
+      const jeti = st.jetiSync === false ? [] : (await findJetiDirs(vols, force)).filter(d => !ethos.includes(d));
+      const dirs = [...ethos, ...jeti];
       this.roots = [...new Set(dirs.map(d => rootOf(d, vols)))];
       for (const d of [...this.synced]) if (!dirs.includes(d)) this.synced.delete(d);
       if (!dirs.length) {
@@ -243,7 +291,7 @@ class SyncWatcher extends EventEmitter {
       for (const d of todo) {
         this.set({ state: 'copy', source: d, total: 0, done: 0 });
         let r;
-        try { r = await syncDir(d, st.archiveDir, p => this.set(p)); }
+        try { r = await syncDir(d, st.archiveDir, p => this.set(p), jeti.includes(d)); }
         catch (e) {
           if (!isDenied(e)) throw e;
           // Zugriff verweigert (macOS fragt gerade nach): Laufwerk in Ruhe lassen, später nochmals
@@ -265,4 +313,4 @@ class SyncWatcher extends EventEmitter {
   }
 }
 
-module.exports = { denied, modelOf, safeDir, volumes, findSenderDirs, listCsv, syncDir, archiveFile, listArchive, defaultArchive, SyncWatcher };
+module.exports = { denied, modelOf, safeDir, decodeText, volumes, findSenderDirs, findJetiDirs, listCsv, listJeti, syncDir, archiveFile, listArchive, defaultArchive, SyncWatcher };

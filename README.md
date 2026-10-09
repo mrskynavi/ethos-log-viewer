@@ -1,10 +1,12 @@
-# Ethos Log Viewer
+# MM Flight Analyzer
 
-> Inoffizielles Werkzeug, nicht mit dem Hersteller von Ethos verbunden. Ethos ist eine Marke ihres Inhabers.
+Flugauswertung von Mächler Modelle (bis Version 2026.10.0 „Ethos Log Viewer“).
 
-Wertet Telemetrie-Logs (CSV) von Ethos-Sendern aus und holt neue Logs automatisch vom Sender, sobald er per USB angeschlossen ist.
+> Nicht mit den Herstellern von Ethos oder Jeti verbunden. Ethos ist eine Marke ihres Inhabers.
 
-Download und Handbuch: unter [Releases](https://github.com/mrskynavi/ethos-log-viewer/releases/latest) liegen der Windows-Installer, das Mac-Image und die Bedienanleitung als PDF.
+Wertet Telemetrie-Logs von Ethos-Sendern (CSV) und Jeti-Sendern (.log) aus und holt neue Logs automatisch vom Sender, sobald er per USB angeschlossen ist.
+
+Download und Handbuch: unter [Releases](https://github.com/mrskynavi/mm-flight-analyzer/releases/latest) liegen der Windows-Installer, das Mac-Image und die Bedienanleitung als PDF.
 
 ## Log-Sync
 
@@ -30,7 +32,7 @@ npm run build-pwa  # Web-App (PWA) nach site/ bauen
 
 `web/index.html` ist dieselbe Seite wie die Web-Version. `npm run prepare-app` kopiert sie nach `app/` und bindet Chart.js lokal ein, damit die App offline läuft.
 
-Das Handbuch entsteht aus `docs/handbuch/handbuch.html`: `npm run handbuch` macht frische Screenshots aus `web/index.html` mit dem Beispiel-Log, setzt Version und Changelog ein und schreibt `dist/Ethos-Log-Viewer-Bedienanleitung.pdf` (braucht Playwright mit Chromium: `npm install --no-save playwright && npx playwright install chromium`). Ändert sich die Bedienung, den Text in der Vorlage nachführen.
+Das Handbuch entsteht aus `docs/handbuch/handbuch.html`: `npm run handbuch` macht frische Screenshots aus `web/index.html` mit dem Beispiel-Log, setzt Version und Changelog ein und schreibt `dist/MM-Flight-Analyzer-Bedienanleitung.pdf` (braucht Playwright mit Chromium: `npm install --no-save playwright && npx playwright install chromium`). Ändert sich die Bedienung, den Text in der Vorlage nachführen.
 
 ## Web-App (PWA)
 
@@ -44,6 +46,8 @@ Die Seite braucht HTTPS. `npm run build-pwa -- --ohne-beispiel` lässt das Beisp
 
 `npm run build-android` baut `site/` mit Beispiel-Log (verschobene GPS-Spur) und kopiert es ins Android-Projekt `android/` (Capacitor). Die APK baut der Workflow „Android“ bei jedem Push, der `android/` oder `capacitor.config.json` ändert, oder von Hand; sie liegt danach als Artefakt beim Lauf unter „Actions“, veröffentlicht wird nichts. Versionsname und -nummer kommen aus `package.json`. Alle APKs sind mit `android/app/ethos-log-viewer.keystore` signiert, darum lässt sich eine neue APK über die alte installieren und die Einstellungen bleiben. Icons und Startbild erzeugt `scripts/android-icons.py` aus `pwa/icons`.
 
-GitHub Actions baut bei jedem Push den Windows-Installer (`.exe`) und das Mac-Image (`.dmg`, Intel und Apple Silicon) und legt beide unter „Releases“ als Version `v<version>` ab. Der Release-Text kommt aus dem Abschnitt der Version in `CHANGELOG.md`; vor dem Erhöhen der Version dort einen Abschnitt `## <version> – <datum>` anlegen.
+GitHub Actions baut bei jedem Push auf `main` den Windows-Installer (`.exe`) und das Mac-Image (`.dmg`, Intel und Apple Silicon) und legt beide unter „Releases“ als Version `v<version>` ab. Der Release-Text kommt aus dem Abschnitt der Version in `CHANGELOG.md`; vor dem Erhöhen der Version dort einen Abschnitt `## <version> – <datum>` anlegen.
+
+Mac-Testbuild: Vor einem Release die Änderungen auf einem Branch ausprobieren. Jeder Push auf einen Branch ausser `main` startet den Workflow „Mac-Testbuild“; er baut nur das Mac-Image, erstellt kein Release und baut weder Windows, Android noch das Handbuch. Von Hand: Actions → „Mac-Testbuild“ → Run workflow → Branch wählen. Das Image liegt danach unten auf der Seite des Laufs unter „Artifacts“ als ZIP (14 Tage aufbewahrt). Version und Changelog müssen dafür nicht angepasst werden.
 
 Die Mac-App ist nicht signiert. Beim ersten Start blockiert macOS sie: unter Systemeinstellungen → Datenschutz & Sicherheit „Dennoch öffnen“. Beim ersten Anschliessen des Senders fragt macOS einmal nach dem Zugriff auf Wechselmedien; „Erlauben“ wählen.

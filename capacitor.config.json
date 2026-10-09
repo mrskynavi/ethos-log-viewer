@@ -1,6 +1,6 @@
 {
   "appId": "ch.maechler.ethoslogviewer",
-  "appName": "Ethos Log Viewer",
+  "appName": "MM Flight Analyzer",
   "webDir": "site",
   "android": {
     "path": "android",

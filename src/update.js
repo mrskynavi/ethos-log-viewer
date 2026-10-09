@@ -1,7 +1,7 @@
-// Sucht auf GitHub nach einer neueren Version (Releases von mrskynavi/ethos-log-viewer)
+// Sucht auf GitHub nach einer neueren Version (Releases von mrskynavi/mm-flight-analyzer)
 const https = require('https');
 
-const API = 'https://api.github.com/repos/mrskynavi/ethos-log-viewer/releases/latest';
+const API = 'https://api.github.com/repos/mrskynavi/mm-flight-analyzer/releases/latest';
 
 // "1.2.10" > "1.2.9"
 function newer(a, b) {
@@ -13,9 +13,13 @@ function newer(a, b) {
   return false;
 }
 
-function getJson(url) {
+// Folgt Umleitungen (GitHub leitet ein umbenanntes Repository weiter)
+function getJson(url, hops = 3) {
   return new Promise((resolve, reject) => {
-    const req = https.get(url, { headers: { 'User-Agent': 'ethos-log-viewer', Accept: 'application/vnd.github+json' }, timeout: 10000 }, res => {
+    const req = https.get(url, { headers: { 'User-Agent': 'mm-flight-analyzer', Accept: 'application/vnd.github+json' }, timeout: 10000 }, res => {
+      if ([301, 302, 307, 308].includes(res.statusCode) && res.headers.location && hops > 0) {
+        res.resume(); return resolve(getJson(new URL(res.headers.location, url).href, hops - 1));
+      }
       let body = '';
       res.on('data', c => body += c);
       res.on('end', () => res.statusCode === 200 ? resolve(JSON.parse(body)) : reject(new Error('HTTP ' + res.statusCode)));

@@ -27,6 +27,15 @@
     appVersion: async () => P.version,
     onUpdate: cb => { updCb = cb; },
     openUpdate: async () => {},
+    // KI-Auswertung mit hinterlegtem Schlüssel (Knopf rechts neben den Tabs sichtbar), MCP-Server eingeschaltet
+    aiKeyState: async () => P.ki === false ? { set:false } : { set:true, hint:'sk-ant-…x7Qa' },
+    aiSetKey: async () => ({ set:true, hint:'sk-ant-…x7Qa' }),
+    aiTest: async () => ({ ok:true }),
+    aiCreate: async () => ({ error:{ kind:'offline' } }),
+    mcpInfo: async () => ({ on:true, running:true, port:3917, error:'', url:'http://127.0.0.1:3917/mcp',
+      desktop:{ mcpServers:{ 'mm-flight-analyzer':{ command:'/Applications/MM Flight Analyzer.app/Contents/MacOS/MM Flight Analyzer',
+        args:['/Applications/MM Flight Analyzer.app/Contents/Resources/mcp-stdio.js'], env:{ ELECTRON_RUN_AS_NODE:'1' } } } } }),
+    copyText: async () => {},
   };
   window.__setSync = s => { window.__STATUS = s; syncCb && syncCb(s); };
 })();

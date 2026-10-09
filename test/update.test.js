@@ -10,7 +10,7 @@ test('Versionen vergleichen', () => {
 });
 
 test('Update-Suche meldet neue Version, Fehler zählen als keine', async () => {
-  const u = await U.check('1.0.1', async () => ({ tag_name: 'v1.1.0', html_url: 'https://github.com/mrskynavi/ethos-log-viewer/releases/tag/v1.1.0' }));
+  const u = await U.check('1.0.1', async () => ({ tag_name: 'v1.1.0', html_url: 'https://github.com/mrskynavi/mm-flight-analyzer/releases/tag/v1.1.0' }));
   assert.equal(u.newer, true); assert.equal(u.latest, '1.1.0');
   const e = await U.check('1.0.1', async () => { throw new Error('HTTP 404'); });
   assert.equal(e.newer, false);

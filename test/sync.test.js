@@ -136,3 +136,31 @@ test('Sender während dem Sync abgezogen: Abbruch statt Fehler pro Datei', async
     assert.deepEqual(left, [], 'keine halben Dateien im Archiv');
   } finally { fsp.copyFile = orig; }
 });
+
+test('Jeti-Sender finden und Logs mit Datum im Namen ins Archiv kopieren', async () => {
+  const root = tmp(), arc = tmp();
+  put(path.join(root, 'JETI', 'Log', '20261007', '16-00-25.log'), '# YES V1\n');
+  put(path.join(root, 'JETI', 'Log', '20261007', 'notiz.txt'), 'x');
+  put(path.join(root, 'JETI', 'Log', '20261012', '14-05-33.log'), '# YES V1\nzwei');
+  put(path.join(root, 'USB', 'Log', 'irgendwas.log'), 'kein Jeti');     // ohne Tagesordner: nicht nehmen
+  const vols = ['JETI', 'USB'].map(n => ({ root: path.join(root, n), label: n }));
+  const dirs = await S.findJetiDirs(vols);
+  assert.deepEqual(dirs, [path.join(root, 'JETI', 'Log')]);
+  let r = await S.syncDir(dirs[0], arc, () => {}, true);
+  assert.equal(r.copied.length, 2);
+  assert.ok(fs.existsSync(path.join(arc, 'Jeti', 'Jeti-2026-10-07-16-00-25.log')));
+  assert.ok(fs.existsSync(path.join(arc, 'Jeti', 'Jeti-2026-10-12-14-05-33.log')));
+  r = await S.syncDir(dirs[0], arc, () => {}, true);
+  assert.equal(r.copied.length, 0);
+  assert.equal(r.skipped, 2);
+  const list = await S.listArchive(arc);
+  assert.deepEqual(list.map(f => f.name).sort(), ['Jeti-2026-10-07-16-00-25.log', 'Jeti-2026-10-12-14-05-33.log']);
+});
+
+test('Text als UTF-8 oder Latin-1 lesen', () => {
+  assert.equal(S.decodeText(Buffer.from('Höhe;°C', 'utf8')), 'Höhe;°C');
+  assert.equal(S.decodeText(Buffer.from('Track;°\nTemp;°C\n', 'latin1')), 'Track;°\nTemp;°C\n');
+  // abgeschnittenes UTF-8-Zeichen am Ende eines Ausschnitts bleibt UTF-8
+  const b = Buffer.from('Abc;Höhe;Zeit;ä', 'utf8');
+  assert.ok(S.decodeText(b.subarray(0, b.length - 1)).startsWith('Abc;Höhe'));
+});
