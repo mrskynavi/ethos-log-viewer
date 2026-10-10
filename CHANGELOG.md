@@ -2,7 +2,11 @@
 
 ## 2026.10.2 – in Arbeit
 
-- Thermik ohne Motor: Im Tab Thermik & Steigflüge zählt bei der Thermik nicht mehr, was mit Motor gestiegen ist. Läuft der Motor während einer Thermik-Phase (Drehzahl über 300 U/min, ohne Drehzahl-Sensor ESC-Strom über 3 A), endet die Phase beim Motorstart; nach dem Motor beginnt sie neu, aber erst 5 s nach Motor aus, damit das Ausschweben nicht als Thermik zählt. Reste unter 5 s fallen weg. Das gilt für Tabelle, Balken, Kennzahlen, Diagramme und Karte. Das Häkchen „Ohne Motor“ bei der Thermik schaltet das ab; daneben steht, wie viele Phasen gekürzt sind. Die Wahl wird pro Modell gespeichert. Ohne Motor-Sensor im Log ändert sich nichts.
+- Thermik ohne Motor: Im Tab Thermik zählt bei der Thermik nicht mehr, was mit Motor gestiegen ist. Läuft der Motor während einer Thermik-Phase (Drehzahl über 300 U/min, ohne Drehzahl-Sensor ESC-Strom über 3 A), endet die Phase beim Motorstart; nach dem Motor beginnt sie neu, aber erst 5 s nach Motor aus, damit das Ausschweben nicht als Thermik zählt. Reste unter 5 s fallen weg. Das gilt für Tabelle, Balken, Kennzahlen, Diagramme und Karte. Das Häkchen „Ohne Motor“ bei der Thermik schaltet das ab; daneben steht, wie viele Phasen gekürzt sind. Die Wahl wird pro Modell gespeichert. Ohne Motor-Sensor im Log ändert sich nichts.
+- Tab Thermik neu: Kennzahlen Ausnutzung (Ø Steigen der Phase im Verhältnis zum besten 30-s-Steigen, Tageswert zeitgewichtet, gut/mittel/schwach), Trefferquote und Fehlversuche, dazu Ø Steigen, Gesamthöhe und Gesamtdauer. Balken grün mit, rot ohne Höhengewinn, eingefärbt nach Steigen, Netto oder Sinken. Die Tabelle zeigt pro Phase die Ausnutzung; mit dem Häkchen nimmst Du eine Phase aus der Auswertung („Netto bis … m“, „Erfolglose inaktiv“, „Alle aktiv“), gemerkt pro Log.
+- Thermik-Karte rechts im Tab: Spur der gewählten Thermik nach Netto-Vario eingefärbt, ideale Spur um den Bartkern, Wind aus dem Versatz der Kreise, geschätzter Ursprung der Thermik am Boden mit Suchbereich (auf Wunsch mit Gelände aus dem Höhenmodell) und eine Heatmap aller Ursprünge des Tages. Luftbild in der Schweiz von swisstopo, im Ausland von Esri mit eigenem Schlüssel unter ⚙ Einstellungen.
+- Eigener Tab Motorsteigflüge: Gipfel bis 20 s nach dem Abschalten (Ausgleiten zählt mit), Ø Steigen unter Motor, Verbrauch und Höhe pro 100 mAh, Tabelle mit Ausgleiten und höchstem Strom.
+- Neue berechnete Werte Vario TEK (ohne Stösse vom Ziehen und Drücken) und Netto-Vario (Steigen der Luft, mit der Polare des Modells).
 
 ## 2026.10.1 – 2026-10-09
 
