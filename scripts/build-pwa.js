@@ -28,7 +28,7 @@ const head = `
 <meta name="theme-color" content="#0f141a" media="(prefers-color-scheme: dark)">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Ethos Logs">
+<meta name="apple-mobile-web-app-title" content="MM Flight Analyzer">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">`;
 if (!html.includes('</title>')) throw new Error('<title> in web/index.html nicht gefunden');
 html = html.replace('</title>', '</title>' + head);
