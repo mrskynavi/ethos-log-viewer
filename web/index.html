@@ -2342,6 +2342,18 @@ function fillInfo(info, txt, tail){
   if (!info.date) info.date=first.split(/[,;]/)[0]||'';
   if (!info.time) info.time=(first.split(/[,;]/)[1]||'').slice(0,8);
   Object.assign(info, headerInfo(txt, info.size));
+  // Springt die Stunde im Log (Uhr vom GPS gestellt, s. parseCSV), stimmt "letzte minus erste Uhrzeit" um volle
+  // Stunden nicht. Dann zählen nur die vollen Stunden, die Zeilenzahl × Zeilenabstand nahelegt.
+  if (info.dur!=null && info.rows){
+    const ts=l=>l.map(x=>parseTime(x.split(/[,;]/)[1]||'')).filter(x=>x!=null);
+    const head=ts(txt.split(/\r?\n/).slice(1,-1)), tl=ts(tail.trim().split(/\r?\n/).slice(1));
+    let jump=false; const steps=[];
+    for (const q of [head,tl]) for (let i=1;i<q.length;i++){ const d=q[i]-q[i-1], m=((d%3600)+3600)%3600;
+      if (Math.abs(d)>=1800 && (m<=600 || m>=3000)) jump=true; else if (d>0 && d<=2) steps.push(d); }
+    if (jump && steps.length){ steps.sort((x,y)=>x-y);
+      const est=info.rows*steps[steps.length>>1], k=Math.round((info.dur-est)/3600);
+      if (k && info.dur-k*3600>=0) info.dur-=k*3600; }
+  }
 }
 async function addFiles(list){
   const csv=[...list].filter(f=>/\.(csv|log)$/i.test(f.name) && !f.name.startsWith('._'));
@@ -2529,11 +2541,12 @@ $('#setForm').addEventListener('submit', async e=>{ e.preventDefault();
     POLAR_CACHE.clear(); if (FILES[CUR]) openLog(CUR); }
   $('#settingsDlg').close();
   if (DESK){ await loadArchive(); renderSync(await DESK.syncStatus()); } });
-// Details (Dauer, Sensoren) je Datei werden gemerkt: Cloud-Ordner laden sonst jede Datei herunter
+// Details (Dauer, Sensoren) je Datei werden gemerkt: Cloud-Ordner laden sonst jede Datei herunter.
+// 'peek2': ab 2026.10.2 stimmt die Dauer bei Logs mit springender Stunde, alte Einträge werden neu gelesen
 let peekCache=null;
-function peekGet(){ if(!peekCache){ try{ peekCache=JSON.parse(store.get('peek')||'{}'); }catch(e){ peekCache={}; } } return peekCache; }
+function peekGet(){ if(!peekCache){ try{ peekCache=JSON.parse(store.get('peek2')||'{}'); }catch(e){ peekCache={}; } } return peekCache; }
 let peekSave=0;
-function peekPut(k,v){ peekGet()[k]=v; clearTimeout(peekSave); peekSave=setTimeout(()=>store.set('peek',JSON.stringify(peekCache)),1000); }
+function peekPut(k,v){ peekGet()[k]=v; clearTimeout(peekSave); peekSave=setTimeout(()=>store.set('peek2',JSON.stringify(peekCache)),1000); }
 async function loadArchive(){
   const list = await DESK.listArchive(), cache=peekGet(), todo=[];
   const infos = list.map(a=>{
